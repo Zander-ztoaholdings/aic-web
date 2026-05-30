@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 180" width="110" height="180">
+  <!-- Left bracket [ -->
+  <path d="M36,1 L1,1 L1,179 L36,179" fill="none" stroke="#0f1f3d" stroke-width="2" stroke-linecap="square"/>
+  <!-- Right bracket ] -->
+  <path d="M74,1 L109,1 L109,179 L74,179" fill="none" stroke="#0f1f3d" stroke-width="2" stroke-linecap="square"/>
+  <!-- METHODOLOGY -->
+  <text x="55" y="21" font-size="7.5" fill="#0f1f3d" text-anchor="middle" letter-spacing="2.5" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif">METHODOLOGY</text>
+  <!-- ASSESSED -->
+  <text x="55" y="33" font-size="7.5" fill="#0f1f3d" text-anchor="middle" letter-spacing="2.5" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif">ASSESSED</text>
+  <!-- Divider 1 -->
+  <line x1="8" y1="43" x2="102" y2="43" stroke="#0f1f3d" stroke-width="1" opacity="0.35"/>
+  <!-- AIC -->
+  <text x="55" y="107" font-size="42" font-weight="700" fill="#0f1f3d" text-anchor="middle" letter-spacing="6" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif">AIC</text>
+  <!-- Divider 2 -->
+  <line x1="8" y1="126" x2="102" y2="126" stroke="#0f1f3d" stroke-width="1" opacity="0.35"/>
+  <!-- AICCERTIFIED.CLOUD -->
+  <text x="55" y="153" font-size="5.5" fill="#0f1f3d" opacity="0.55" text-anchor="middle" letter-spacing="1.5" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif">AICCERTIFIED.CLOUD</text>
+</svg>
