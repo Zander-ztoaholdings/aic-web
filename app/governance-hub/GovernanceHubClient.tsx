@@ -204,17 +204,11 @@ export default function GovernanceHubClient({
                 Declaration of Algorithmic Rights
               </h2>
               <p className="text-[#0f1f3d] text-sm leading-relaxed mb-6 font-medium">
-                Adopted by the AIC General Assembly in 2023, the Declaration of Algorithmic Rights establishes five fundamental entitlements for every person interacting with automated systems. These rights form the cornerstone of all AIC certification assessments.
+                The Declaration of Algorithmic Rights establishes five fundamental entitlements for every person interacting with automated systems. These rights form the cornerstone of all AIC certification assessments.
               </p>
               <div className="bg-[#f0f4f8] rounded-xl p-5 border border-[#e5e7eb]">
                 <div className="text-xs text-[#0f1f3d] uppercase tracking-wider mb-3 font-bold opacity-70">Document Reference</div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-[#6b7280]">Version</span><span className="font-medium text-[#0f1f3d]">3.1 (2025)</span></div>
-                  <div className="flex justify-between"><span className="text-[#6b7280]">Languages</span><span className="font-medium text-[#0f1f3d]">24 Official</span></div>
-                  <div className="flex justify-between"><span className="text-[#6b7280]">Signatories</span><span className="font-medium text-[#0f1f3d]">67 Nations</span></div>
-                  <div className="flex justify-between"><span className="text-[#6b7280]">Last Amended</span><span className="font-medium text-[#0f1f3d]">Oct 2025</span></div>
-                </div>
-                <a 
+                <a
                   href="/AIC-Declaration-of-Algorithmic-Rights.pdf" 
                   download 
                   className="mt-4 w-full flex items-center justify-center gap-2 bg-[#c9920a] text-white text-sm py-2.5 rounded-lg hover:bg-[#b07d08] transition-colors"

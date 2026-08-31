@@ -247,15 +247,15 @@ export default function DisclosuresPage() {
                         {[
                           {
                             title: "Financial Independence",
-                            desc: "No single client represents more than 15% of annual revenue.",
+                            desc: "Our impartiality policy commits us to: no single client representing more than 15% of annual revenue.",
                           },
                           {
                             title: "Personnel Separation",
-                            desc: "Auditors cannot assess organizations they've consulted for within 3 years.",
+                            desc: "Auditors may not assess organisations they have consulted for within the preceding 3 years.",
                           },
                           {
                             title: "Board Oversight",
-                            desc: "Independent ethics committee reviews all conflict of interest allegations.",
+                            desc: "Conflict of interest allegations are referred to an independent ethics committee.",
                           },
                           {
                             title: "Public Accountability",

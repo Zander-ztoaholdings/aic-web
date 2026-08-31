@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | AIC",
   },
   description:
-    "Certifying the human behind the algorithm. AIC is the world's premier accreditation body for AI governance and ethics. Join thousands of Chief AI Officers, ethics leaders, and organizations building accountable, transparent, and trustworthy AI systems that put humanity first.",
+    "Certifying the human behind the algorithm. Join thousands of Chief AI Officers, ethics leaders, and organizations building accountable, transparent, and trustworthy AI systems that put humanity first.",
   openGraph: {
     type: "website",
     locale: "en_ZA",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "AI Integrity Certification",
     title: "AI Integrity Certification | Certifying Responsible AI Leaders",
     description:
-      "Certifying the human behind the algorithm. AIC is the world's premier accreditation body for AI governance and ethics. Join thousands of leaders building accountable, transparent, and trustworthy AI systems.",
+      "Certifying the human behind the algorithm. Join thousands of leaders building accountable, transparent, and trustworthy AI systems.",
     images: [
       {
         url: "/opengraph-image",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Integrity Certification | Certifying Responsible AI Leaders",
     description:
-      "Certifying the human behind the algorithm. AIC is the world's premier accreditation body for AI governance and ethics.",
+      "Certifying the human behind the algorithm.",
     images: ["/opengraph-image"],
   },
   robots: {

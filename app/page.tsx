@@ -47,10 +47,10 @@ const standards = [
 ];
 
 const alignmentBars = [
-  { standard: "POPIA · §71", alignment: 95 },
-  { standard: "EU AI Act", alignment: 95 },
-  { standard: "NIST AI RMF", alignment: 82, opacity: 0.6 },
-  { standard: "Singapore MGAI", alignment: 85 },
+  { standard: "POPIA · §71" },
+  { standard: "EU AI Act" },
+  { standard: "NIST AI RMF" },
+  { standard: "Singapore MGAI" },
 ];
 
 
@@ -122,7 +122,7 @@ export default function MarketingPage() {
                 }}
                 className="text-lg md:text-xl text-white/80 mb-12 max-w-3xl leading-[1.65]"
               >
-                AIC is the world&apos;s premier accreditation body focused on certifying the professionals accountable for AI — not just the machines. We establish the global standard for AI governance, ethics, and human responsibility.
+                Certifying that a named human remains accountable for every decision that matters.
               </motion.p>
 
               <motion.div 
@@ -221,7 +221,7 @@ export default function MarketingPage() {
               {
                 tag: "The Answer",
                 heading: "AIC certifies the humans behind the algorithm.",
-                body: "We are the world's only certification body focused on the professionals responsible for AI governance. Our certification is built on global best practices, aligned to the EU AI Act, NIST AI RMF, and POPIA — and it means something when it matters most.",
+                body: "We are a certification body focused on the professionals responsible for AI governance. Our certification is built on global best practices, aligned to the EU AI Act, NIST AI RMF, and POPIA — and it means something when it matters most.",
               },
             ].map((item, i) => (
               <motion.div
@@ -323,25 +323,22 @@ export default function MarketingPage() {
                 AIC certification isn&apos;t just a badge — it&apos;s a rigorous technical audit that maps directly to the evolving regulatory landscape of major global jurisdictions.
               </p>
             </div>
-            <div className="space-y-8">
-              {alignmentBars.map((bar, i) => (
-                <div key={i} className="space-y-3">
-                  <div className="flex justify-between text-sm font-bold tracking-wider uppercase">
-                    <span className="text-white">{bar.standard}</span>
-                    <span className="text-[#c9920a]">{bar.alignment}%</span>
-                  </div>
-                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${bar.alignment}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, ease: "easeOut", delay: i * 0.1 }}
-                      className="h-full bg-[#c9920a]"
-                      style={{ opacity: bar.opacity || 1 }}
-                    />
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-6">
+              <span className="text-white/40 text-[0.7rem] uppercase tracking-[0.3em] font-bold">Built with reference to:</span>
+              <div className="space-y-4">
+                {alignmentBars.map((bar, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
+                    className="text-sm font-bold tracking-wider uppercase text-white border-b border-white/10 pb-4"
+                  >
+                    {bar.standard}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
