@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, integer, boolean, timestamp, jsonb, text, pgEnum, index, type AnyPgColumn } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, integer, boolean, timestamp, jsonb, text, pgEnum, index, uniqueIndex, type AnyPgColumn } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 // Enums
@@ -29,20 +29,38 @@ export const capabilities = pgTable('capabilities', {
 });
 
 // Role-Capability mapping (Many-to-Many)
+// Surrogate single-column primary key + a unique constraint on the pair.
+//
+// Two problems are being fixed here. The original definition named its
+// constraint `pk` but built an index(), which is not the same thing: there was
+// no primary key and, crucially, no uniqueness — the same capability could be
+// granted to the same role twice, leaving permission state ambiguous.
+//
+// The obvious fix, a composite primary key on (role_id, capability_id), fixes
+// uniqueness but Directus still refuses the table: it requires a SINGLE-column
+// primary key to address a row, and skips any collection without one. Verified
+// against Directus 12.3.1 — the composite key changed nothing.
+//
+// So: a surrogate uuid id for addressability, and a unique index for integrity.
 export const roleCapabilities = pgTable('role_capabilities', {
-  roleId: uuid('role_id').references(() => roles.id, { onDelete: 'cascade' }),
-  capabilityId: uuid('capability_id').references(() => capabilities.id, { onDelete: 'cascade' }),
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  roleId: uuid('role_id').notNull().references(() => roles.id, { onDelete: 'cascade' }),
+  capabilityId: uuid('capability_id').notNull().references(() => capabilities.id, { onDelete: 'cascade' }),
 }, (table) => ({
-  pk: index('role_cap_pk').on(table.roleId, table.capabilityId),
+  uniq: uniqueIndex('role_cap_unique').on(table.roleId, table.capabilityId),
 }));
 
 // User-Capability overrides (Specific permissions for a user)
+// Same fix as role_capabilities above. This one matters more: is_granted can be
+// an explicit DENY, so a duplicate (user, capability) pair could hold both a
+// grant and a deny for the same permission at once, with no defined winner.
 export const userCapabilities = pgTable('user_capabilities', {
-  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  capabilityId: uuid('capability_id').references(() => capabilities.id, { onDelete: 'cascade' }),
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  capabilityId: uuid('capability_id').notNull().references(() => capabilities.id, { onDelete: 'cascade' }),
   isGranted: boolean('is_granted').default(true), // true = whitelist, false = explicit deny
 }, (table) => ({
-  pk: index('user_cap_pk').on(table.userId, table.capabilityId),
+  uniq: uniqueIndex('user_cap_unique').on(table.userId, table.capabilityId),
 }));
 
 // Permission Audit Logs
