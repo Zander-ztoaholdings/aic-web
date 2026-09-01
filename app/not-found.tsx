@@ -23,8 +23,36 @@ export default function NotFound() {
           <h2 className="text-3xl font-serif italic text-aic-navy mb-6">Page Not Found</h2>
           
           <p className="text-[#6b7280] mb-10 text-lg leading-relaxed">
-            The resource you are looking for does not exist or has been moved within our accountability registry.
+            This page doesn&apos;t exist, or it has moved. If you followed a link
+            here from somewhere on our site, we&apos;d like to know.
           </p>
+
+          {/* Give the visitor somewhere to go rather than a dead end — helps
+              people, and keeps crawlers moving through the site. */}
+          <div className="mb-10 text-left border border-[#e5e7eb] rounded-xl bg-white p-6">
+            <p className="text-[10px] uppercase tracking-widest font-mono text-[#9ca3af] mb-4">
+              Try one of these
+            </p>
+            <ul className="space-y-2.5 text-sm">
+              {[
+                { href: "/certification", label: "Certification framework" },
+                { href: "/registry", label: "Public registry" },
+                { href: "/verify", label: "Verify a certificate" },
+                { href: "/frameworks", label: "Frameworks by industry" },
+                { href: "/regulatory-map", label: "Regulatory map" },
+                { href: "/contact", label: "Contact us" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-aic-navy hover:text-aic-copper transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getArticleBySlug } from "@/lib/notion";
 import { notFound } from "next/navigation";
@@ -8,6 +9,35 @@ import Link from "next/link";
 import { Card } from "@/app/components/ui/card";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
+  if (!article) return { title: "Article not found" };
+
+  return {
+    title: article.title,
+    description: article.excerpt,
+    openGraph: {
+      type: "article",
+      title: article.title,
+      description: article.excerpt,
+      images: article.image ? [{ url: article.image }] : undefined,
+      publishedTime: article.date,
+      authors: article.author ? [article.author] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.excerpt,
+      images: article.image ? [article.image] : undefined,
+    },
+  };
+}
 
 export default async function ArticlePage({
   params,
@@ -21,8 +51,33 @@ export default async function ArticlePage({
     notFound();
   }
 
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    image: article.image,
+    datePublished: article.date,
+    author: article.author
+      ? { "@type": "Person", name: article.author }
+      : { "@type": "Organization", name: "AI Integrity Certification" },
+    publisher: {
+      "@type": "Organization",
+      name: "AI Integrity Certification",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://aiccertified.cloud/icon",
+      },
+    },
+    mainEntityOfPage: `https://aiccertified.cloud/articles/${slug}`,
+  };
+
   return (
     <div className="min-h-screen bg-[#f0f4f8] pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
       {/* Hero Header */}
       <div className="relative h-[400px] w-full overflow-hidden">
         <Image

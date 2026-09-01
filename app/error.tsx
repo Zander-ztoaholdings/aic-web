@@ -23,8 +23,8 @@ export default function Error({
         </h2>
 
         <p className="text-[#6b7280] font-serif leading-relaxed mb-12 italic">
-          An unexpected error occurred. Our integrity systems have logged this
-          incident for review.
+          An unexpected error occurred on this page. Try again, and if it keeps
+          happening, let us know.
         </p>
 
         <button

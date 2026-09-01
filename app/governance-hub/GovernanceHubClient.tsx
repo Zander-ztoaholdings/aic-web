@@ -101,7 +101,7 @@ const rights = [
 ];
 
 
-interface PolicyUpdate {
+export interface PolicyUpdate {
   id: string | number;
   date: string;
   tag: string;
@@ -152,11 +152,13 @@ export default function GovernanceHubClient({
             <span className="text-[#c9920a] text-sm uppercase tracking-widest">Governance Hub</span>
           </div>
           <h1 className="text-5xl text-white mb-4" style={{ fontFamily: "'Merriweather', serif", fontWeight: 700 }}>
-            The Global Standard for<br />
+            The Declaration of<br />
             <span className="text-[#c9920a]">Algorithmic Rights</span>
           </h1>
           <p className="text-white/80 text-lg max-w-2xl mb-8">
-            Access AIC&apos;s foundational Declaration of Algorithmic Rights, global standards maps, and real-time policy intelligence for researchers, regulators, and policymakers.
+            The five rights AIC certifies against, the regulatory picture we maintain, and the
+            policy developments we&apos;re tracking &mdash; for researchers, regulators and
+            policymakers.
           </p>
           <div className="flex gap-4">
             <a
@@ -214,6 +216,7 @@ export default function GovernanceHubClient({
                   >
                     <button
                       className="w-full flex items-center gap-4 p-5 text-left"
+                      aria-expanded={isExpanded}
                       onClick={() => setExpandedRight(isExpanded ? null : i)}
                     >
                       <div className={`w-10 h-10 rounded-lg ${right.iconClass} flex items-center justify-center shrink-0`}>
@@ -306,10 +309,30 @@ export default function GovernanceHubClient({
                 Policy Updates
               </h2>
             </div>
-            <button className="flex items-center gap-2 text-sm text-[#0f1f3d] border border-[#e5e7eb] px-4 py-2 rounded-lg hover:bg-[#f0f4f8]">
-              <Newspaper className="w-4 h-4" /> All Updates
-            </button>
+            <Link
+              href="/articles"
+              className="flex items-center gap-2 text-sm text-[#0f1f3d] border border-[#e5e7eb] px-4 py-2 rounded-lg hover:bg-[#f0f4f8] transition-colors"
+            >
+              <Newspaper className="w-4 h-4" /> All updates
+            </Link>
           </div>
+
+          {policyUpdates.length === 0 && (
+            <div className="border border-[#e5e7eb] rounded-xl bg-white p-10 text-center max-w-2xl mx-auto">
+              <Newspaper className="w-10 h-10 text-[#e5e7eb] mx-auto mb-4" />
+              <p className="text-[#0f1f3d] font-semibold mb-2">
+                No policy updates published yet.
+              </p>
+              <p className="text-[#6b7280] text-sm leading-relaxed">
+                When we publish a regulatory development, it will appear here with its
+                source. In the meantime, the{" "}
+                <Link href="/regulatory-map" className="text-aic-copper hover:underline">
+                  regulatory map
+                </Link>{" "}
+                covers where AI regulation currently stands by jurisdiction.
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {policyUpdates.map((update, i) => (
@@ -334,9 +357,6 @@ export default function GovernanceHubClient({
                 </div>
                 <h3 className="text-[#0f1f3d] font-semibold mb-2 leading-snug">{update.title}</h3>
                 <p className="text-[#6b7280] text-sm leading-relaxed mb-4">{update.summary}</p>
-                <button className="flex items-center gap-1 text-sm text-[#c9920a] font-medium">
-                  Read More <ChevronRight className="w-3 h-3" />
-                </button>
               </motion.div>
             ))}
           </div>

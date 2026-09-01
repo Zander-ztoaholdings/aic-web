@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
 import { Globe2 } from "lucide-react";
 import RegulatoryMap from "@/app/components/RegulatoryMap";
 
-export const metadata: Metadata = {
-  title: "Regulatory Map",
-  description:
-    "An interactive map of AI-relevant regulatory frameworks by jurisdiction, with draft compliance-measures summaries.",
-};
+// Metadata lives in ./layout.tsx alongside every other route's.
 
 export default function RegulatoryMapPage() {
   return (

@@ -91,7 +91,8 @@ export default function MarketingPage() {
               }}
               className="flex-1"
             >
-              <motion.h1 
+              <motion.h1
+                aria-label="Certifying the Human Behind the Algorithm"
                 variants={{
                   hidden: { opacity: 0 },
                   visible: { opacity: 1 }
@@ -106,7 +107,7 @@ export default function MarketingPage() {
                       key={i}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 1.2 + (i * 0.08) }}
+                      transition={{ delay: 0.3 + (i * 0.04) }}
                     >
                       {letter}
                     </motion.span>

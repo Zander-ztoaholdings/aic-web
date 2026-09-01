@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+/* Google Fonts are loaded via <link rel="preconnect"> + <link rel="stylesheet">
+   in app/layout.tsx instead of a CSS @import. A CSS @import forces the browser
+   to download and parse this stylesheet before it even discovers the font
+   request, which delays first paint. IBM Plex Mono was also dropped here — it
+   was being downloaded on every page load and never used. */
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -51,6 +55,8 @@
   --aic-gold: #c9920a;
   --aic-copper: #c9920a;
   --aic-paper: #fcfcfa;
+  --aic-black: #0f1f3d;
+  --aic-red: #b07d08;
 }
 
 .dark {
@@ -94,6 +100,8 @@
   --aic-gold: #c9920a;
   --aic-copper: #c9920a;
   --aic-paper: #fcfcfa;
+  --aic-black: #0f1f3d;
+  --aic-red: #b07d08;
 }
 
 @theme inline {
@@ -140,6 +148,8 @@
   --color-aic-gold: var(--aic-gold);
   --color-aic-copper: var(--aic-copper);
   --color-aic-paper: var(--aic-paper);
+  --color-aic-black: var(--aic-black);
+  --color-aic-red: var(--aic-red);
 }
 
 @layer base {
@@ -279,3 +289,27 @@ html {
   100% { transform: translateY(-200px) translateX(20px); opacity: 0; }
 }
 
+
+/* --- Accessibility ------------------------------------------------------ */
+
+/* Visible keyboard focus. :focus-visible only shows the ring for keyboard and
+   assistive-tech users, so mouse clicks stay visually clean. */
+:focus-visible {
+  outline: 2px solid var(--aic-copper, #c9920a);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respect the OS "reduce motion" setting. This site leans heavily on Framer
+   Motion; for users who have asked for less movement, collapse animations to
+   near-instant rather than removing the content they reveal. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

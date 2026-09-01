@@ -31,8 +31,37 @@ export default async function FrameworkDetailPage({
   const fw = frameworks.find((f) => f.slug === slug);
   if (!fw) notFound();
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://aiccertified.cloud",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Frameworks",
+        item: "https://aiccertified.cloud/frameworks",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: fw.industry,
+        item: `https://aiccertified.cloud/frameworks/${fw.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 relative z-10">

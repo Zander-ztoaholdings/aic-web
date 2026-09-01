@@ -24,7 +24,7 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 
-interface Article {
+export interface Article {
   id: string | number;
   title: string;
   excerpt: string;
@@ -266,9 +266,21 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
           </div>
 
           {filteredArticles.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-16 max-w-md mx-auto">
               <FileText className="w-12 h-12 text-[#e5e7eb] mx-auto mb-4" />
-              <p className="text-[#6b7280]">No articles found matching your criteria.</p>
+              {articles.length === 0 ? (
+                <>
+                  <p className="text-[#0f1f3d] font-semibold mb-2">
+                    Nothing published here yet.
+                  </p>
+                  <p className="text-[#6b7280] text-sm leading-relaxed">
+                    We&apos;d rather show an empty page than fill it with placeholder
+                    writing. Articles will appear here as we publish them.
+                  </p>
+                </>
+              ) : (
+                <p className="text-[#6b7280]">No articles found matching your criteria.</p>
+              )}
             </div>
           ) : (
             <>
@@ -387,24 +399,24 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
             {[
               {
                 icon: Award,
-                title: "Certification Resources",
-                description: "Exam guides, study materials, and preparation tips for CAEL candidates.",
-                link: "/professional-portal",
-                linkText: "Explore Resources",
+                title: "Certification Framework",
+                description: "The Five-Division accountability model, and what an AIC assessment covers.",
+                link: "/certification",
+                linkText: "Read the framework",
               },
               {
                 icon: Globe,
-                title: "Policy Map",
-                description: "Interactive tracker of global AI regulations and governance frameworks.",
-                link: "/governance-hub",
-                linkText: "View Policy Map",
+                title: "Regulatory Map",
+                description: "AI regulation by jurisdiction, with draft compliance summaries.",
+                link: "/regulatory-map",
+                linkText: "Open the map",
               },
               {
                 icon: TrendingUp,
-                title: "Governance Index",
-                description: "Annual rankings of Fortune 500 companies on AI accountability metrics.",
-                link: "/ai-governance-index",
-                linkText: "See Rankings",
+                title: "Frameworks",
+                description: "AI mapped against the safety frameworks each industry already runs on.",
+                link: "/frameworks",
+                linkText: "See frameworks",
               },
             ].map((resource, i) => {
               const Icon = resource.icon;
