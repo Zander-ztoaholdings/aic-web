@@ -18,6 +18,8 @@ import {
   Globe2,
   Newspaper,
   Radio,
+  Layers,
+  GraduationCap,
 } from "lucide-react";
 
 export interface NavLink {
@@ -31,6 +33,15 @@ export interface NavGroup {
   label: string;
   href?: string;
   items: NavLink[];
+}
+
+// A standalone top-level nav item — rendered as a plain link, not a dropdown.
+// Workshops lives here deliberately: it's a temporary, standalone product, not
+// a sub-item of an existing category (see the "own spot in the ribbon" call).
+export interface TopLevelLink {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 // Grouped by function rather than audience — see /governance-hub and /disclosures
@@ -58,6 +69,7 @@ export const navGroups: NavGroup[] = [
     label: "Where We Operate",
     items: [
       { href: "/regulatory-map", label: "Regulatory Map", icon: Globe2, description: "AI regulation by jurisdiction, with draft compliance summaries" },
+      { href: "/frameworks", label: "Frameworks", icon: Layers, description: "AI mapped against established industry safety frameworks" },
     ],
   },
   {
@@ -67,6 +79,11 @@ export const navGroups: NavGroup[] = [
       { href: "/governance-hub#policy-updates", label: "Policy Updates", icon: Radio, description: "Real-time policy intelligence" },
     ],
   },
+];
+
+// Standalone links, rendered next to the dropdown groups rather than inside one.
+export const topLevelLinks: TopLevelLink[] = [
+  { href: "/workshops", label: "Workshops", icon: GraduationCap },
 ];
 
 export default function Navbar() {
@@ -190,6 +207,26 @@ export default function Navbar() {
                 );
               })}
 
+              {/* Standalone top-level links — plain, no dropdown */}
+              {topLevelLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded text-sm font-medium transition-colors ${
+                      isActive
+                        ? "text-[#0f1f3d] bg-[#f0f4f8]"
+                        : "text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8]"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+
               {/* Copper CTA */}
               <Link
                 href="/contact"
@@ -250,6 +287,25 @@ export default function Navbar() {
                   </div>
                 );
               })}
+
+              {/* Standalone top-level links in mobile menu */}
+              <div className="border-b border-[rgba(0,0,0,0.06)] pb-1">
+                {topLevelLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center gap-2.5 px-4 py-4 text-base font-semibold text-[#0f1f3d]"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <Icon className="w-4 h-4 text-[#c9920a]" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
               <div className="pt-4 mt-2 flex flex-col gap-3">
                 <Link
                   href="/contact"
