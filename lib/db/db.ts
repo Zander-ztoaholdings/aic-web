@@ -19,7 +19,9 @@ let db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 function getDbInstance() {
   if (!db) {
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
+      // Computed key so the value is read at runtime rather than inlined at
+      // build time — otherwise the pool silently falls back to localhost.
+      connectionString: process.env["DATABASE_URL"] || process.env["POSTGRES_URL"],
       max: 50, // Institutional Capacity
       connectionTimeoutMillis: 5000,
       idleTimeoutMillis: 30000,

@@ -101,7 +101,20 @@ export type VerificationResult =
  * register during a genuine database failure.
  */
 function registerIsProvisioned(): boolean {
-  return Boolean(process.env.DATABASE_URL || process.env.POSTGRES_URL);
+  // Read through a computed key. `process.env.DATABASE_URL` (dot access) is
+  // statically replaced at build time in the server-component bundle, so when
+  // the build runs without the variable — the normal case, since Coolify build
+  // args and runtime env are separate — it is baked in as `undefined` and stays
+  // that way at runtime no matter what the container's environment says.
+  //
+  // The symptom was ugly and specific: with the database configured but DOWN,
+  // /registry announced "no organisation currently holds AIC certification"
+  // instead of admitting it could not reach the register. A false negative
+  // about certification is the one answer this page must never give.
+  //
+  // A computed key cannot be statically analysed, so this is read at runtime.
+  const env = process.env;
+  return Boolean(env["DATABASE_URL"] || env["POSTGRES_URL"]);
 }
 
 /** Score → band. The ONLY place the number is interpreted, and the number does
