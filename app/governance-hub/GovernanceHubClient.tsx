@@ -4,9 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpen,
-  Globe,
   Download,
-  Search,
   ChevronDown,
   ChevronRight,
   Scale,
@@ -19,6 +17,7 @@ import {
   RefreshCw,
   UserCheck,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
 
 const heroBg = "https://images.unsplash.com/photo-1585417239901-f3a4085218b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnbG9iYWwlMjBkaWdpdGFsJTIwbmV0d29yayUyMGRhdGElMjBjb21wbGlhbmNlfGVufDF8fHx8MTc3MTk2MjY5MXww&ixlib=rb-4.1.0&q=80&w=1080";
@@ -101,16 +100,6 @@ const rights = [
   },
 ];
 
-const globalStandards = [
-  { region: "European Union", framework: "EU AI Act", status: "Enacted", level: "High", year: "2024", alignment: 95 },
-  { region: "United States", framework: "NIST AI RMF + EO 14110", status: "Active", level: "Moderate", year: "2023", alignment: 82 },
-  { region: "United Kingdom", framework: "UK Pro-Innovation AI Framework", status: "Active", level: "Moderate", year: "2023", alignment: 74 },
-  { region: "Canada", framework: "AIDA (Bill C-27)", status: "Pending", level: "High", year: "2024", alignment: 88 },
-  { region: "China", framework: "Generative AI Regulations", status: "Enacted", level: "High", year: "2023", alignment: 61 },
-  { region: "Brazil", framework: "AI Bill (PL 2338/2023)", status: "Pending", level: "High", year: "2024", alignment: 79 },
-  { region: "Singapore", framework: "Model AI Governance Framework", status: "Active", level: "Voluntary", year: "2023", alignment: 85 },
-  { region: "Japan", framework: "AI Strategy & Guidelines", status: "Active", level: "Voluntary", year: "2024", alignment: 72 },
-];
 
 interface PolicyUpdate {
   id: string | number;
@@ -130,8 +119,6 @@ export default function GovernanceHubClient({
   initialNextCursor,
 }: GovernanceHubClientProps) {
   const [expandedRight, setExpandedRight] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("All Regions");
   
   const [policyUpdates, setPolicyUpdates] = useState<PolicyUpdate[]>(initialPolicyUpdates);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
@@ -152,12 +139,6 @@ export default function GovernanceHubClient({
     }
   };
 
-  const filteredStandards = globalStandards.filter(
-    (s) =>
-      (selectedRegion === "All Regions" || s.region === selectedRegion) &&
-      (s.region.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.framework.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
 
   return (
     <div>
@@ -285,94 +266,38 @@ export default function GovernanceHubClient({
           <div className="mb-10">
             <span className="text-[#c9920a] text-sm uppercase tracking-widest">Global Overview</span>
             <h2 className="text-3xl text-[#0f1f3d] mt-2 mb-2" style={{ fontFamily: "'Merriweather', serif" }}>
-              AI Regulatory Standards Map
+              AI Regulatory Map
             </h2>
             <p className="text-[#6b7280] text-sm max-w-2xl">
-              Track the status of AI governance legislation and voluntary frameworks across major jurisdictions, and see how they align with AIC&apos;s Declaration of Algorithmic Rights.
+              An interactive, country-by-country view of AI-relevant regulation — built from verified public
+              sources, with draft compliance-measure summaries you can download.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]/60" />
-              <input
-                type="text"
-                placeholder="Search regions or frameworks..."
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-[#e5e7eb] bg-aic-paper text-sm focus:outline-none focus:ring-2 focus:ring-[#c9920a]/20"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+          <Link
+            href="/regulatory-map"
+            className="group flex flex-col sm:flex-row sm:items-center justify-between gap-6 rounded-xl border border-[#e5e7eb] bg-aic-paper p-8 hover:border-[#c9920a] hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-[#0a1628] flex items-center justify-center shrink-0">
+                <Map className="w-5 h-5 text-[#c9920a]" />
+              </div>
+              <div>
+                <div className="text-[#0f1f3d] font-semibold text-lg">Open the Regulatory Map</div>
+                <div className="text-[#6b7280] text-sm">
+                  Click any mapped country for its framework, authority, status, and a draft compliance-measures download.
+                </div>
+              </div>
             </div>
-            <select
-              className="px-4 py-2.5 rounded-lg border border-[#e5e7eb] bg-aic-paper text-sm focus:outline-none"
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-            >
-              <option>All Regions</option>
-              {globalStandards.map((s) => <option key={s.region}>{s.region}</option>)}
-            </select>
-          </div>
-
-          <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-aic-paper">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[#0a1628] text-white/70 text-xs uppercase tracking-wider">
-                  <th className="text-left px-5 py-3">Region</th>
-                  <th className="text-left px-5 py-3">Framework</th>
-                  <th className="text-left px-5 py-3">Status</th>
-                  <th className="text-left px-5 py-3 hidden md:table-cell">Risk Level</th>
-                  <th className="text-left px-5 py-3">AIC Alignment</th>
-                  <th className="text-left px-5 py-3 hidden lg:table-cell">Year</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#e5e7eb]">
-                {filteredStandards.map((s, i) => (
-                  <tr key={i} className="hover:bg-[#f0f4f8] transition-colors">
-                    <td className="px-5 py-4 font-medium text-[#0f1f3d] flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-[#c9920a]" />
-                      {s.region}
-                    </td>
-                    <td className="px-5 py-4 text-[#6b7280]">{s.framework}</td>
-                    <td className="px-5 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                        s.status === "Enacted" ? "bg-[#c9920a]/10 text-[#c9920a]" :
-                        s.status === "Active" ? "bg-[#1a3160]/10 text-[#1a3160]" :
-                        "bg-[#f0f4f8] text-[#6b7280]"
-                      }`}>
-                        {s.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 hidden md:table-cell">
-                      <span className={`text-xs font-medium ${
-                        s.level === "High" ? "text-[#d4183d]" :
-                        s.level === "Moderate" ? "text-[#c9920a]" :
-                        "text-[#6b7280]"
-                      }`}>
-                        {s.level}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-[#e5e7eb] rounded-full h-1.5 max-w-[100px]">
-                          <div
-                            className="h-1.5 rounded-full bg-[#c9920a]"
-                            style={{ width: `${s.alignment}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-xs text-[#6b7280] shrink-0">{s.alignment}%</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-[#6b7280] hidden lg:table-cell">{s.year}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+            <span className="inline-flex items-center gap-2 text-[#c9920a] font-semibold text-sm shrink-0">
+              View map <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </Link>
         </div>
       </section>
 
       {/* Policy Updates */}
-      <section className="py-20 bg-aic-paper">
+      <section id="policy-updates" className="py-20 bg-aic-paper">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-10">
             <div>
