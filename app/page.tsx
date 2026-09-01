@@ -136,7 +136,7 @@ export default function MarketingPage() {
                   href="/contact"
                   className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-10 py-5 rounded-full transition-all text-sm font-bold shadow-2xl shadow-[#c9920a]/30 hover:-translate-y-1"
                 >
-                  APPLY FOR CERTIFICATION <ArrowRight className="w-4 h-4" />
+                  Contact us <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/certification"
@@ -320,7 +320,7 @@ export default function MarketingPage() {
                 Aligned With the World&apos;s Toughest AI Regulations
               </h2>
               <p className="text-white/60 text-lg leading-relaxed mb-8">
-                AIC certification isn&apos;t just a badge — it&apos;s a rigorous technical audit that maps directly to the evolving regulatory landscape of major global jurisdictions.
+                AIC certification is an evidence-based audit against published requirements, mapped to the regulatory frameworks that apply to your organisation.
               </p>
             </div>
             <div className="space-y-6">
@@ -424,20 +424,14 @@ export default function MarketingPage() {
               Ready to Lead Responsible AI?
             </h2>
             <p className="text-white/60 mb-12 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              Join the growing ecosystem of organisations and individuals who hold the AIC credential — the global benchmark for algorithmic integrity.
+              AIC is assembling its founding cohort — a small group of organisations that shape the methodology and carry the mark first.
             </p>
-            <div className="flex flex-col md:flex-row gap-6 justify-center">
+            <div className="flex justify-center">
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-3 bg-[#c9920a] text-white px-10 py-5 rounded-full font-bold hover:bg-[#b07d08] transition-all shadow-xl shadow-[#c9920a]/20 hover:-translate-y-1"
               >
-                START CERTIFICATION PROCESS <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-3 border-2 border-white/20 text-white px-10 py-5 rounded-full hover:bg-white/5 transition-all font-bold"
-              >
-                CORPORATE INQUIRY
+                Contact us <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </motion.div>

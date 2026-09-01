@@ -97,7 +97,7 @@ const journeySteps = [
   { step: "01", title: "Self-Assessment", desc: "Complete AIC's diagnostic questionnaire to identify your Division classification based on how your organisation relates to AI in consequential decisions." },
   { step: "02", title: "Gap Analysis", desc: "AIC conducts a structured gap analysis against the accountability requirements for your Division, identifying what evidence and controls are needed." },
   { step: "03", title: "Evidence Review", desc: "Submit documentation of your human accountability structures, AI system registrations, override processes, and monitoring mechanisms." },
-  { step: "04", title: "Certification Audit", desc: "An AIC-accredited auditor conducts the formal assessment. For Sovereign and Builder certifications, this is a point-in-time audit." },
+  { step: "04", title: "Certification Audit", desc: "An AIC auditor conducts the formal assessment. For Sovereign and Builder certifications, this is a point-in-time audit." },
   { step: "05", title: "Certification & Pulse", desc: "Upon passing, receive your AIC Division certificate. Supervised, Reviewed, and Monitored organisations enter continuous Pulse monitoring." },
 ];
 
@@ -139,7 +139,7 @@ export default function CertificationPage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-lg transition-all text-sm font-bold shadow-xl shadow-[#c9920a]/20"
               >
-                ENQUIRE ABOUT CERTIFICATION <ArrowRight className="w-4 h-4" />
+                Contact us <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </motion.div>
@@ -373,7 +373,7 @@ export default function CertificationPage() {
               href="/contact"
               className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-10 py-4 rounded font-bold uppercase tracking-widest transition-all shadow-xl shadow-[#c9920a]/25 text-sm"
             >
-              Enquire About Certification
+              Contact us
               <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>

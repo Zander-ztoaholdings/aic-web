@@ -34,82 +34,9 @@ interface CertifiedOrganization {
   country: string;
 }
 
-const certifiedOrgs: CertifiedOrganization[] = [
-  {
-    name: "Microsoft Corporation",
-    industry: "Technology",
-    certNumber: "AIC-42001-0012",
-    issueDate: "January 15, 2025",
-    expiryDate: "January 15, 2028",
-    status: "Active",
-    scope: "AI-powered cloud services and enterprise software",
-    country: "United States",
-  },
-  {
-    name: "JPMorgan Chase & Co.",
-    industry: "Financial Services",
-    certNumber: "AIC-42001-0034",
-    issueDate: "March 8, 2025",
-    expiryDate: "March 8, 2028",
-    status: "Active",
-    scope: "AI-driven risk assessment and fraud detection systems",
-    country: "United States",
-  },
-  {
-    name: "Siemens AG",
-    industry: "Manufacturing",
-    certNumber: "AIC-42001-0089",
-    issueDate: "November 22, 2024",
-    expiryDate: "November 22, 2027",
-    status: "Active",
-    scope: "Industrial automation and predictive maintenance AI",
-    country: "Germany",
-  },
-  {
-    name: "Johnson & Johnson",
-    industry: "Healthcare",
-    certNumber: "AIC-42001-0156",
-    issueDate: "February 10, 2025",
-    expiryDate: "February 10, 2028",
-    status: "Active",
-    scope: "Medical device AI and clinical decision support",
-    country: "United States",
-  },
-  {
-    name: "HSBC Holdings",
-    industry: "Financial Services",
-    certNumber: "AIC-42001-0201",
-    issueDate: "December 5, 2024",
-    expiryDate: "December 5, 2027",
-    status: "Active",
-    scope: "Credit scoring and anti-money laundering AI systems",
-    country: "United Kingdom",
-  },
-];
+const certifiedOrgs: CertifiedOrganization[] = [];
 
-const appealCases = [
-  {
-    caseId: "APP-2026-047",
-    organization: "TechCorp Industries",
-    dateSubmitted: "January 28, 2026",
-    status: "Under Review",
-    issue: "Certification decision dispute",
-  },
-  {
-    caseId: "APP-2025-892",
-    organization: "GlobalBank International",
-    dateSubmitted: "December 12, 2025",
-    status: "Resolved",
-    issue: "Scope clarification request",
-  },
-  {
-    caseId: "APP-2025-743",
-    organization: "HealthAI Solutions",
-    dateSubmitted: "October 20, 2025",
-    status: "Resolved",
-    issue: "Assessment timeline extension",
-  },
-];
+const appealCases: { caseId: string; organization: string; dateSubmitted: string; status: string; issue: string }[] = [];
 
 export default function DisclosuresPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -159,8 +86,8 @@ export default function DisclosuresPage() {
             {[
               { icon: Shield, label: "Methodology", value: "Assessed" },
               { icon: Globe, label: "Recognition", value: "Global" },
-              { icon: Building2, label: "Certified Orgs", value: "Verified" },
-              { icon: Users, label: "Certified Professionals", value: "Active" },
+              { icon: Users, label: "Founding Cohort", value: "Forming" },
+              { icon: Building2, label: "Public Registry", value: "Opening Soon" },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
@@ -334,10 +261,10 @@ export default function DisclosuresPage() {
                   <div className="flex items-start justify-between mb-6">
                     <div>
                       <h2 className="text-2xl font-semibold text-[#0f1f3d] mb-2">
-                        ISO/IEC 42001 Certified Organizations
+                        Certified Organizations
                       </h2>
                       <p className="text-sm text-[#6b7280]/80">
-                        Public registry of all organizations with active AIC certifications. Updated daily.
+                        The public registry opens with our founding cohort, currently forming.
                       </p>
                     </div>
                     <Button variant="outline">
@@ -410,10 +337,11 @@ export default function DisclosuresPage() {
                     ))}
                   </div>
 
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-[#6b7280]/80 mb-3">Showing verified organizations</p>
-                    <Button variant="outline">Load More Organizations</Button>
-                  </div>
+                  {filteredOrgs.length === 0 && (
+                    <div className="text-center py-12 border border-dashed border-[#e5e7eb] rounded-lg text-[#6b7280]/80 text-sm">
+                      No organisation currently holds AIC certification. The register opens with our founding cohort.
+                    </div>
+                  )}
                 </Card>
               </motion.div>
             </TabsContent>
@@ -509,7 +437,7 @@ export default function DisclosuresPage() {
                     <h3 className="font-semibold text-[#0f1f3d] mb-4">Recent Appeals Activity</h3>
                     <p className="text-sm text-[#6b7280]/80 mb-6">
                       Transparency report showing recent appeals filed and their outcomes (anonymized per confidentiality
-                      requirements).
+                      requirements). No appeals have been filed yet.
                     </p>
                     <div className="space-y-3">
                       {appealCases.map((appeal, i) => (

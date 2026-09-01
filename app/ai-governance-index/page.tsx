@@ -61,89 +61,7 @@ interface CertifiedCompany {
   aiEthicsOfficer: string;
 }
 
-const companies: CertifiedCompany[] = [
-  {
-    id: "msft-001",
-    name: "Microsoft Corporation",
-    industry: "Technology",
-    location: "Redmond, USA",
-    certificationDate: "2025-01-15",
-    expiryDate: "2028-01-14",
-    status: "Active",
-    certificateNumber: "AIC-2025-MSFT-001",
-    scope: "Global Azure AI services and OpenAI integration layer including model safety guardrails and automated content moderation systems.",
-    certifiedProfessionals: 142,
-    website: "https://microsoft.com",
-    integrityScore: 96,
-    leadAuditor: "Dr. Sarah Chen (AIC Senior Fellow)",
-    accreditationBody: "AIC Methodology Assessed",
-    transparencyUrl: "https://microsoft.com/ai/transparency",
-    aiEthicsOfficer: "Natasha Crampton",
-    complianceMatrix: [
-      { framework: "EU AI Act", score: 98, status: "Full" },
-      { framework: "NIST AI RMF", score: 95, status: "Full" },
-      { framework: "ISO/IEC 42001", score: 96, status: "Full" },
-    ],
-    auditHistory: [
-      { date: "2025-01-15", type: "Certification Audit", result: "Pass", auditor: "AIC Global" },
-      { date: "2024-11-20", type: "Stage 2 Technical Review", result: "Minor NC", auditor: "AIC Global" },
-      { date: "2024-10-05", type: "Stage 1 Readiness", result: "Pass", auditor: "AIC Global" },
-    ],
-  },
-  {
-    id: "jpm-002",
-    name: "JPMorgan Chase & Co.",
-    industry: "Financial Services",
-    location: "New York, USA",
-    certificationDate: "2025-03-10",
-    expiryDate: "2028-03-09",
-    status: "Active",
-    certificateNumber: "AIC-2025-JPM-002",
-    scope: "Internal algorithmic credit scoring, fraud detection systems, and automated wealth management advisory engines.",
-    certifiedProfessionals: 85,
-    website: "https://jpmorganchase.com",
-    integrityScore: 92,
-    leadAuditor: "Marcus Thorne (Certified Lead Auditor)",
-    accreditationBody: "AIC Methodology Assessed",
-    transparencyUrl: "https://jpmorganchase.com/ai-governance",
-    aiEthicsOfficer: "James Cummins",
-    complianceMatrix: [
-      { framework: "EU AI Act", score: 91, status: "Full" },
-      { framework: "NIST AI RMF", score: 93, status: "Full" },
-      { framework: "SEC Rule 240", score: 94, status: "Full" },
-    ],
-    auditHistory: [
-      { date: "2025-03-10", type: "Certification Audit", result: "Pass", auditor: "AIC Global" },
-      { date: "2025-01-12", type: "Pre-assessment", result: "Pass", auditor: "AIC Global" },
-    ],
-  },
-  {
-    id: "fin-004",
-    name: "Sovereign Bank",
-    industry: "Financial Services",
-    location: "Johannesburg, RSA",
-    certificationDate: "2025-08-05",
-    expiryDate: "2028-08-04",
-    status: "Active",
-    certificateNumber: "AIC-2025-SOV-004",
-    scope: "Retail banking automated decision systems, customer risk profiles, and POPIA-compliant automated processing modules.",
-    certifiedProfessionals: 12,
-    website: "https://sovereign.bank",
-    integrityScore: 94,
-    leadAuditor: "Thabo Mbeki (AIC RSA Division)",
-    accreditationBody: "AIC Methodology Assessed",
-    transparencyUrl: "https://sovereign.bank/governance",
-    aiEthicsOfficer: "Elena Rodriguez",
-    complianceMatrix: [
-      { framework: "POPIA Sec 71", score: 99, status: "Full" },
-      { framework: "EU AI Act", score: 92, status: "Full" },
-      { framework: "ISO/IEC 42001", score: 94, status: "Full" },
-    ],
-    auditHistory: [
-      { date: "2025-08-05", type: "Certification Audit", result: "Pass", auditor: "AIC Africa" },
-    ],
-  },
-];
+const companies: CertifiedCompany[] = [];
 
 // ─── Helper sub-components ────────────────────────────────────────────────
 
@@ -476,8 +394,8 @@ function RegistryContent() {
       <div className="mb-12">
         <h1 className="text-4xl md:text-6xl font-bold text-[#0f1f3d] mb-4">AIC Verified Registry</h1>
         <p className="text-xl text-[#6b7280] max-w-3xl leading-relaxed">
-          The central authority for algorithmic accountability. Search the official public registry of organizations
-          that have achieved AIC Certification and verified their commitment to responsible AI.
+          The public register of organisations that hold AIC certification. It opens with our founding cohort,
+          currently forming — no organisation currently holds AIC certification.
         </p>
       </div>
 
@@ -547,6 +465,12 @@ function RegistryContent() {
         ))}
       </div>
 
+      {filteredCompanies.length === 0 && (
+        <div className="text-center py-16 border border-dashed border-[#e5e7eb] rounded-xl text-[#6b7280]">
+          No organisation currently holds AIC certification. The register opens with our founding cohort.
+        </div>
+      )}
+
       {visibleCount < filteredCompanies.length && (
         <div className="mt-16 flex justify-center">
           <Button
@@ -588,11 +512,10 @@ export default function AIGovernanceIndexPage() {
       <section className="py-24 bg-[#0a1628] text-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <Award className="w-16 h-16 text-[#c9920a] mx-auto mb-6" />
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">The Global Benchmark for AI Integrity</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">What the Registry Verifies</h2>
           <p className="text-xl text-white/60 max-w-3xl mx-auto mb-12">
-            The AIC Registry is the world&apos;s most trusted record of algorithmic accountability. Organizations
-            listed here have undergone rigorous technical and ethical audits to verify their compliance with
-            global standards.
+            Every organisation listed here has undergone an evidence-based audit against AIC&apos;s published
+            certification requirements. The registry is how anyone can check a certification claim in seconds.
           </p>
           <div className="flex flex-wrap gap-8 justify-center opacity-80">
             {[

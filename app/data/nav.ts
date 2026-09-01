@@ -23,7 +23,7 @@ export const navItems = [
     label: "AI Governance Index",
     href: "/ai-governance-index",
     icon: BarChart3,
-    description: "Fortune 500 AI Maturity Rankings",
+    description: "Public Certification Registry",
   },
   {
     label: "Disclosures",

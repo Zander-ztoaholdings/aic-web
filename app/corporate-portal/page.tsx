@@ -94,13 +94,7 @@ const riskTemplates = [
   { title: "NIST AI RMF Gap Analysis Workbook", desc: "Structured workbook mapping current controls to GOVERN, MAP, MEASURE, and MANAGE functions.", type: "Excel", size: "312 KB" },
 ];
 
-const certifiedOrgs = [
-  { name: "Meridian Financial Group", sector: "Finance", tier: "Enterprise", since: "2024", score: 94 },
-  { name: "NovaTech Healthcare Systems", sector: "Healthcare", tier: "Professional", since: "2024", score: 88 },
-  { name: "Apex Logistics Corp.", sector: "Supply Chain", tier: "Professional", since: "2023", score: 85 },
-  { name: "GlobalEdge Insurance", sector: "Insurance", tier: "Enterprise", since: "2025", score: 91 },
-  { name: "Pinnacle HR Solutions", sector: "HR Technology", tier: "Foundation", since: "2025", score: 76 },
-];
+const certifiedOrgs: { name: string; sector: string; tier: string; since: string; score: number }[] = [];
 
 export default function CorporatePortalPage() {
   const [activeTab, setActiveTab] = useState<"certification" | "gap" | "templates" | "directory" | string>("certification");
@@ -428,7 +422,7 @@ export default function CorporatePortalPage() {
                 Certified Organizations
               </h2>
               <p className="text-[#6b7280] max-w-2xl text-sm">
-                Publicly searchable registry of ISO/IEC 42001-certified organizations. This directory is maintained for public transparency and verification.
+                The public directory opens with our founding cohort, currently forming. No organisation currently holds AIC certification.
               </p>
             </div>
 

@@ -57,7 +57,7 @@ export default async function Image() {
             display: "flex",
           }}
         >
-          The global standard for AI governance, ethics, and human accountability.
+          A South African certification body for AI accountability.
         </div>
 
         <div
