@@ -80,6 +80,24 @@ export const organizations = pgTable('organizations', {
   primaryAiOfficer: varchar('primary_ai_officer', { length: 255 }),
   
   // Settings
+  // DO NOT wire this up as a listing gate without reading this first.
+  //
+  // Registry listing is decided by status band (Website PRD §8.2), not by this
+  // flag. Settled Sep 2026: this is an EXCEPTIONAL OVERRIDE for AIC to suppress
+  // a listing in a specific justified case (e.g. a legal order) — it is not a
+  // client opt-in.
+  //
+  // Opt-in would break the register: an organisation could untick it after a
+  // suspension and vanish, which is exactly the silent deletion D7 forbids, and
+  // absence would stop meaning anything (not certified, or certified and
+  // hiding?). A register whose silence is ambiguous verifies nothing.
+  //
+  // It must never suppress a Suspended or Lapsed status. Suppress before
+  // certification if at all, never retroactively after a bad outcome.
+  //
+  // Note the default is false: gating on this naively would empty the entire
+  // register at once. Flip the default to true in the same change if it is ever
+  // used as a gate.
   publicDirectoryVisible: boolean('public_directory_visible').default(false),
   onPremProxyEnabled: boolean('on_prem_proxy_enabled').default(false),
   

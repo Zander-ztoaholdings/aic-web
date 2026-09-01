@@ -48,6 +48,23 @@ const nextConfig: NextConfig = {
         destination: '/contact',
         permanent: true,
       },
+      // The corporate and professional portals were removed, not merely hidden.
+      // They advertised a credential scheme (AAEP / CAEL / SAIGS, with exam fees
+      // and pass marks) and ISO/IEC 42001 "Level 1/2" certification at
+      // $12,400/$38,000 — none of which exists, and the latter implying an
+      // accreditation AIC does not hold. noindex would have stopped search
+      // engines without unmaking the offer. Original markup is preserved in the
+      // Obsidian vault under 9 - Drafts.
+      {
+        source: '/corporate-portal',
+        destination: '/certification',
+        permanent: true,
+      },
+      {
+        source: '/professional-portal',
+        destination: '/certification',
+        permanent: true,
+      },
     ];
   },
 };

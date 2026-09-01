@@ -199,6 +199,11 @@ export async function listRegistry(): Promise<RegistryListing[] | null> {
 
       // "Assessed" and "Registered" are never listed (§8.2). They remain
       // confirmable by certificate ID at /verify.
+      //
+      // organizations.publicDirectoryVisible is deliberately NOT consulted here.
+      // Listing follows the status band; the flag is an exceptional override for
+      // AIC, not a client opt-in, and must never hide a suspension. See the note
+      // on the column in lib/db/schema.ts before changing this.
       if (!LISTABLE.has(band as RegistryStatus)) continue;
 
       const status = band as RegistryStatus;
