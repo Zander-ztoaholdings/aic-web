@@ -1,7 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Shield, Mail, MapPin, ChevronRight } from "lucide-react";
-import { navItems } from "./Navbar";
+import { navGroups } from "./Navbar";
+
+// Footer intentionally does NOT reuse the top nav's dropdown interaction —
+// footers are conventionally a flat, always-visible sitemap rather than a
+// second set of hover/click menus (see e.g. charteredaccountantsworldwide.com's
+// footer: branding, then plain categorised link columns, then legal, then
+// social — never a footer dropdown). So this renders the same navGroups data
+// as static sub-headed lists instead of mirroring the nav's dropdown behaviour.
 
 const standards = [
   { label: "ISO/IEC 42001 (AIMS)",      url: "https://www.iso.org/standard/81230.html" },
@@ -35,7 +42,7 @@ export default function Footer() {
               href="/contact"
               className="shrink-0 inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-7 py-4 rounded transition-all text-xs font-bold uppercase tracking-widest font-sans shadow-xl shadow-[#c9920a]/20 self-start lg:self-auto"
             >
-              Become a Founding Partner
+              Contact us
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -44,7 +51,7 @@ export default function Footer() {
 
       {/* Main footer grid */}
       <div className="max-w-[1600px] mx-auto px-6 sm:px-8 py-16 sm:py-20 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
 
           {/* Brand */}
           <div className="space-y-6 sm:col-span-2 lg:col-span-1">
@@ -58,32 +65,46 @@ export default function Footer() {
               />
             </Link>
             <p className="text-white/50 text-sm leading-relaxed">
-              The global standard for certifying the humans accountable for AI systems — ensuring transparency, accountability, and trust in the age of artificial intelligence.
+              Certifying the humans accountable for AI systems. AI Integrity Certification (Pty) Ltd, South Africa.
             </p>
             <div className="pt-2 flex items-center gap-2 text-[10px] text-[#c9920a] font-mono uppercase tracking-widest">
               <Shield className="w-3.5 h-3.5 shrink-0" />
               <span>METHODOLOGY ASSESSED</span>
             </div>
+            <Link
+              href="/verify"
+              className="inline-block text-white/40 hover:text-[#c9920a] text-xs font-mono uppercase tracking-widest transition-colors"
+            >
+              Verify a certificate →
+            </Link>
           </div>
 
-          {/* Navigation */}
-          <div>
+          {/* Explore — flat sitemap, grouped with sub-headers to match the nav's categories */}
+          <div className="sm:col-span-2 lg:col-span-2">
             <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-7 font-mono">
-              Navigation
+              Explore
             </h4>
-            <ul className="space-y-4">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-white/60 hover:text-[#c9920a] text-xs transition-colors font-mono uppercase tracking-widest flex items-center gap-2 group"
-                  >
-                    <ChevronRight className="w-3 h-3 text-[#c9920a] opacity-0 group-hover:opacity-100 transition-opacity -ml-1" />
-                    {item.label}
-                  </Link>
-                </li>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-8">
+              {navGroups.map((group) => (
+                <div key={group.label}>
+                  <h5 className="text-[10px] font-bold uppercase tracking-widest text-white/50 font-mono mb-3">
+                    {group.label}
+                  </h5>
+                  <ul className="space-y-3">
+                    {group.items.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className="text-white/60 hover:text-[#c9920a] text-xs transition-colors font-mono uppercase tracking-widest"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
 
           {/* Standards */}
@@ -127,17 +148,6 @@ export default function Footer() {
                 </div>
               </li>
               <li className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 group">
-                  <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4 text-[#c9920a]" />
-                  </div>
-                  <a
-                    href="mailto:albert@ztoaholdings.com"
-                    className="hover:text-white transition-colors break-all"
-                  >
-                    albert@ztoaholdings.com
-                  </a>
-                </div>
                 <div className="flex items-center gap-3 group">
                   <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0">
                     <Mail className="w-4 h-4 text-[#c9920a]" />
