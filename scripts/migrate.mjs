@@ -90,6 +90,7 @@ try {
   }
 
   // Baseline: schema already present from the old bootstrap script.
+  const baselined = new Set();
   if (!hasBookkeeping) {
     const { rows } = await client.query(
       `SELECT to_regclass('public.organizations') IS NOT NULL AS present`
@@ -104,6 +105,7 @@ try {
         `Baselining ${first} — application tables already exist, so it was ` +
           `applied out of band. Recording it rather than re-running it.`
       );
+      baselined.add(first);
       if (!DRY) {
         await client.query(
           `INSERT INTO schema_migrations (filename, checksum, baselined)
@@ -117,7 +119,9 @@ try {
   const { rows: appliedRows } = DRY && !hasBookkeeping
     ? { rows: [] }
     : await client.query(`SELECT filename FROM schema_migrations`);
-  const applied = new Set(appliedRows.map((r) => r.filename));
+  // Baselined files count as applied — including during a dry run, so the plan
+  // it prints is the plan that would actually run.
+  const applied = new Set([...appliedRows.map((r) => r.filename), ...baselined]);
 
   const pending = files.filter((f) => !applied.has(f));
   if (pending.length === 0) {
