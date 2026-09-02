@@ -38,14 +38,16 @@ export interface Article {
 }
 
 interface ArticlesClientProps {
-  initialArticles: Article[];
+  /** null = the CMS could not be reached. [] = reachable, nothing published. */
+  initialArticles: Article[] | null;
   initialNextCursor: string | null;
   heroBg: string;
   categories: string[];
 }
 
 export default function ArticlesClient({ initialArticles, initialNextCursor, heroBg, categories }: ArticlesClientProps) {
-  const [articles, setArticles] = useState<Article[]>(initialArticles);
+  const unavailable = initialArticles === null;
+  const [articles, setArticles] = useState<Article[]>(initialArticles ?? []);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Articles");
@@ -268,7 +270,17 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
           {filteredArticles.length === 0 ? (
             <div className="text-center py-16 max-w-md mx-auto">
               <FileText className="w-12 h-12 text-[#e5e7eb] mx-auto mb-4" />
-              {articles.length === 0 ? (
+              {unavailable ? (
+                <>
+                  <p className="text-[#0f1f3d] font-semibold mb-2">
+                    We can&apos;t load our writing right now.
+                  </p>
+                  <p className="text-[#6b7280] text-sm leading-relaxed">
+                    This is a fault on our side, not an empty archive. Please try
+                    again shortly.
+                  </p>
+                </>
+              ) : articles.length === 0 ? (
                 <>
                   <p className="text-[#0f1f3d] font-semibold mb-2">
                     Nothing published here yet.

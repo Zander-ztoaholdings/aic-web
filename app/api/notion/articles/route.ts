@@ -8,6 +8,13 @@ export async function GET(request: Request) {
 
   try {
     const data = await getArticles(pageSize, cursor);
+    if (data === null) {
+      // Unreachable or unconfigured — not the same as "nothing published".
+      return NextResponse.json(
+        { error: "Content source unavailable" },
+        { status: 503 }
+      );
+    }
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching articles from Notion:", error);

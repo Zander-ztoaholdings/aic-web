@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getArticles } from "@/lib/notion";
-import ArticlesClient, { type Article } from "./ArticlesClient";
+import ArticlesClient from "./ArticlesClient";
 
 export const dynamic = "force-dynamic";
 
@@ -33,20 +33,14 @@ const categories = [
 // source was empty or unreachable — indexed by search engines as if real.
 // An empty list renders the honest empty state in ArticlesClient instead.
 export default async function ArticlesPage() {
-  let articlesData: { results: Article[]; nextCursor: string | null } = {
-    results: [],
-    nextCursor: null,
-  };
-  try {
-    articlesData = await getArticles(12);
-  } catch {
-    // Leave the list empty rather than substituting placeholder content.
-  }
+  // null = the CMS could not be reached; [] = reachable but nothing published.
+  // The page must not report the first as the second.
+  const articlesData = await getArticles(12);
 
   return (
     <ArticlesClient
-      initialArticles={articlesData.results}
-      initialNextCursor={articlesData.nextCursor}
+      initialArticles={articlesData ? articlesData.results : null}
+      initialNextCursor={articlesData ? articlesData.nextCursor : null}
       heroBg={heroBg}
       categories={categories}
     />

@@ -10,8 +10,21 @@ const n2m = notion ? new NotionToMarkdown({ notionClient: notion }) : null;
 const ARTICLES_DATABASE_ID = process.env.NOTION_ARTICLES_DATABASE_ID;
 const POLICY_UPDATES_DATABASE_ID = process.env.NOTION_POLICY_UPDATES_DATABASE_ID;
 
+/**
+ * Returns null when the CMS cannot be reached or is not configured, and an
+ * empty results array when it is reachable but has nothing published.
+ *
+ * These must stay distinguishable. Previously every failure was swallowed into
+ * an empty array, so /articles told visitors "nothing published here yet" when
+ * the truth was that the database ID pointed at a deleted page. Same failure
+ * mode the registry had, and the same fix: an outage is not a fact about the
+ * world, and the page should not state it as one.
+ */
 export async function getArticles(pageSize = 12, startCursor?: string) {
-  if (!notion || !ARTICLES_DATABASE_ID) return { results: [], nextCursor: null };
+  if (!notion || !ARTICLES_DATABASE_ID) {
+    console.warn("[notion] articles not configured (missing API key or database ID)");
+    return null;
+  }
 
   try {
     const response = await notion.databases.query({
@@ -53,7 +66,7 @@ export async function getArticles(pageSize = 12, startCursor?: string) {
     };
   } catch (error) {
     console.error("Notion API Error (getArticles):", error);
-    return { results: [], nextCursor: null };
+    return null;
   }
 }
 
@@ -94,8 +107,13 @@ export async function getArticleBySlug(slug: string) {
   }
 }
 
+/** Null when unreachable/unconfigured; empty results when simply nothing is
+ *  published. See the note on getArticles. */
 export async function getPolicyUpdates(pageSize = 4, startCursor?: string) {
-  if (!notion || !POLICY_UPDATES_DATABASE_ID) return { results: [], nextCursor: null };
+  if (!notion || !POLICY_UPDATES_DATABASE_ID) {
+    console.warn("[notion] policy updates not configured (missing API key or database ID)");
+    return null;
+  }
 
   try {
     const response = await notion.databases.query({
@@ -132,6 +150,6 @@ export async function getPolicyUpdates(pageSize = 4, startCursor?: string) {
     };
   } catch (error) {
     console.error("Notion API Error (getPolicyUpdates):", error);
-    return { results: [], nextCursor: null };
+    return null;
   }
 }

@@ -110,7 +110,8 @@ export interface PolicyUpdate {
 }
 
 interface GovernanceHubClientProps {
-  initialPolicyUpdates: PolicyUpdate[];
+  /** null = the CMS could not be reached. [] = reachable, nothing published. */
+  initialPolicyUpdates: PolicyUpdate[] | null;
   initialNextCursor: string | null;
 }
 
@@ -120,7 +121,8 @@ export default function GovernanceHubClient({
 }: GovernanceHubClientProps) {
   const [expandedRight, setExpandedRight] = useState<number | null>(null);
   
-  const [policyUpdates, setPolicyUpdates] = useState<PolicyUpdate[]>(initialPolicyUpdates);
+  const policyUnavailable = initialPolicyUpdates === null;
+  const [policyUpdates, setPolicyUpdates] = useState<PolicyUpdate[]>(initialPolicyUpdates ?? []);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -321,7 +323,9 @@ export default function GovernanceHubClient({
             <div className="border border-[#e5e7eb] rounded-xl bg-white p-10 text-center max-w-2xl mx-auto">
               <Newspaper className="w-10 h-10 text-[#e5e7eb] mx-auto mb-4" />
               <p className="text-[#0f1f3d] font-semibold mb-2">
-                No policy updates published yet.
+                {policyUnavailable
+                  ? "We can't load policy updates right now."
+                  : "No policy updates published yet."}
               </p>
               <p className="text-[#6b7280] text-sm leading-relaxed">
                 When we publish a regulatory development, it will appear here with its

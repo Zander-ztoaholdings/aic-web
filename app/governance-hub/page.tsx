@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPolicyUpdates } from "@/lib/notion";
-import GovernanceHubClient, { type PolicyUpdate } from "./GovernanceHubClient";
+import GovernanceHubClient from "./GovernanceHubClient";
 
 // force-dynamic: prevents build-time prerender so Notion calls only happen
 // at request time when env vars are available. Switch to `revalidate = 3600`
@@ -22,20 +22,13 @@ export const metadata: Metadata = {
 // EU AI Act compliance deadline that is not correct, and a capacity claim
 // about AIC that was never true. An empty list is the honest state.
 export default async function GovernanceHubPage() {
-  let policyUpdatesData: { results: PolicyUpdate[]; nextCursor: string | null } = {
-    results: [],
-    nextCursor: null,
-  };
-  try {
-    policyUpdatesData = await getPolicyUpdates(4);
-  } catch {
-    // Leave empty rather than substituting placeholder content.
-  }
+  // null = unreachable, [] = nothing published. See lib/notion.ts.
+  const policyUpdatesData = await getPolicyUpdates(4);
 
   return (
     <GovernanceHubClient
-      initialPolicyUpdates={policyUpdatesData.results}
-      initialNextCursor={policyUpdatesData.nextCursor}
+      initialPolicyUpdates={policyUpdatesData ? policyUpdatesData.results : null}
+      initialNextCursor={policyUpdatesData ? policyUpdatesData.nextCursor : null}
     />
   );
 }
