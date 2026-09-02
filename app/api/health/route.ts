@@ -80,8 +80,10 @@ function safeTarget(): string {
 
 export async function GET() {
   const checks: Record<string, ServiceCheck> = {};
-  const hideTarget = process.env.HEALTH_HIDE_TARGET === "1";
-  const dbConfigured = Boolean(process.env.DATABASE_URL || process.env.POSTGRES_URL);
+  const hideTarget = process.env["HEALTH_HIDE_TARGET"] === "1";
+  const dbConfigured = Boolean(
+    process.env["DATABASE_URL"] || process.env["POSTGRES_URL"]
+  );
 
   // 1. Database
   const dbStart = Date.now();
@@ -112,7 +114,53 @@ export async function GET() {
     }
   }
 
-  // 2. Engine — "not deployed yet" is a different statement from "broken",
+  // 2. Contact notifications.
+  //
+  // Added after a failure that was invisible from every angle: the form said
+  // thanks, the row stored, the environment variable was present, and Coolify
+  // masked the value — but RESEND_API_KEY held a pasted DKIM public key rather
+  // than an API key, so nothing was ever sent. It took a terminal session and a
+  // direct API call to find. Reporting shape here makes that class of mistake a
+  // single curl away.
+  //
+  // Nothing secret is emitted: booleans, a length, and whether the prefix looks
+  // like a Resend key. Never the key.
+  const resendKey = process.env["RESEND_API_KEY"] || "";
+  const notifyTo = process.env["CONTACT_NOTIFY_TO"] || "";
+  const notifyFrom = process.env["CONTACT_NOTIFY_FROM"] || "";
+  const notifyConfigured = Boolean(resendKey && notifyTo && notifyFrom);
+  // Resend keys are re_ followed by a short token. A 218-character value is not
+  // an API key — that is the length of a 1024-bit DKIM public key.
+  const keyShapeValid = resendKey.startsWith("re_") && resendKey.length < 100;
+
+  if (!notifyConfigured) {
+    const missing = [
+      !resendKey && "RESEND_API_KEY",
+      !notifyTo && "CONTACT_NOTIFY_TO",
+      !notifyFrom && "CONTACT_NOTIFY_FROM",
+    ].filter(Boolean);
+    checks.contact_notifications = {
+      status: "not_configured",
+      latency_ms: 0,
+      detail: `Not set: ${missing.join(", ")}.`,
+      hint: "Enquiries are still stored in Postgres, but nobody is told about them. Find unannounced ones with: SELECT * FROM contact_submissions WHERE notified_at IS NULL AND handled_at IS NULL;",
+    };
+  } else if (!keyShapeValid) {
+    checks.contact_notifications = {
+      status: "error",
+      latency_ms: 0,
+      detail: `RESEND_API_KEY does not look like a Resend key (length ${resendKey.length}, expected a short value beginning "re_").`,
+      hint: "A 218-character value is a DKIM public key, not an API key — an easy mix-up when both are on screen during setup. Create a key under Resend > API Keys with Sending access and replace it.",
+    };
+  } else {
+    checks.contact_notifications = {
+      status: "ok",
+      latency_ms: 0,
+      detail: `Notifying ${notifyTo.split(",").length} recipient(s).`,
+    };
+  }
+
+  // 3. Engine — "not deployed yet" is a different statement from "broken",
   //    and reporting the first as the second makes the whole check cry wolf.
   const engineStart = Date.now();
   if (!ENGINE_URL) {
