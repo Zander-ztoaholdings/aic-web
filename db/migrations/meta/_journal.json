@@ -15,6 +15,13 @@
       "when": 1788297367823,
       "tag": "0001_bored_kitty_pryde",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788335558959,
+      "tag": "0002_nervous_iron_fist",
+      "breakpoints": true
     }
   ]
 }

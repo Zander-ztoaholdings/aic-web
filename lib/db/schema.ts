@@ -367,6 +367,40 @@ export const auditSignatures = pgTable('audit_signatures', {
 });
 
 // Leads
+// Contact form submissions.
+//
+// Deliberately separate from `leads`. A lead is a person or company; a
+// submission is an EVENT — someone enquired, at a time, about a thing. Writing
+// enquiries into `leads` would hit its unique constraint on email, so the
+// second time a prospect got in touch the insert would fail and the enquiry
+// would be lost. Exactly the people most worth hearing from twice.
+//
+// No unique constraints here on purpose: every submission is kept.
+export const contactSubmissions = pgTable('contact_submissions', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  firstName: varchar('first_name', { length: 255 }).notNull(),
+  lastName: varchar('last_name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  organization: varchar('organization', { length: 255 }),
+  role: varchar('role', { length: 255 }),
+  country: varchar('country', { length: 120 }),
+  enquiryType: varchar('enquiry_type', { length: 120 }),
+  message: text('message'),
+  source: varchar('source', { length: 50 }).default('website'),
+  // Hashed, not raw. An IP address is personal information under POPIA, and we
+  // only need it to recognise repeat abuse — which a hash does just as well.
+  ipHash: varchar('ip_hash', { length: 64 }),
+  userAgent: text('user_agent'),
+  // Set when an operator has actually been notified, so an unnoticed enquiry is
+  // detectable rather than silently sitting in a table nobody opens.
+  notifiedAt: timestamp('notified_at', { withTimezone: true }),
+  handledAt: timestamp('handled_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => ({
+  byEmail: index('contact_submissions_email_idx').on(table.email),
+  byCreated: index('contact_submissions_created_idx').on(table.createdAt),
+}));
+
 export const leads = pgTable('leads', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
   orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
