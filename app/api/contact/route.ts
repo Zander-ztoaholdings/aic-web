@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { Client } from "@notionhq/client";
-import { getSystemDb, contactSubmissions } from "@/lib/db";
+import { getSystemDb, contactSubmissions, eq } from "@/lib/db";
 
 // Contact form intake.
 //
@@ -211,6 +211,35 @@ export async function POST(req: NextRequest) {
     notifyByEmail(data, ref),
     saveToNotion(data),
   ]);
+
+  // Record that a human was actually told. Without this, "the enquiry arrived
+  // but the notification silently failed" is an invisible state — the row looks
+  // identical either way, and the first you would know is a prospect asking why
+  // nobody replied. With it, stranded enquiries are one query away:
+  //
+  //   SELECT * FROM contact_submissions
+  //    WHERE notified_at IS NULL AND handled_at IS NULL
+  //    ORDER BY created_at;
+  if (ref && emailed) {
+    try {
+      await getSystemDb()
+        .update(contactSubmissions)
+        .set({ notifiedAt: new Date() })
+        .where(eq(contactSubmissions.id, ref));
+    } catch (error) {
+      // Never fail the submission over bookkeeping — the enquiry is already
+      // stored and the email already sent.
+      console.error("[contact] could not record notified_at:", error);
+    }
+  }
+
+  if (ref && !emailed) {
+    console.warn(
+      `[contact] stored but NOT notified (ref ${ref}). ` +
+        `Set RESEND_API_KEY, CONTACT_NOTIFY_TO and CONTACT_NOTIFY_FROM, ` +
+        `or this enquiry waits until someone looks.`
+    );
+  }
 
   // "Durable" means we can retrieve it later. An email that reached an operator
   // counts; a Notion page counts. If none of them accepted it, the submission is

@@ -8,8 +8,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 let dbShouldFail = false;
 let inserted: Record<string, unknown>[] = [];
 let notionShouldFail = true;
-let notionConfigured = false;
 let emailStatus: number | null = null;
+let updated: Record<string, unknown>[] = [];
+let updateShouldFail = false;
 
 vi.mock("@/lib/db", () => ({
   getSystemDb: () => ({
@@ -22,8 +23,17 @@ vi.mock("@/lib/db", () => ({
         },
       }),
     }),
+    update: () => ({
+      set: (v: Record<string, unknown>) => ({
+        where: async () => {
+          if (updateShouldFail) throw new Error("update failed");
+          updated.push(v);
+        },
+      }),
+    }),
   }),
-  contactSubmissions: { id: "id" },
+  contactSubmissions: { id: "id", notifiedAt: "notified_at" },
+  eq: () => ({}),
 }));
 
 vi.mock("@notionhq/client", () => ({
@@ -63,8 +73,9 @@ beforeEach(() => {
   dbShouldFail = false;
   inserted = [];
   notionShouldFail = true;
-  notionConfigured = false;
   emailStatus = null;
+  updated = [];
+  updateShouldFail = false;
 
   delete process.env.RESEND_API_KEY;
   delete process.env.CONTACT_NOTIFY_TO;
@@ -143,5 +154,39 @@ describe("contact form durability contract", () => {
     const res = await POST(makeReq({ email: "" }, "10.0.0.5"));
     expect(res.status).toBe(400);
     expect(inserted).toHaveLength(0);
+  });
+});
+
+describe("notification bookkeeping", () => {
+  function withEmail(status: number) {
+    process.env.RESEND_API_KEY = "re_test";
+    process.env.CONTACT_NOTIFY_TO = "ops@example.com";
+    process.env.CONTACT_NOTIFY_FROM = "site@example.com";
+    emailStatus = status;
+  }
+
+  it("records notified_at when a human was actually told", async () => {
+    withEmail(200);
+    await POST(makeReq({}, "10.1.0.1"));
+    expect(updated).toHaveLength(1);
+    expect(updated[0].notifiedAt).toBeInstanceOf(Date);
+  });
+
+  it("leaves notified_at unset when the notification failed", async () => {
+    withEmail(500);
+    const res = await POST(makeReq({}, "10.1.0.2"));
+    // The enquiry is still stored and still a success — it just has not been
+    // announced, which is exactly the state notified_at exists to expose.
+    expect(res.status).toBe(200);
+    expect(inserted).toHaveLength(1);
+    expect(updated).toHaveLength(0);
+  });
+
+  it("does not fail the submission if the bookkeeping update throws", async () => {
+    withEmail(200);
+    updateShouldFail = true;
+    const res = await POST(makeReq({}, "10.1.0.3"));
+    expect(res.status).toBe(200);
+    expect((await res.json()).success).toBe(true);
   });
 });
