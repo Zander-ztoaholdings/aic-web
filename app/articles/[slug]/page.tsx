@@ -8,7 +8,9 @@ import { Calendar, Clock, User, ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/app/components/ui/card";
 
-export const dynamic = "force-dynamic";
+// The heaviest page: a database query plus a fetch of every block in the page.
+// Caching takes it from ~1.5s to near-instant for everyone after the first hit.
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -142,16 +144,17 @@ export default async function ArticlePage({
           <div className="mt-16 pt-10 border-t border-[#e5e7eb] flex flex-col items-center text-center">
             <Shield className="w-10 h-10 text-[#c9920a] mb-4" />
             <h3 className="text-xl font-bold text-[#0f1f3d] mb-2 font-serif">
-              Built for Algorithmic Accountability
+              Certifying the human behind the algorithm
             </h3>
             <p className="text-[#6b7280] max-w-md mx-auto mb-6">
-              AIC provides the world's most rigorous certification for AI professionals and organizations.
+              AIC certifies that a named human remains accountable for the automated
+              decisions that matter, and publishes the result so anyone can check it.
             </p>
             <Link
               href="/contact"
               className="bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-3 rounded-lg font-medium transition-all shadow-lg shadow-[#c9920a]/20"
             >
-              Get Certified
+              Contact us
             </Link>
           </div>
         </Card>

@@ -2,7 +2,16 @@ import type { Metadata } from "next";
 import { getArticles } from "@/lib/notion";
 import ArticlesClient from "./ArticlesClient";
 
-export const dynamic = "force-dynamic";
+// Cached, not force-dynamic. Every request was previously making a fresh Notion
+// round trip (~1.1s of the 1.19s TTFB), which is the whole reason this page felt
+// slow. Editorial content does not need to be real-time: an article five minutes
+// stale is harmless.
+//
+// This is deliberately NOT applied to /registry or /verify. A certification
+// status is a claim about the present, and serving a suspended certificate from
+// cache as "active" is the exact failure the register exists to prevent. Cache
+// what is editorial; never cache a status.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Articles",

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getPolicyUpdates } from "@/lib/notion";
 import GovernanceHubClient from "./GovernanceHubClient";
 
-// force-dynamic: prevents build-time prerender so Notion calls only happen
-// at request time when env vars are available. Switch to `revalidate = 3600`
-// once Notion databases are confirmed and the integration is tested.
-export const dynamic = "force-dynamic";
+// Notion databases are now confirmed and tested, so this moves off
+// force-dynamic as that comment anticipated. Same reasoning as /articles:
+// editorial content tolerates being minutes old; certification status does not.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Governance Hub",
