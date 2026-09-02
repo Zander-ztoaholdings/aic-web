@@ -76,11 +76,15 @@ export async function getArticleBySlug(slug: string) {
   try {
     const response = await notion.databases.query({
       database_id: ARTICLES_DATABASE_ID,
+      // Status is filtered here as well as on Slug. Without it, ANY draft was
+      // publicly readable by URL — the article list correctly hid unpublished
+      // rows while /articles/<slug> served them in full to anyone with the
+      // link. Drafts are exactly the things not ready to be read.
       filter: {
-        property: "Slug",
-        rich_text: {
-          equals: slug,
-        },
+        and: [
+          { property: "Slug", rich_text: { equals: slug } },
+          { property: "Status", select: { equals: "Published" } },
+        ],
       },
     });
 
