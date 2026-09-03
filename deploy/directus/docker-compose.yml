@@ -1,0 +1,115 @@
+# Directus — admin interface for the AIC certification register.
+#
+# Deployed in Coolify as a "Docker Compose" resource. It does NOT own a
+# database: it introspects the existing Postgres that the website already uses,
+# which is the whole reason it was chosen (see the vault note "AIC - CMS &
+# Registry Data Decision"). Deleting this service leaves the register intact.
+#
+# Every value below comes from Coolify's environment variables. Nothing secret
+# is written in this file, and nothing secret should be added to it — this file
+# is in git.
+
+services:
+  directus:
+    # Pinned deliberately. This is the version the schema spike ran against and
+    # the version the junction-table fix in migration 0001 was validated with.
+    # Read the Directus changelog before moving it; a minor bump can change how
+    # it introspects foreign keys.
+    image: directus/directus:12.3.1
+    restart: unless-stopped
+
+    environment:
+      # ── Database ────────────────────────────────────────────────────────────
+      # DB_HOST is the Coolify Postgres resource's INTERNAL hostname, not
+      # localhost and not the public IP. Coolify shows it on the database page.
+      DB_CLIENT: pg
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Traffic never leaves the Docker network, so TLS to Postgres buys
+      # nothing here. Set to true if the database is ever moved off-host.
+      DB_SSL: ${DB_SSL:-false}
+
+      # ── Instance secrets ────────────────────────────────────────────────────
+      # KEY identifies this instance; SECRET signs access tokens.
+      # Changing SECRET logs every user out. Changing KEY breaks stored
+      # credentials for any configured SSO/flows. Generate once, keep.
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      # ── First-boot admin ────────────────────────────────────────────────────
+      # Only used when directus_users is empty. After the first successful
+      # login, change the password inside Directus and blank these two in
+      # Coolify so the credentials do not sit in the environment.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      # ── Licence ─────────────────────────────────────────────────────────────
+      # WITHOUT a key, this instance runs on the free "core" tier: 3 Studio
+      # seats, 25 registered collections, 5 flows, 30-day log retention.
+      # Exceeding any of those starts a 30-day countdown to lockdown.
+      # AIC qualifies for the Open Innovation Grant, which lifts all of them to
+      # unlimited at no cost. Apply BEFORE deploying — see README step 0.
+      LICENSE_KEY: ${LICENSE_KEY:-}
+
+      # ── Public identity ─────────────────────────────────────────────────────
+      # Must match the domain Coolify routes to this service exactly, scheme
+      # included. A mismatch breaks OAuth redirects and asset URLs.
+      PUBLIC_URL: ${PUBLIC_URL}
+
+      # ── Hardening ───────────────────────────────────────────────────────────
+      # This panel holds the certification register. Treat it as production
+      # admin, not as a CMS.
+      TELEMETRY: "false"
+      # Short access tokens; the refresh cookie carries the session.
+      ACCESS_TOKEN_TTL: 15m
+      REFRESH_TOKEN_TTL: 7d
+      REFRESH_TOKEN_COOKIE_SECURE: "true"
+      REFRESH_TOKEN_COOKIE_SAME_SITE: strict
+      SESSION_COOKIE_TTL: 1d
+      SESSION_COOKIE_SECURE: "true"
+      SESSION_COOKIE_SAME_SITE: strict
+      # No browser client other than the admin app itself. If the website is
+      # ever pointed at the Directus API, it will do so server-side, which does
+      # not need CORS. Leave this off.
+      CORS_ENABLED: "false"
+      # Blunt but effective against credential stuffing on a single-tenant
+      # admin panel.
+      RATE_LIMITER_ENABLED: "true"
+      RATE_LIMITER_POINTS: "50"
+      RATE_LIMITER_DURATION: "1"
+      # Nothing here should be installing extensions at runtime.
+      EXTENSIONS_AUTO_RELOAD: "false"
+      # Uploads are audit evidence, not a public CDN.
+      STORAGE_LOCATIONS: local
+      STORAGE_LOCAL_DRIVER: local
+      STORAGE_LOCAL_ROOT: /directus/uploads
+      MAX_PAYLOAD_SIZE: 25mb
+      LOG_LEVEL: info
+      LOG_STYLE: json
+
+    volumes:
+      # Uploaded audit documents. This is real data — it must be in Coolify's
+      # backup set alongside Postgres, or evidence files are lost while the
+      # rows that reference them survive.
+      - directus-uploads:/directus/uploads
+      - directus-extensions:/directus/extensions
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8055/server/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+    # No `ports:` on purpose. Coolify's proxy reaches the container over the
+    # internal network and terminates TLS. Publishing 8055 to the host would
+    # expose the admin panel unencrypted, bypassing the proxy.
+    expose:
+      - "8055"
+
+volumes:
+  directus-uploads:
+  directus-extensions:
