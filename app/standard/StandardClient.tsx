@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useHashTarget } from "@/lib/scroll";
 import Link from "next/link";
 import { Star, Info, ArrowRight } from "lucide-react";
@@ -30,6 +30,33 @@ export default function StandardClient() {
 
   // Re-applies #hu / #ex / #em / #co / #tr once these sections actually exist.
   useHashTarget();
+
+  // Which right the reader is currently inside. Observed rather than computed
+  // from scroll offsets, so it stays correct when the Division filter changes
+  // every section's height underneath it.
+  const [activeRight, setActiveRight] = useState<RightCode>("HU");
+  const sectionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const els = RIGHT_ORDER.map((r) => document.getElementById(r.toLowerCase()))
+      .filter((e): e is HTMLElement => e !== null);
+    if (els.length === 0) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const onScreen = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (onScreen?.target.id) {
+          setActiveRight(onScreen.target.id.toUpperCase() as RightCode);
+        }
+      },
+      // Top band of the viewport, just under the sticky header.
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [division]);
 
   const visible = useMemo(
     () => (division === null ? requirements : requirementsForDivision(division)),
@@ -121,13 +148,64 @@ export default function StandardClient() {
         </div>
       </div>
 
+      {/* A rail that stays with you.
+          44 requirements across five rights is a long document, and the
+          reader's question part-way down is always "which right am I in, and
+          how do I get to the one I actually need". The rail answers both
+          without scrolling back, and the active state is driven by which
+          section is under the header — not by scroll maths, so it stays honest
+          when sections change height under a Division filter. */}
       {/* The requirements.
           Rendered as a specification, not a feed of cards. 44 identical
           rounded cards down a single column made the reader scroll past the
           document rather than read across it — and a standard is a thing you
           scan and compare, so it wants the density of a table. One DOM: a
           grid that stacks on a phone and lines up into columns from md. */}
-      <div className="space-y-12">
+      <div className="grid lg:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-8 lg:gap-12 items-start">
+        <nav
+          aria-label="The five rights"
+          className="hidden lg:block lg:sticky lg:top-32"
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af] block mb-3">
+            Five rights
+          </span>
+          <ul className="space-y-0.5">
+            {RIGHT_ORDER.map((right) => {
+              const n = visible.filter((r) => r.right === right).length;
+              if (n === 0) return null;
+              const isActive = activeRight === right;
+              return (
+                <li key={right}>
+                  <a
+                    href={`#${right.toLowerCase()}`}
+                    aria-current={isActive ? "true" : undefined}
+                    className={`flex items-baseline gap-2 py-1.5 px-2.5 -mx-2.5 rounded-md transition-colors ${
+                      isActive
+                        ? "bg-aic-copper/10 text-[#0f1f3d]"
+                        : "text-[#6b7280] hover:text-[#0f1f3d]"
+                    }`}
+                  >
+                    <span
+                      className={`font-mono text-[10px] font-bold shrink-0 ${
+                        isActive ? "text-aic-copper" : "text-[#9ca3af]"
+                      }`}
+                    >
+                      {right}
+                    </span>
+                    <span className="text-sm flex-1 min-w-0 truncate">
+                      {RIGHTS[right].name}
+                    </span>
+                    <span className="font-mono text-[10px] text-[#9ca3af] tabular-nums shrink-0">
+                      {n}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div ref={sectionsRef} className="space-y-12 min-w-0">
         {RIGHT_ORDER.map((right) => {
           const group = visible.filter((r) => r.right === right);
           if (group.length === 0) return null;
@@ -205,6 +283,7 @@ export default function StandardClient() {
             </section>
           );
         })}
+        </div>
       </div>
 
       <div className="mt-14 border border-[#e5e7eb] rounded-xl bg-white p-8">

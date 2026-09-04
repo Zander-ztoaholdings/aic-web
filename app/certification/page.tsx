@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
+import StickyChapter from "@/app/components/StickyChapter";
 import Link from "next/link";
 import {
   Shield,
@@ -101,18 +102,14 @@ const journeySteps = [
   { step: "05", title: "Certification & Pulse", desc: "Upon passing, receive your AIC Division certificate. Supervised, Reviewed, and Monitored organisations enter continuous Pulse monitoring." },
 ];
 
-const heroBg = "https://images.unsplash.com/photo-1683447551794-1c287cd42675?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMG5ldHdvcmslMjBjb25uZWN0aW9ucyUyMGFjY291bnRhYmlsaXR5JTIwc3RydWN0dXJlfGVufDF8fHx8MTc3NTcyNDY1NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+// Stock photography removed — see the Intention Behind Context principle.
 
 export default function CertificationPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero */}
       <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroBg})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/90 to-[#0a1628]/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0f1f3d] to-[#162640]" />
         <div className="absolute inset-0 subtle-grid opacity-5" />
         <div className="relative max-w-7xl mx-auto px-4">
           <motion.div
@@ -147,77 +144,57 @@ export default function CertificationPage() {
       </section>
 
       {/* Intro — accountability calibrated */}
-      <section className="py-12 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
-            <motion.div
-              initial={{ opacity: 1, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="eyebrow">The Framework</span>
-              <h2 className="text-[#0f1f3d] mt-3 mb-6">
-                Your relationship with AI determines your certification path
-              </h2>
-              <p className="text-[#6b7280] mb-6">
-                The AIC Five-Division Framework recognises that organisations sit at very different points on the human-AI accountability spectrum. A hospital where clinicians sign off every AI diagnostic is fundamentally different from a platform where algorithms operate autonomously with periodic human review.
-              </p>
-              <p className="text-[#6b7280]">
-                AIC certification is calibrated to your actual relationship with AI. Each Division has distinct requirements, monitoring obligations, and primary accountability KPIs — because generic compliance frameworks miss the nuance that matters.
-              </p>
-            </motion.div>
-
-            {/* Division summary grid */}
-            <div className="grid grid-cols-1 gap-3">
-              {divisions.map((div, i) => {
-                const Icon = div.icon;
-                return (
-                  <motion.a
-                    key={div.number}
-                    href={`#division-${div.number}`}
-                    initial={{ opacity: 1, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className={`flex items-center gap-4 p-4 rounded border border-[#e5e7eb] bg-[#f0f4f8] hover:bg-white transition-colors`}
-                  >
-                    <div className={`w-10 h-10 rounded flex items-center justify-center shrink-0 bg-white`}>
-                      <Icon className={`w-5 h-5 ${div.accentText}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-[10px] font-mono text-[#6b7280] uppercase tracking-widest">Division {div.number}</span>
-                        <span className="text-sm font-semibold text-[#0f1f3d]">{div.name}</span>
-                      </div>
-                      <p className="text-xs text-[#6b7280] truncate">{div.tagline}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-[#e5e7eb] shrink-0" />
-                  </motion.a>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Division Cards */}
+      {/* The framework, as one chapter.
+          Previously two sections: a two-column intro carrying the Division
+          jump-list, then a centred "The Five Divisions" heading above five
+          very tall cards. The heading scrolled away immediately and the
+          jump-list was left behind in the section above, so by card three you
+          had no idea which chapter you were in or how to get to the Division
+          that actually applied to you. Both now sit in a rail that stays. */}
       <section id="divisions" className="py-12 lg:py-24 bg-[#f0f4f8]">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 1, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-14"
+          <StickyChapter
+            eyebrow="The framework"
+            title="Your relationship with AI decides what we certify"
+            intro={
+              <>
+                <p className="mb-4">
+                  A hospital where a clinician signs off every AI diagnostic is
+                  a different organisation from a platform where algorithms run
+                  autonomously with periodic review. Certification is calibrated
+                  to which of those you actually are, because a single generic
+                  standard would miss the only distinction that matters.
+                </p>
+                <p>
+                  Each Division carries its own requirements, monitoring
+                  obligations and primary KPI. Find yours.
+                </p>
+              </>
+            }
+            aside={
+              <nav aria-label="Jump to a Division" className="grid grid-cols-1 gap-1.5">
+                {divisions.map((div) => {
+                  const Icon = div.icon;
+                  return (
+                    <a
+                      key={div.number}
+                      href={`#division-${div.number}`}
+                      className="group flex items-center gap-3 p-2.5 rounded-lg border border-[#e5e7eb] bg-white hover:border-aic-copper/40 transition-colors"
+                    >
+                      <Icon className={`w-4 h-4 shrink-0 ${div.accentText}`} />
+                      <span className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-widest shrink-0">
+                        D{div.number}
+                      </span>
+                      <span className="text-sm font-semibold text-[#0f1f3d] flex-1 min-w-0 truncate">
+                        {div.name}
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-[#d1d5db] group-hover:text-aic-copper transition-colors shrink-0" />
+                    </a>
+                  );
+                })}
+              </nav>
+            }
           >
-            <span className="eyebrow">Full Detail</span>
-            <h2 className="text-[#0f1f3d] mt-3 mb-4">
-              The Five Divisions
-            </h2>
-            <p className="text-[#6b7280] max-w-2xl mx-auto">
-              Each Division maps to a distinct accountability model. Find yours and see exactly what AIC certifies.
-            </p>
-          </motion.div>
-
           <div className="space-y-6">
             {divisions.map((div, i) => {
               const Icon = div.icon;
@@ -299,6 +276,7 @@ export default function CertificationPage() {
               );
             })}
           </div>
+          </StickyChapter>
         </div>
       </section>
 

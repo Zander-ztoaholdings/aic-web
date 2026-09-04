@@ -399,14 +399,21 @@ export default function RegulatoryMap({
           under the cursor. That is the motion doing a job — preserving spatial
           continuity through a layout change — rather than decorating one. */}
       <div
-        className={`overflow-hidden transition-[width] duration-300 ease-out motion-reduce:transition-none ${
+        className={`transition-[width] duration-300 ease-out motion-reduce:transition-none ${
           selectedId
-            ? "w-full lg:w-[26rem] lg:shrink-0"
-            : "hidden lg:block lg:w-0"
+            ? "w-full lg:w-[26rem] lg:shrink-0 lg:self-start"
+            : "hidden lg:block lg:w-0 overflow-hidden"
         }`}
         aria-hidden={!selectedId}
       >
-        <div className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8">
+        {/* Its own scroll container, stuck below the header. A country's detail
+            can run to obligations, dated commencements, enforcement, sources
+            and linked updates — reading it used to scroll the whole page, so
+            the map slid away under you and the thing you had just clicked was
+            gone. The panel scrolls; nothing else moves. */}
+        <div
+          className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto overscroll-contain"
+        >
         {selected ? (
           <div>
             <div className="flex items-start justify-between mb-4">
