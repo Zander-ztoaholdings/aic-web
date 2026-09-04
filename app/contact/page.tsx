@@ -44,8 +44,27 @@ export default function ContactPage() {
 }
 
 function ContactForm() {
+  const params = useSearchParams();
   // Arriving from "Ask us to prioritise <country>" on the regulatory map.
-  const jurisdiction = useSearchParams().get("jurisdiction")?.slice(0, 60) ?? "";
+  const jurisdiction = params.get("jurisdiction")?.slice(0, 60) ?? "";
+  // Arriving from a specific page rather than the nav — the empathy scorer on
+  // the homepage, or the "challenge a requirement" call on /standard. Preseeds
+  // the enquiry so someone who arrives mid-thought does not restart from a
+  // blank form, which is where warm intent goes to die.
+  const enquiry = params.get("enquiry") ?? "";
+
+  const PRESETS: Record<string, { type: string; message: string }> = {
+    empathy: {
+      type: "Corporate Certification",
+      message:
+        "I'd like AIC to score our adverse customer communications against the Empathy Rubric.",
+    },
+    standard: {
+      type: "General Enquiry",
+      message: "I have a challenge to one of the published requirements: ",
+    },
+  };
+  const preset = PRESETS[enquiry];
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -54,10 +73,12 @@ function ContactForm() {
     company: "",
     jobTitle: "",
     country: jurisdiction,
-    enquiryType: jurisdiction ? "Regulatory Coverage" : "",
+    enquiryType: jurisdiction
+      ? "Regulatory Coverage"
+      : preset?.type ?? "",
     message: jurisdiction
       ? `Please prioritise ${jurisdiction} on the regulatory map.`
-      : "",
+      : preset?.message ?? "",
   });
 
   const [submitted, setSubmitted] = useState(false);

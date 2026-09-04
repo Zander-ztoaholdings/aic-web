@@ -2,57 +2,111 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  CheckCircle,
-  Eye,
-  MessageSquare,
-  Bell,
-  RefreshCw,
-  UserCheck,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import EmpathyScorer from "@/app/components/EmpathyScorer";
 
+// Each right now carries its real requirement count from the published
+// standard. Descriptions are deliberately short: these sit five-across so they
+// can be compared, which is the whole reason they were pulled out of five
+// separate full-height screens.
 const algorithmicRights = [
   {
-    icon: Eye,
+    code: "HU",
     title: "Human Agency",
-    description: "Every consequential automated decision must be reviewable and overridable by a named, accountable human being.",
+    count: 11,
+    description:
+      "A named individual is accountable for the decision, and can actually intervene in it.",
   },
   {
-    icon: MessageSquare,
+    code: "EX",
     title: "Explanation",
-    description: "Individuals have the right to receive a meaningful, human-readable explanation of any autooutcome that affects their rights, welfare, or opportunities.",
+    count: 7,
+    description:
+      "The reason a person is given is the reason that actually operated. Anything else is rationalisation.",
   },
   {
-    icon: Bell,
+    code: "EM",
     title: "Empathy",
-    description: "Automated communications — rejections, decisions, notifications — must meet minimum standards of human dignity. Cold, algorithmic language that strips the humanity from consequential outcomes is a governance failure.",
+    count: 10,
+    description:
+      "Adverse decisions are communicated the way a person receives them, not the way a system emits them.",
   },
   {
-    icon: RefreshCw,
+    code: "CO",
     title: "Correction",
-    description: "No individual shall be permanently bound by an algorithmic decision. Every person has the right to trigger a review, receive a human reconsideration, and have errors corrected within a documented timeframe.",
+    count: 9,
+    description:
+      "Getting a decision wrong is recoverable, and the record shows it demonstrably happens.",
   },
   {
-    icon: UserCheck,
+    code: "TR",
     title: "Truth",
-    description: "Every person must be informed when they are interacting with or being evaluated by an AI system, prior to that interaction affecting them.",
+    count: 7,
+    description:
+      "People know an AI is involved before it affects them, not afterwards in the terms.",
+  },
+];
+
+// Every figure here is real, and the two zeros are the point: a body that
+// publishes its own emptiness is making a checkable claim, which is the only
+// kind worth making.
+const proofPoints = [
+  {
+    figure: "44",
+    label: "Published requirements",
+    detail:
+      "The full standard — what each test demands and what evidence satisfies it.",
+    cta: "Read the standard",
+    href: "/standard",
+  },
+  {
+    figure: "28",
+    label: "Jurisdictions mapped",
+    detail:
+      "Each carrying its own verification date and a link to the primary source.",
+    cta: "Open the map",
+    href: "/regulatory-map",
+  },
+  {
+    figure: "0",
+    label: "Certified organisations",
+    detail:
+      "The register is empty because nobody has been assessed yet. We publish that.",
+    cta: "See the register",
+    href: "/registry",
+  },
+  {
+    figure: "0",
+    label: "Accreditations held",
+    detail:
+      "AIC is not accredited by UKAS, SANAS or anyone else. The application status is public.",
+    cta: "Where we stand",
+    href: "/disclosures#accreditation",
   },
 ];
 
 const standards = [
-  { code: "ISO/IEC 42001", name: "AI Management Systems", desc: "Framework for establishing, implementing, and continually improving an Artificial Intelligence Management System." },
-  { code: "POPIA / GDPR", name: "Privacy & Data Rights", desc: "Frameworks for protecting individual data rights and ensuring lawful processing of personal information in automated systems." },
-  { code: "NIST AI RMF", name: "Risk Management Framework", desc: "Voluntary framework for managing AI risks across the full lifecycle, mapping to Govern, Map, Measure, and Manage functions." },
+  {
+    code: "ISO/IEC 42001",
+    name: "AI management systems",
+    desc: "The management-system standard for AI, and the scheme AIC is pursuing accreditation to certify against.",
+  },
+  {
+    code: "POPIA §71",
+    name: "Automated decisions",
+    desc: "South Africa's binding hook: no solely automated decision with legal or substantial effect, without safeguards and an explanation.",
+  },
+  {
+    code: "EU AI Act",
+    name: "Risk-tiered obligations",
+    desc: "Transparency duties already apply; high-risk obligations are deferred to December 2027, not cancelled.",
+  },
+  {
+    code: "NIST AI RMF",
+    name: "Risk management",
+    desc: "The voluntary US reference framework, and the language most American procurement is written in.",
+  },
 ];
-
-const alignmentBars = [
-  { standard: "POPIA · §71" },
-  { standard: "EU AI Act" },
-  { standard: "NIST AI RMF" },
-  { standard: "Singapore MGAI" },
-];
-
 
 export default function MarketingPage() {
   const headlineHuman = "Human".split("");
@@ -186,256 +240,294 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* SECTION 2 — 2 MIN EXPLAINER */}
-      <section className="bg-white py-24 border-b border-[#e5e7eb]">
+      {/* ── THE PROBLEM, MADE CONCRETE ──────────────────────────────
+          Asymmetric on purpose. The previous version of this section was a
+          centred heading over three equal cards, which said "these three
+          things are of identical importance" — they are not. The argument
+          leads; the letter is the evidence that makes it land. */}
+      <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mb-16"
-          >
-            <span className="inline-flex items-center gap-2 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#c9920a] mb-6">
-              <span className="w-6 h-[1.5px] bg-[#c9920a] inline-block" />
-              2 min read
-            </span>
-            <h2
-              className="text-3xl md:text-5xl font-bold text-[#0f1f3d] leading-[1.1] tracking-[-0.03em]"
-              style={{ fontFamily: "'Merriweather', serif" }}
-            >
-              Why AIC exists — and what we actually do.
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-0 border border-[#e5e7eb] rounded-2xl overflow-hidden">
-            {[
-              {
-                tag: "The Problem",
-                heading: "AI is making decisions about people.",
-                body: "Hiring. Lending. Insurance. Healthcare. Parole. Millions of life-changing decisions are now made — or heavily influenced — by automated systems. Most people never know it happened. Most companies cannot explain why.",
-              },
-              {
-                tag: "The Gap",
-                heading: "Nobody is accountable for the outcome.",
-                body: "Technology can be audited. Code can be reviewed. But accountability only exists when a human being is responsible. Right now, the industry has no recognised standard for who that person is — or what they must know.",
-              },
-              {
-                tag: "The Answer",
-                heading: "AIC certifies the humans behind the algorithm.",
-                body: "We are a certification body focused on the professionals responsible for AI governance. Our certification is built on global best practices, aligned to the EU AI Act, NIST AI RMF, and POPIA — and it means something when it matters most.",
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
-                className="p-10 border-r border-[#e5e7eb] last:border-r-0 group hover:bg-[#0a1628] transition-colors duration-300"
-              >
-                <span className="text-[0.6rem] font-bold uppercase tracking-[0.25em] text-[#c9920a] mb-5 block">
-                  {item.tag}
-                </span>
-                <h3 className="text-xl font-bold text-[#0f1f3d] group-hover:text-white mb-5 leading-snug transition-colors">
-                  {item.heading}
-                </h3>
-                <p className="text-[#6b7280] group-hover:text-white/60 text-[15px] leading-relaxed transition-colors">
-                  {item.body}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3 — FIVE ALGORITHMIC RIGHTS (Manifesto layout) */}
-      <section className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-24 text-center"
-          >
-            <span className="text-[#c9920a] text-[0.7rem] uppercase tracking-[0.3em] font-bold">The Manifesto</span>
-            <h2 
-              className="text-4xl md:text-6xl text-[#0a1628] mt-4 mb-8 leading-[1.1] tracking-[-0.03em] font-bold mx-auto max-w-3xl"
-              style={{ fontFamily: "'Merriweather', serif" }}
-            >
-              The Five Fundamental Algorithmic Rights
-            </h2>
-          </motion.div>
-
-          <div className="space-y-0">
-            {algorithmicRights.map((right, i) => {
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="group relative border-t border-[#e5e7eb] last:border-b py-16 transition-all hover:bg-[#0a1628] overflow-hidden"
-                >
-                  <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center px-4">
-                    <div className="text-5xl font-bold text-[#c9920a]/20 group-hover:text-[#c9920a]/40 transition-colors font-serif italic mb-6">
-                      0{i + 1}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl md:text-3xl font-bold mb-6 text-[#0a1628] group-hover:text-white transition-colors">{right.title}</h3>
-                      <p className="text-[#6b7280] group-hover:text-white/60 transition-colors max-w-2xl mx-auto leading-relaxed text-lg">
-                        {right.description}
-                      </p>
-                    </div>
-                  </div>
-                  {/* Accent bottom border */}
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 bg-[#c9920a] w-0 group-hover:w-full transition-all duration-700" />
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="mt-20 text-center">
-            <Link
-              href="/governance-hub"
-              className="inline-flex items-center gap-4 text-[#0a1628] font-bold uppercase tracking-widest text-xs group"
-            >
-              <span>Explore the full governance framework</span>
-              <div className="w-12 h-px bg-[#0a1628] group-hover:w-20 transition-all" />
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 4 — REGULATORY ALIGNMENT BARS */}
-      <section className="py-32 bg-[#0a1628] relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-12 lg:gap-16 items-start">
             <div>
-              <span className="text-[#c9920a] text-[0.7rem] uppercase tracking-[0.3em] font-bold">Global Benchmarking</span>
-              <h2 
-                className="text-4xl md:text-5xl text-white mt-4 mb-8 leading-[1.1] tracking-[-0.03em] font-bold"
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                Why AIC exists
+              </span>
+              <h2
+                className="text-3xl md:text-[2.75rem] leading-[1.08] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-6 text-balance"
                 style={{ fontFamily: "'Merriweather', serif" }}
               >
-                Aligned With the World&apos;s Toughest AI Regulations
+                Somebody was refused something this morning, and nobody can tell
+                them why.
               </h2>
-              <p className="text-white/60 text-lg leading-relaxed mb-8">
-                AIC certification is an evidence-based audit against published requirements, mapped to the regulatory frameworks that apply to your organisation.
-              </p>
+              <div className="space-y-4 text-[#3d4a58] leading-relaxed max-w-[62ch]">
+                <p>
+                  Hiring. Lending. Insurance. Healthcare. Parole. These
+                  decisions are increasingly made, or heavily shaped, by
+                  automated systems — and the person on the receiving end
+                  usually never learns that a system was involved at all.
+                </p>
+                <p>
+                  Technology can be audited. Code can be reviewed. But
+                  accountability is not a property of software; it is a property
+                  of a person. Right now there is no recognised standard for who
+                  that person is, what they must know, or what they owe the
+                  people their systems decide about.
+                </p>
+                <p className="text-[#0f1f3d] font-medium">
+                  AIC certifies that a named human remains accountable — and
+                  publishes the result so anyone can check it.
+                </p>
+              </div>
             </div>
-            <div className="space-y-6">
-              <span className="text-white/40 text-[0.7rem] uppercase tracking-[0.3em] font-bold">Built with reference to:</span>
-              <div className="space-y-4">
-                {alignmentBars.map((bar, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
-                    className="text-sm font-bold tracking-wider uppercase text-white border-b border-white/10 pb-4"
-                  >
-                    {bar.standard}
-                  </motion.div>
-                ))}
+
+            <div className="lg:pt-12">
+              <div className="border-l-2 border-aic-copper pl-5 py-1">
+                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#9ca3af] mb-3">
+                  A decline letter, in full
+                </p>
+                <p className="text-[#3d4a58] leading-relaxed text-[15px]">
+                  “This decision was made in accordance with our internal credit
+                  policy. We are unable to provide further detail regarding the
+                  specific factors involved. This is an automated notification.
+                  Please do not reply to this message.”
+                </p>
+                <p className="text-sm text-[#6b7280] mt-4 leading-relaxed">
+                  Four sentences. No reason, no person, no way to reply, no
+                  route to challenge it. We score letters like this against a
+                  seven-part rubric, and a score below 40 out of 70 blocks
+                  certification outright.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 5 — STANDARDS & CREDIBILITY */}
-      <section className="py-32 bg-white">
+      {/* ── THE PEAK — the reader does something ─────────────────────
+          The only place on the site where a visitor is asked to make a
+          judgement rather than receive one. Everything above sets it up. */}
+      <section className="bg-[#f0f4f8] py-20 md:py-28 border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-24">
-            <span className="text-[#c9920a] text-[0.7rem] uppercase tracking-[0.3em] font-bold">Technical Foundation</span>
-            <h2 
-              className="text-4xl md:text-5xl text-[#0a1628] mt-4 leading-[1.1] tracking-[-0.03em] font-bold"
+          <div className="max-w-3xl mb-10">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+              Try the standard
+            </span>
+            <h2
+              className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-4 text-balance"
               style={{ fontFamily: "'Merriweather', serif" }}
             >
-              Built on International Frameworks
+              How would you score this letter?
             </h2>
+            <p className="text-[#3d4a58] leading-relaxed">
+              Seven dimensions, ten seconds. Score it, then see what our
+              assessor scored it and where you disagreed. This is requirement
+              EM-1 of the published standard, run exactly as it runs in an
+              assessment.
+            </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-            {standards.map((std, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="group p-10 bg-[#f0f4f8] border border-[#e5e7eb] rounded-2xl hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-              >
-                <div className="text-[#c9920a] font-bold text-xl mb-4 font-mono">{std.code}</div>
-                <h3 className="text-[#0a1628] text-lg font-bold mb-4">{std.name}</h3>
-                <p className="text-[#6b7280] text-sm leading-relaxed mb-8">{std.desc}</p>
-                <div className="pt-6 border-t border-[#e5e7eb] flex items-center gap-2 text-[#c9920a] text-[0.7rem] font-bold uppercase tracking-wider">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>AIC Aligned</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
+          <EmpathyScorer />
         </div>
       </section>
 
-      {/* SECTION 6 — CTA BAND */}
-      <section className="py-32 bg-[#0a1628] relative overflow-hidden">
-        {/* Particle effect */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-[#c9920a] rounded-full opacity-20"
-              initial={{ 
-                x: Math.random() * 100 + "%", 
-                y: "110%",
-                opacity: 0
-              }}
-              animate={{ 
-                y: "-10%",
-                opacity: [0, 0.4, 0],
-                x: (Math.random() * 100 - 50) + "px"
-              }}
-              transition={{ 
-                duration: 5 + Math.random() * 5, 
-                repeat: Infinity,
-                delay: Math.random() * 5
-              }}
-              style={{
-                left: Math.random() * 100 + "%"
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 
-              className="text-4xl md:text-6xl text-white mb-8 leading-[1.05] tracking-[-0.03em] font-bold"
-              style={{ fontFamily: "'Merriweather', serif" }}
-            >
-              Ready to Lead Responsible AI?
-            </h2>
-            <p className="text-white/60 mb-12 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              AIC is assembling its founding cohort — a small group of organisations that shape the methodology and carry the mark first.
-            </p>
-            <div className="flex justify-center">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-3 bg-[#c9920a] text-white px-10 py-5 rounded-full font-bold hover:bg-[#b07d08] transition-all shadow-xl shadow-[#c9920a]/20 hover:-translate-y-1"
+      {/* ── THE FIVE RIGHTS — one comparative view ───────────────────
+          Previously five full viewports delivering about sixty words, one
+          right per screen, so nobody could compare or count them. All five
+          now sit together, each carrying its real requirement count from the
+          published standard — which connects the philosophy to the thing that
+          makes it testable. */}
+      <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
+            <div className="max-w-2xl">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                The framework
+              </span>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
               >
-                Contact us <ArrowRight className="w-4 h-4" />
+                Five rights, forty-four tests
+              </h2>
+              <p className="text-[#3d4a58] leading-relaxed mt-4">
+                Principles that cannot be measured are decoration. Each right
+                below resolves into specific requirements with defined evidence,
+                and every one of them is published.
+              </p>
+            </div>
+            <Link
+              href="/standard"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-aic-copper hover:gap-3 transition-all shrink-0"
+            >
+              Read all 44 requirements <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 border-t border-[#e5e7eb]">
+            {algorithmicRights.map((right) => (
+              <div
+                key={right.title}
+                className="border-b sm:border-r border-[#e5e7eb] last:border-r-0 p-6 flex flex-col gap-3 hover:bg-[#f8f9fb] transition-colors"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-aic-copper">
+                    {right.code}
+                  </span>
+                  <span className="font-mono text-[11px] text-[#9ca3af] tabular-nums">
+                    {right.count} tests
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-[#0f1f3d] leading-snug">
+                  {right.title}
+                </h3>
+                <p className="text-sm text-[#6b7280] leading-relaxed">
+                  {right.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── THE PROOF ────────────────────────────────────────────────
+          The densest, darkest block on the page, and the only one carrying
+          bare figures. It exists because the homepage previously argued in
+          adjectives — "evidence-based", "world's toughest" — while the actual
+          proof sat unlinked in the navigation. Every number here is real, and
+          the zero is deliberately included. */}
+      <section className="bg-[#0a1628] py-20 md:py-28">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
+            <div>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                Check us
+              </span>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-white font-bold mt-4 mb-5 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                Everything we assert is somewhere you can go and look
+              </h2>
+              <p className="text-white/60 leading-relaxed">
+                A certification body that asks to be trusted has already lost
+                the argument. These are the four things you can verify about AIC
+                without speaking to us.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-px bg-white/10 border border-white/10">
+              {proofPoints.map((p) => (
+                <Link
+                  key={p.href}
+                  href={p.href}
+                  className="group bg-[#0a1628] p-6 hover:bg-[#0f1f3d] transition-colors"
+                >
+                  <div
+                    className="text-4xl font-bold text-white tabular-nums leading-none mb-2"
+                    style={{ fontFamily: "'Merriweather', serif" }}
+                  >
+                    {p.figure}
+                  </div>
+                  <div className="text-sm font-medium text-white mb-1.5">
+                    {p.label}
+                  </div>
+                  <p className="text-[13px] text-white/50 leading-relaxed mb-3">
+                    {p.detail}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-aic-copper group-hover:gap-2.5 transition-all">
+                    {p.cta} <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ALIGNMENT ────────────────────────────────────────────────
+          Merged from two near-identical sections that both said "we align to
+          frameworks", one immediately after the other. */}
+      <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-12 lg:gap-16 items-center">
+            <div>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                Built with reference to
+              </span>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-5 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                Your regulator's language, not ours
+              </h2>
+              <p className="text-[#3d4a58] leading-relaxed">
+                AIC's requirements were written against the instruments that
+                already apply to you, so an assessment produces evidence you can
+                use elsewhere rather than a second vocabulary to maintain.
+              </p>
+              <Link
+                href="/regulatory-map"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-aic-copper hover:gap-3 transition-all mt-6"
+              >
+                See where regulation stands, by country{" "}
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-          </motion.div>
+
+            <dl className="divide-y divide-[#e5e7eb] border-y border-[#e5e7eb]">
+              {standards.map((s) => (
+                <div
+                  key={s.code}
+                  className="grid sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] gap-2 sm:gap-6 py-5"
+                >
+                  <dt className="font-mono text-sm font-semibold text-[#0f1f3d] tracking-tight">
+                    {s.code}
+                  </dt>
+                  <dd className="text-sm text-[#6b7280] leading-relaxed">
+                    <span className="text-[#0f1f3d] font-medium">{s.name}.</span>{" "}
+                    {s.desc}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CLOSE ────────────────────────────────────────────────── */}
+      <section className="bg-[#0a1628] py-20 md:py-28">
+        <div className="max-w-4xl mx-auto px-4">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+            Founding cohort
+          </span>
+          <h2
+            className="text-3xl md:text-5xl text-white mt-4 mb-6 leading-[1.08] tracking-[-0.02em] font-bold text-balance"
+            style={{ fontFamily: "'Merriweather', serif" }}
+          >
+            The register is empty. We would rather it stayed that way than fill
+            it badly.
+          </h2>
+          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mb-8">
+            AIC is assembling a small founding cohort — organisations that shape
+            the methodology, are assessed against it first, and carry the mark
+            before anyone else. Their audits are also the witnessed activity our
+            accreditation depends on, so the arrangement is reciprocal rather
+            than promotional.
+          </p>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2.5 bg-aic-copper text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#b07d08] transition-all"
+            >
+              Talk to us about the founding cohort{" "}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/disclosures#accreditation"
+              className="text-sm text-white/60 hover:text-white transition-colors underline underline-offset-4"
+            >
+              Read our accreditation status first
+            </Link>
+          </div>
         </div>
       </section>
     </div>
