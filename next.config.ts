@@ -40,7 +40,10 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/login',
-        destination: process.env.NEXT_PUBLIC_PLATFORM_URL || 'https://app.aiccertified.cloud/login',
+        // NEXT_PUBLIC_PLATFORM_URL holds the platform ROOT (see .env.example),
+        // so using it bare sent /login to the platform homepage whenever the
+        // variable was set — only the hardcoded fallback carried the path.
+        destination: `${process.env.NEXT_PUBLIC_PLATFORM_URL || 'https://app.aiccertified.cloud'}/login`,
         permanent: false,
       },
       {

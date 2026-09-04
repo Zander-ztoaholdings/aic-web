@@ -234,9 +234,18 @@ export default function Navbar() {
               })}
 
               {/* Copper CTA */}
+              {/* /login is a redirect to NEXT_PUBLIC_PLATFORM_URL (see
+                  next.config.ts), so the platform can move without touching
+                  every link that points at it. */}
+              <Link
+                href="/login"
+                className="ml-2 px-4 py-2.5 rounded text-sm font-semibold text-[#0f1f3d] border border-[#e5e7eb] hover:border-[#0f1f3d] transition-colors"
+              >
+                Log in
+              </Link>
               <Link
                 href="/contact"
-                className="ml-2 bg-[#c9920a] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-[#b07d08] transition-all shadow-md active:scale-95"
+                className="ml-1 bg-[#c9920a] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-[#b07d08] transition-all shadow-md active:scale-95"
               >
                 Contact us
               </Link>
@@ -313,6 +322,13 @@ export default function Navbar() {
               </div>
 
               <div className="pt-4 mt-2 flex flex-col gap-3">
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center text-base border border-[#e5e7eb] text-[#0f1f3d] px-4 py-4 rounded font-bold transition-colors hover:border-[#0f1f3d]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Log in
+                </Link>
                 <Link
                   href="/contact"
                   className="flex items-center justify-center text-base bg-[#c9920a] text-white px-4 py-4 rounded font-bold transition-all hover:bg-[#b07d08]"
