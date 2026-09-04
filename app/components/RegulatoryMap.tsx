@@ -1,17 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as d3geo from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Download, Mail, X, MapPin, CheckCircle2 } from "lucide-react";
+import { Download, Mail, X, MapPin, CheckCircle2, Search } from "lucide-react";
 import {
   regulatoryData,
   oldestVerification,
   type CountryRegulation,
 } from "@/app/data/regulatory-data";
+
+/** Display order for the mobile jurisdiction list. */
+const REGION_ORDER = [
+  "Africa",
+  "Europe",
+  "North America",
+  "Latin America",
+  "Middle East",
+  "Asia-Pacific",
+] as const;
 
 const STATUS_TONE: Record<string, string> = {
   "In force": "bg-[#10b981]/10 text-[#0a7a54]",
@@ -46,6 +56,15 @@ export default function RegulatoryMap({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Search exists because the map alone cannot be used to find a small country.
+  // Vatican City is roughly one pixel at this projection; so are Monaco, San
+  // Marino, Liechtenstein and Malta. Clicking is fine for Brazil and useless
+  // for the places people most often need to look up.
+  const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const width = 960;
   const height = 520;
@@ -87,6 +106,60 @@ export default function RegulatoryMap({
     };
   }, []);
 
+  // Searches every country on the map, not only the mapped ones, so looking up
+  // an uncovered jurisdiction lands on the honest "not yet mapped" panel and
+  // its prioritisation request rather than silently returning nothing.
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const scored = countries
+      .filter((c) => c.name.toLowerCase().includes(q))
+      .map((c) => ({
+        country: c,
+        mapped: Boolean(regulatoryData[c.id]),
+        // Prefix matches first: typing "ind" should offer India before Indonesia.
+        rank: c.name.toLowerCase().startsWith(q) ? 0 : 1,
+      }));
+    scored.sort(
+      (a, b) => a.rank - b.rank || a.country.name.localeCompare(b.country.name)
+    );
+    return scored.slice(0, 8);
+  }, [query, countries]);
+
+  useEffect(() => setActiveIndex(0), [query]);
+
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
+      if (!searchRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  function choose(id: string) {
+    setSelectedId(id);
+    setQuery("");
+    setOpen(false);
+  }
+
+  function onSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+    if (!open || matches.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) => (i + 1) % matches.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => (i - 1 + matches.length) % matches.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      choose(matches[activeIndex].country.id);
+    }
+  }
+
   const selected: CountryRegulation | undefined = useMemo(
     () => (selectedId ? regulatoryData[selectedId] : undefined),
     [selectedId]
@@ -100,7 +173,84 @@ export default function RegulatoryMap({
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
       {/* Map */}
       <div className="flex-1 lg:pr-8">
-        <div className="bg-white border border-[#e5e7eb] rounded-xl p-4 sm:p-8">
+        {/* Search. Rendered above the map on every breakpoint, and on mobile it
+            is the ONLY way in — see the note on the SVG wrapper below. */}
+        <div ref={searchRef} className="relative mb-4">
+          <label htmlFor="jurisdiction-search" className="sr-only">
+            Search for a country
+          </label>
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af] pointer-events-none" />
+            <input
+              id="jurisdiction-search"
+              type="text"
+              role="combobox"
+              aria-expanded={open && matches.length > 0}
+              aria-controls="jurisdiction-search-results"
+              aria-autocomplete="list"
+              aria-activedescendant={
+                open && matches.length > 0 ? `jsr-${activeIndex}` : undefined
+              }
+              autoComplete="off"
+              placeholder="Search for a country — try Vatican, Malta, Singapore"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpen(true);
+              }}
+              onFocus={() => setOpen(true)}
+              onKeyDown={onSearchKeyDown}
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border border-[#e5e7eb] bg-white text-sm text-[#0f1f3d] placeholder:text-[#9ca3af] focus:outline-none focus:border-aic-copper focus:ring-2 focus:ring-aic-copper/20 transition-all disabled:opacity-50"
+            />
+          </div>
+
+          {open && query.trim() !== "" && (
+            <ul
+              id="jurisdiction-search-results"
+              role="listbox"
+              aria-label="Matching countries"
+              className="absolute z-20 mt-2 w-full bg-white border border-[#e5e7eb] rounded-lg shadow-lg overflow-hidden max-h-80 overflow-y-auto"
+            >
+              {matches.length === 0 ? (
+                <li className="px-4 py-3 text-sm text-[#9ca3af]">
+                  No country matches “{query.trim()}”.
+                </li>
+              ) : (
+                matches.map((m, i) => (
+                  <li key={m.country.id} id={`jsr-${i}`} role="option" aria-selected={i === activeIndex}>
+                    <button
+                      type="button"
+                      onMouseEnter={() => setActiveIndex(i)}
+                      onClick={() => choose(m.country.id)}
+                      className={`w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 transition-colors ${
+                        i === activeIndex ? "bg-[#f0f4f8]" : "bg-white"
+                      }`}
+                    >
+                      <span className="text-sm text-[#0f1f3d]">{m.country.name}</span>
+                      {/* Says up front whether there is anything to read, so an
+                          uncovered country is not a dead end the user discovers
+                          only after clicking. */}
+                      <span
+                        className={`text-[10px] uppercase tracking-wide font-semibold shrink-0 ${
+                          m.mapped ? "text-aic-copper" : "text-[#9ca3af]"
+                        }`}
+                      >
+                        {m.mapped ? "Mapped" : "Not yet mapped"}
+                      </span>
+                    </button>
+                  </li>
+                ))
+              )}
+            </ul>
+          )}
+        </div>
+
+        {/* The SVG is desktop-only. At phone width a world map is not an
+            interface: the tap targets for most countries are smaller than a
+            fingertip, so it would be decoration that costs a 750KB download.
+            Mobile gets the search box above and the region list below. */}
+        <div className="hidden lg:block bg-white border border-[#e5e7eb] rounded-xl p-4 sm:p-8">
           {loading ? (
             <div className="aspect-[960/520] flex items-center justify-center text-[#9ca3af] text-sm">
               Loading map…
@@ -162,6 +312,55 @@ export default function RegulatoryMap({
             </div>
           </div>
         </div>
+        {/* Mobile substitute for the map: the 28 covered jurisdictions, grouped
+            by region, so someone on a phone can browse rather than having to
+            already know the name of the country they want. */}
+        <div className="lg:hidden">
+          {loading ? (
+            <div className="bg-white border border-[#e5e7eb] rounded-xl p-6 text-sm text-[#9ca3af]">
+              Loading jurisdictions…
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {REGION_ORDER.map((region) => {
+                const inRegion = Object.values(regulatoryData)
+                  .filter((c) => c.region === region)
+                  .map((c) => ({
+                    reg: c,
+                    name:
+                      countries.find((f) => f.id === c.id)?.name ?? c.framework,
+                  }))
+                  .sort((a, b) => a.name.localeCompare(b.name));
+                if (inRegion.length === 0) return null;
+                return (
+                  <div key={region}>
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-[#9ca3af] mb-2">
+                      {region}
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {inRegion.map(({ reg, name }) => (
+                        <button
+                          key={reg.id}
+                          type="button"
+                          onClick={() => setSelectedId(reg.id)}
+                          aria-pressed={selectedId === reg.id}
+                          className={`text-sm px-3 py-2 rounded-lg border transition-all ${
+                            selectedId === reg.id
+                              ? "border-aic-copper bg-aic-copper/10 text-aic-copper font-semibold"
+                              : "border-[#e5e7eb] bg-white text-[#0f1f3d] hover:border-aic-copper/40"
+                          }`}
+                        >
+                          {name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         <p className="text-xs text-[#9ca3af] mt-4">
           Every jurisdiction on this map has been checked against its primary
           source since {oldestVerification()}; each entry carries its own
@@ -275,12 +474,18 @@ export default function RegulatoryMap({
               This jurisdiction hasn&apos;t been mapped yet. We&apos;d rather say that plainly than
               guess at a regulatory position we haven&apos;t verified.
             </p>
+            {/* Carries the country through to the form. Previously this
+                dropped the visitor on a blank contact page, so the one piece
+                of information the request is about — which jurisdiction — was
+                the one thing we made them retype, and usually did not get. */}
             <Link
-              href="/contact"
+              href={`/contact?jurisdiction=${encodeURIComponent(
+                selectedName ?? ""
+              )}`}
               className="w-full inline-flex items-center justify-center gap-2 bg-aic-navy text-white px-5 py-3 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-all"
             >
               <Mail className="w-4 h-4" />
-              Ask us to prioritise this jurisdiction
+              Ask us to prioritise {selectedName ?? "this jurisdiction"}
             </Link>
           </div>
         )}

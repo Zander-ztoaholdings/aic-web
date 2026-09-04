@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { Suspense, useState, ChangeEvent, FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -18,23 +19,45 @@ import { Card } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 
+// These named a credential scheme (CAEL / SAIGS / AAEP) and an ISO/IEC 42001
+// certification offering. Both were removed from the rest of the site as
+// claims AIC cannot currently back — the portals advertising them were deleted
+// outright — but they survived here, still being offered to anyone filling in
+// the form. Descriptions now say only what AIC can stand behind. The final
+// taxonomy is a commercial decision, not a technical one.
 const enquiryTypes = [
-  { value: "Corporate Certification", label: "Corporate Certification", description: "ISO/IEC 42001 certification for your organisation" },
-  { value: "Professional Certification", label: "Professional Certification", description: "CAEL, SAIGS, or AAEP individual certification" },
-  { value: "Partnership / Media", label: "Partnership / Media", description: "Strategic partnership, press, or research inquiry" },
+  { value: "Corporate Certification", label: "Corporate Certification", description: "Certification for your organisation against the AIC framework" },
+  { value: "Workshops & Training", label: "Workshops & Training", description: "Industry workshops mapped to the framework you already use" },
+  { value: "Regulatory Coverage", label: "Regulatory Coverage", description: "Ask us to prioritise a jurisdiction on the regulatory map" },
+  { value: "Partnership / Media", label: "Partnership / Media", description: "Strategic partnership, press, or research enquiry" },
   { value: "General Enquiry", label: "General Enquiry", description: "Other questions or feedback" },
 ];
 
+// useSearchParams requires a Suspense boundary in the App Router; without one
+// the whole route is forced dynamic and the build complains.
 export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactForm />
+    </Suspense>
+  );
+}
+
+function ContactForm() {
+  // Arriving from "Ask us to prioritise <country>" on the regulatory map.
+  const jurisdiction = useSearchParams().get("jurisdiction")?.slice(0, 60) ?? "";
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     company: "",
     jobTitle: "",
-    country: "",
-    enquiryType: "",
-    message: "",
+    country: jurisdiction,
+    enquiryType: jurisdiction ? "Regulatory Coverage" : "",
+    message: jurisdiction
+      ? `Please prioritise ${jurisdiction} on the regulatory map.`
+      : "",
   });
 
   const [submitted, setSubmitted] = useState(false);
