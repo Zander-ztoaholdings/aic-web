@@ -41,16 +41,32 @@ export default function InsurersPage() {
                 For Insurers &amp; Underwriters
               </span>
             </div>
+            {/* Was "Insurers recognise AIC certification." — stated as present
+                fact, and not one. No insurer recognises it: there are no
+                certified organisations and no recognition arrangement in place.
+                The body copy below was already careful and conditional; the
+                headline contradicted it. The honest version is also the more
+                interesting one, because the underwriter's actual problem is
+                more compelling than a claim about our own standing. */}
             <h1
-              className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold"
+              className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold max-w-4xl text-balance"
               style={{ fontFamily: "'Merriweather', serif" }}
             >
-              Insurers recognise AIC certification.
+              You are already writing AI risk. You just cannot see it.
             </h1>
-            <p className="text-xl text-white/70 max-w-3xl leading-relaxed">
-              AIC certifies that a named, accountable human stands behind an organisation&apos;s
-              consequential automated decisions, and publishes the result. What you do with that
-              signal — pricing, underwriting appetite, portfolio review — stays entirely yours.
+            <p className="text-xl text-white/70 max-w-3xl leading-relaxed mb-8">
+              Somewhere in your book are insureds whose consequential decisions
+              are made by systems nobody in the business can explain, with no
+              named human accountable for the outcome. Nothing on a proposal
+              form asks. AIC exists to make that answerable — and verifiable by
+              you in under thirty seconds, without taking anyone&apos;s word for it.
+            </p>
+            <p className="text-sm text-white/50 max-w-3xl leading-relaxed border-l-2 border-aic-copper/40 pl-4">
+              To be plain about where this stands: no insurer currently
+              recognises AIC certification, and no organisation has been
+              certified yet. This page sets out what the signal would be and how
+              recognition would work. We would rather propose it than describe
+              it as though it already exists.
             </p>
           </motion.div>
         </div>
@@ -80,6 +96,88 @@ export default function InsurersPage() {
             Monitored</strong> overlay when Pulse telemetry is live and coherent — the visible face
             of a mark that stays accountable after the audit, not only on the day of it.
           </p>
+        </div>
+      </section>
+
+      {/* The artefact. An underwriter does not want to be told verification is
+          fast — they want to see what comes back. This is what /verify returns
+          against a certificate number, laid out as they would meet it. */}
+      <section className="py-20 md:py-24 bg-[#0a1628]">
+        <div className="max-w-[1600px] mx-auto px-4">
+          <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-16 items-start">
+            <div className="lg:sticky lg:top-32">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                What you would get back
+              </span>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-white font-bold mt-4 mb-5 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                One field on a proposal form, answerable in thirty seconds
+              </h2>
+              <p className="text-white/60 leading-relaxed mb-4">
+                No login, no account, no call to us. A certificate number
+                resolves to a record that states its own scope and its own
+                expiry, and shows plainly when something has lapsed or been
+                suspended.
+              </p>
+              <p className="text-white/50 text-sm leading-relaxed">
+                A badge that cannot visibly lapse is a badge that means nothing.
+                The status history stays on the record — a revoked certificate
+                is marked revoked, never quietly deleted.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl overflow-hidden border border-white/10">
+              <div className="px-5 py-3 bg-[#f8f9fb] border-b border-[#e5e7eb] flex items-center justify-between gap-4">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]">
+                  aiccertified.cloud/verify
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]">
+                  Illustrative record
+                </span>
+              </div>
+              <div className="p-6 sm:p-8">
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded bg-[#10b981]/10 text-[#0a7a54] border border-[#10b981]/20">
+                    <BadgeCheck className="w-3.5 h-3.5" /> Certified — Active
+                  </span>
+                  <span className="font-mono text-xs text-[#9ca3af]">
+                    AIC-D3-2027-0041
+                  </span>
+                </div>
+                <dl className="divide-y divide-[#f1f1f0] border-y border-[#f1f1f0]">
+                  {[
+                    ["Division", "D3 Reviewed — AI decides, humans review a defined sample"],
+                    ["Scope", "Retail credit origination and collections decisioning"],
+                    ["Accountable Person", "Named on the certificate record"],
+                    ["Issued", "14 February 2027"],
+                    ["Expires", "14 August 2028 · 18-month cycle for D3"],
+                    ["Continuous monitoring", "Live — telemetry coherent with declared Division"],
+                    ["Status history", "No suspensions, no revocations"],
+                  ].map(([k, v]) => (
+                    <div
+                      key={k}
+                      className="grid sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-1 sm:gap-5 py-3"
+                    >
+                      <dt className="font-mono text-[11px] uppercase tracking-wide text-[#9ca3af] pt-0.5">
+                        {k}
+                      </dt>
+                      <dd className="text-sm text-[#0f1f3d] leading-relaxed">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="text-xs text-[#9ca3af] leading-relaxed mt-5">
+                  Illustrative. AIC has issued no certificates — the{" "}
+                  <Link href="/registry" className="text-aic-copper hover:underline">
+                    public register
+                  </Link>{" "}
+                  is empty and says so. This is the shape of the record, not a
+                  real one.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

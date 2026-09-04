@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -10,6 +10,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { workshopIndustries } from "@/app/data/workshops-data";
+import WorkshopIntake from "./WorkshopIntake";
 import { DURATION, EASE_OUT } from "@/lib/motion";
 
 export default function WorkshopsPage() {
@@ -101,36 +102,59 @@ export default function WorkshopsPage() {
               </Link>
             </div>
 
-            {/* Rotating teaser card */}
-            <div className="bg-white border border-[#e5e7eb] rounded-xl p-8 md:p-10 min-h-[220px] flex flex-col justify-center">
-              <span className="text-[#9ca3af] text-[0.65rem] uppercase tracking-[0.25em] font-mono font-bold mb-6">
-                In this session
-              </span>
-              <div className="relative min-h-[96px]">
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={`${active.slug}-${topicIndex}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: DURATION.base, ease: EASE_OUT }}
-                    className="text-xl md:text-2xl text-[#0f1f3d] font-medium leading-snug"
-                    style={{ fontFamily: "'Merriweather', serif" }}
-                  >
-                    {active.topics[topicIndex]}
-                  </motion.p>
-                </AnimatePresence>
+            {/* The syllabus, in full.
+                This rotated one topic at a time through a card, which meant a
+                visitor deciding whether to book saw a fifth of what a session
+                covers and had to wait out a carousel for the rest. The whole
+                list is now visible; the rotation only moves the emphasis, so
+                the movement still draws the eye without withholding anything. */}
+            <div className="bg-white border border-[#e5e7eb] rounded-xl p-8 md:p-10">
+              <div className="flex items-baseline justify-between gap-4 mb-6">
+                <span className="text-[#9ca3af] text-[0.65rem] uppercase tracking-[0.25em] font-mono font-bold">
+                  In this session
+                </span>
+                <span className="font-mono text-[11px] text-[#9ca3af] tabular-nums">
+                  {active.topics.length} topics
+                </span>
               </div>
-              <div className="flex gap-1.5 mt-8">
-                {active.topics.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`h-1 rounded-full transition-all ${
-                      i === topicIndex ? "w-8 bg-aic-copper" : "w-1.5 bg-[#e5e7eb]"
-                    }`}
-                  />
-                ))}
-              </div>
+              <ul className="space-y-1">
+                {active.topics.map((topic, i) => {
+                  const isCurrent = i === topicIndex;
+                  return (
+                    <li key={topic}>
+                      <motion.button
+                        type="button"
+                        onClick={() => setTopicIndex(i)}
+                        animate={{ opacity: isCurrent ? 1 : 0.55 }}
+                        transition={{ duration: DURATION.base, ease: EASE_OUT }}
+                        className="w-full text-left flex gap-4 py-3 border-b border-[#f1f1f0] last:border-b-0"
+                      >
+                        <span
+                          className={`font-mono text-[11px] tabular-nums pt-1 shrink-0 transition-colors ${
+                            isCurrent ? "text-aic-copper" : "text-[#9ca3af]"
+                          }`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={`leading-snug transition-all ${
+                            isCurrent
+                              ? "text-[#0f1f3d] text-lg md:text-xl font-medium"
+                              : "text-[#6b7280] text-[15px]"
+                          }`}
+                          style={
+                            isCurrent
+                              ? { fontFamily: "'Merriweather', serif" }
+                              : undefined
+                          }
+                        >
+                          {topic}
+                        </span>
+                      </motion.button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </div>
@@ -161,25 +185,38 @@ export default function WorkshopsPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-aic-navy text-white text-center">
-        <div className="max-w-2xl mx-auto px-4">
-          <h2
-            className="text-3xl md:text-4xl mb-6 leading-[1.1] tracking-[-0.03em] font-bold"
-            style={{ fontFamily: "'Merriweather', serif" }}
-          >
-            Want to bring a session to your team?
-          </h2>
-          <p className="text-white/60 text-lg leading-relaxed mb-10">
-            Tell us your industry and team size, and we&apos;ll let you know what a session could look
-            like.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center gap-3 bg-aic-copper text-white px-10 py-5 rounded-full font-bold hover:bg-[#b07d08] transition-all shadow-xl shadow-aic-copper/20 hover:-translate-y-1"
-          >
-            Contact us <ArrowRight className="w-4 h-4" />
-          </Link>
+      {/* Intake.
+          This said "tell us your industry and team size" above a button to the
+          general contact form, which asks for neither — so the two facts needed
+          to answer a workshop enquiry were exactly the two we did not collect,
+          and every reply began by asking for them. */}
+      <section id="enquire" className="py-20 md:py-24 bg-[#f0f4f8] border-t border-[#e5e7eb]">
+        <div className="max-w-[1600px] mx-auto px-4">
+          <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-16 items-start">
+            <div className="lg:sticky lg:top-32">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                Bring a session to your team
+              </span>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-5 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                Four questions, and we can tell you what a session looks like
+              </h2>
+              <p className="text-[#3d4a58] leading-relaxed mb-6">
+                Sessions are scoped to the industry and the room. Tell us which
+                one and how many people, and you get a straight answer on
+                format, length and cost rather than a discovery call.
+              </p>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                We ask nothing about your AI governance here, on purpose.
+                Workshops teach and do not assess, and profiling a prospect&apos;s
+                compliance posture at the enquiry stage is the first crack in
+                the firewall that lets AIC certify you later.
+              </p>
+            </div>
+            <WorkshopIntake industrySlug={active.slug} />
+          </div>
         </div>
       </section>
     </div>
