@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { scrollElementToTop } from "@/lib/scroll";
 import { motion } from "framer-motion";
 import {
   FileText,
@@ -51,11 +52,18 @@ export default function DisclosuresPage() {
   // The accreditation status is linked to from the mark in the header and
   // footer, and from elsewhere on the site, so the deep link has to work.
   const TAB_IDS = ["impartiality", "accreditation", "directory", "appeals"];
+  const tabsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const applyHash = () => {
       const hash = window.location.hash.replace("#", "");
-      if (TAB_IDS.includes(hash)) setActiveTab(hash);
+      if (!TAB_IDS.includes(hash)) return;
+      setActiveTab(hash);
+      // Selecting the tab was not enough: there is no element with that id on
+      // the page, so the browser had nothing to scroll to and left the reader
+      // at the very top, above a full-height hero, with the right tab open
+      // somewhere below the fold. The navbar and footer marks both link here.
+      requestAnimationFrame(() => scrollElementToTop(tabsRef.current));
     };
     applyHash();
     window.addEventListener("hashchange", applyHash);
@@ -141,6 +149,7 @@ export default function DisclosuresPage() {
       {/* Main Content */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
+          <div ref={tabsRef} className="scroll-mt-32">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-8">
               <TabsTrigger value="impartiality">Impartiality Statement</TabsTrigger>
@@ -639,6 +648,7 @@ export default function DisclosuresPage() {
               </motion.div>
             </TabsContent>
           </Tabs>
+          </div>
         </div>
       </section>
 

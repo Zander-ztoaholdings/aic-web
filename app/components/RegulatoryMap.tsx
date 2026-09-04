@@ -7,6 +7,7 @@ import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
 import { Download, Mail, X, CheckCircle2, Search, ExternalLink } from "lucide-react";
+import { scrollElementToTop, isAtTop } from "@/lib/scroll";
 import {
   regulatoryData,
   oldestVerification,
@@ -136,8 +137,25 @@ export default function RegulatoryMap({
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
-  function choose(id: string) {
+  /**
+   * Selecting a country reframes the view: the search bar goes to the top of
+   * the screen, the map sits under it, and the panel opens level with the
+   * search bar — which is where it already begins, since the two columns are
+   * siblings.
+   *
+   * Only scrolls when the search bar is not already there, so clicking a
+   * second country from a correctly-framed view does nothing rather than
+   * jolting the page. Every selection path routes through here — map click,
+   * search result, mobile region button — so the framing is the same however
+   * you got there.
+   */
+  function select(id: string) {
     setSelectedId(id);
+    if (!isAtTop(searchRef.current)) scrollElementToTop(searchRef.current);
+  }
+
+  function choose(id: string) {
+    select(id);
     setQuery("");
     setOpen(false);
   }
@@ -291,9 +309,9 @@ export default function RegulatoryMap({
                     strokeWidth={0.5}
                     onMouseEnter={() => setHoveredId(c.id)}
                     onMouseLeave={() => setHoveredId((h) => (h === c.id ? null : h))}
-                    onClick={() => setSelectedId(c.id)}
+                    onClick={() => select(c.id)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") setSelectedId(c.id);
+                      if (e.key === "Enter" || e.key === " ") select(c.id);
                     }}
                     tabIndex={0}
                     aria-label={c.name}
@@ -349,7 +367,7 @@ export default function RegulatoryMap({
                         <button
                           key={reg.id}
                           type="button"
-                          onClick={() => setSelectedId(reg.id)}
+                          onClick={() => select(reg.id)}
                           aria-pressed={selectedId === reg.id}
                           className={`text-sm px-3 py-2 rounded-lg border transition-all ${
                             selectedId === reg.id

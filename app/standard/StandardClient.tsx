@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useHashTarget } from "@/lib/scroll";
 import Link from "next/link";
 import { Star, Info, ArrowRight } from "lucide-react";
 import {
@@ -26,6 +27,9 @@ export default function StandardClient() {
   // null = show everything. Filtering by Division is the question a prospect
   // actually has: not "what do you test" but "what do you test *me* on".
   const [division, setDivision] = useState<number | null>(null);
+
+  // Re-applies #hu / #ex / #em / #co / #tr once these sections actually exist.
+  useHashTarget();
 
   const visible = useMemo(
     () => (division === null ? requirements : requirementsForDivision(division)),

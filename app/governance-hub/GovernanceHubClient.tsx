@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useHashTarget } from "@/lib/scroll";
 import { motion } from "framer-motion";
 import {
   BookOpen,
@@ -124,6 +125,11 @@ export default function GovernanceHubClient({
 }: GovernanceHubClientProps) {
   const [expandedRight, setExpandedRight] = useState<number | null>(null);
   
+  // #declaration and #standards-map are linked from the navbar. Next resets
+  // scroll on navigation, which lands the reader at the top of the page rather
+  // than at the section they asked for.
+  useHashTarget();
+
   const policyUnavailable = initialPolicyUpdates === null;
   const [policyUpdates, setPolicyUpdates] = useState<PolicyUpdate[]>(initialPolicyUpdates ?? []);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);

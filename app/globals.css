@@ -236,7 +236,11 @@ html {
   -webkit-overflow-scrolling: touch;
   /* Keeps #declaration / #policy-updates (and similar in-page anchors) from
      landing underneath the sticky header. */
-  scroll-padding-top: 120px;
+  /* The sticky header is 111px. This must stay in step with HEADER_OFFSET in
+     lib/scroll.ts, which every programmatic scroll on the site uses — an
+     anchor landing under the header and a button scrolling to a different
+     place are the same bug with two causes. */
+  scroll-padding-top: 128px;
 }
 
 /* ─── Typography responsiveness ─────────────────────────────────── */
