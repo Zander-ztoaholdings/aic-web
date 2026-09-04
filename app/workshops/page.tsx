@@ -10,6 +10,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { workshopIndustries } from "@/app/data/workshops-data";
+import { DURATION, EASE_OUT } from "@/lib/motion";
 
 export default function WorkshopsPage() {
   const [activeSlug, setActiveSlug] = useState(workshopIndustries[0].slug);
@@ -112,7 +113,7 @@ export default function WorkshopsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: DURATION.base, ease: EASE_OUT }}
                     className="text-xl md:text-2xl text-[#0f1f3d] font-medium leading-snug"
                     style={{ fontFamily: "'Merriweather', serif" }}
                   >

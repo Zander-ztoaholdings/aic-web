@@ -116,7 +116,7 @@ export default function CertificationPage() {
         <div className="absolute inset-0 subtle-grid opacity-5" />
         <div className="relative max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="max-w-3xl"
@@ -151,7 +151,7 @@ export default function CertificationPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 1, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
@@ -175,7 +175,7 @@ export default function CertificationPage() {
                   <motion.a
                     key={div.number}
                     href={`#division-${div.number}`}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 1, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08 }}
@@ -204,7 +204,7 @@ export default function CertificationPage() {
       <section id="divisions" className="py-12 lg:py-24 bg-[#f0f4f8]">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-14"
@@ -225,7 +225,7 @@ export default function CertificationPage() {
                 <motion.div
                   key={div.number}
                   id={`division-${div.number}`}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 1, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
@@ -306,7 +306,7 @@ export default function CertificationPage() {
       <section className="py-12 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-14"
@@ -324,7 +324,7 @@ export default function CertificationPage() {
             {journeySteps.map((step, i) => (
               <motion.div
                 key={step.step}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 1, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
@@ -356,7 +356,7 @@ export default function CertificationPage() {
         />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >

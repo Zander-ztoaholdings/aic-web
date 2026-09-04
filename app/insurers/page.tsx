@@ -34,7 +34,7 @@ export default function InsurersPage() {
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 1, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <ShieldCheck className="w-6 h-6 text-aic-copper" />
               <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -99,7 +99,7 @@ export default function InsurersPage() {
             {steps.map((step, i) => (
               <motion.div
                 key={step.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}

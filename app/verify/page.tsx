@@ -19,7 +19,7 @@ export default function VerifyIndexPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <QrCode className="w-6 h-6 text-aic-copper" />
               <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">

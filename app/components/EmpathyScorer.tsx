@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, RotateCcw } from "lucide-react";
+import { DURATION, EASE_OUT, STAGGER, countTo } from "@/lib/motion";
 
 /**
  * The homepage's one interactive moment.
@@ -98,10 +100,33 @@ const CHOICES: { value: Verdict; label: string }[] = [
 export default function EmpathyScorer() {
   const [scores, setScores] = useState<Record<string, Verdict>>({});
   const [revealed, setRevealed] = useState(false);
+  const reduced = useReducedMotion() ?? false;
+
+  // The two totals count up rather than appearing. The number is the payload
+  // here — the whole exercise exists to make the size of the gap felt — so
+  // giving it weight is the motion doing a job. Reduced motion gets the final
+  // value immediately, because the figure is the information and the movement
+  // is only emphasis.
+  const [shownReader, setShownReader] = useState(0);
+  const [shownAic, setShownAic] = useState(0);
+
+  useEffect(() => {
+    if (!revealed) {
+      setShownReader(0);
+      setShownAic(0);
+      return;
+    }
+    const total = Object.values(scores).reduce<number>((n, v) => n + v, 0);
+    const stopA = countTo(total, setShownReader, { reduced });
+    const stopB = countTo(AIC_TOTAL, setShownAic, { reduced });
+    return () => {
+      stopA();
+      stopB();
+    };
+  }, [revealed, scores, reduced]);
 
   const answered = Object.keys(scores).length;
   const complete = answered === DIMENSIONS.length;
-  const readerTotal = Object.values(scores).reduce<number>((n, v) => n + v, 0);
 
   return (
     <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] border border-[#e5e7eb] rounded-xl overflow-hidden bg-white">
@@ -225,7 +250,7 @@ export default function EmpathyScorer() {
                   You scored it
                 </div>
                 <div className="text-3xl font-bold text-[#0f1f3d] tabular-nums">
-                  {readerTotal}
+                  {shownReader}
                 </div>
               </div>
               <div className="flex-1 border border-aic-copper/40 bg-aic-copper/5 rounded-lg p-3.5">
@@ -233,17 +258,27 @@ export default function EmpathyScorer() {
                   AIC scored it
                 </div>
                 <div className="text-3xl font-bold text-[#0f1f3d] tabular-nums">
-                  {AIC_TOTAL}
+                  {shownAic}
                 </div>
               </div>
             </div>
 
             <ul className="space-y-3 mb-6">
-              {DIMENSIONS.map((d) => {
+              {DIMENSIONS.map((d, i) => {
                 const mine = scores[d.key] ?? 0;
                 const gap = Math.abs(mine - d.aic);
                 return (
-                  <li key={d.key} className="border-b border-[#f1f1f0] pb-3 last:border-b-0">
+                  <motion.li
+                    key={d.key}
+                    className="border-b border-[#f1f1f0] pb-3 last:border-b-0"
+                    initial={reduced ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: DURATION.base,
+                      ease: EASE_OUT,
+                      delay: reduced ? 0 : i * STAGGER,
+                    }}
+                  >
                     <div className="flex items-center gap-3 mb-1">
                       <span className="text-sm font-medium text-[#0f1f3d] flex-1">
                         {d.label}
@@ -271,7 +306,7 @@ export default function EmpathyScorer() {
                         {d.note}
                       </p>
                     )}
-                  </li>
+                  </motion.li>
                 );
               })}
             </ul>

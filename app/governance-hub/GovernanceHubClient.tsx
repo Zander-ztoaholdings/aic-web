@@ -213,7 +213,7 @@ export default function GovernanceHubClient({
                 return (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 1, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.05 }}
@@ -345,7 +345,7 @@ export default function GovernanceHubClient({
             {policyUpdates.map((update, i) => (
               <motion.div
                 key={update.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: (i % 4) * 0.1 }}

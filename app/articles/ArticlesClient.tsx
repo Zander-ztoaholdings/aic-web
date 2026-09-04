@@ -122,7 +122,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
 
         <div className="relative max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
@@ -194,7 +194,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
               {featuredArticles.slice(0, 2).map((article, i) => (
                 <motion.article
                   key={article.id}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 1, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
@@ -300,7 +300,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
                 {filteredArticles.map((article, i) => (
                   <motion.article
                     key={article.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 1, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: (i % 6) * 0.05 }}
@@ -363,7 +363,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
       <section className="py-16 bg-gradient-to-br from-[#0a1628] to-[#0f1f3d]">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
@@ -435,7 +435,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 1, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
