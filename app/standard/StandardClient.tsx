@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Star, Info, ArrowRight } from "lucide-react";
 import {
   requirements,
@@ -118,8 +117,13 @@ export default function StandardClient() {
         </div>
       </div>
 
-      {/* The requirements */}
-      <div className="space-y-10">
+      {/* The requirements.
+          Rendered as a specification, not a feed of cards. 44 identical
+          rounded cards down a single column made the reader scroll past the
+          document rather than read across it — and a standard is a thing you
+          scan and compare, so it wants the density of a table. One DOM: a
+          grid that stacks on a phone and lines up into columns from md. */}
+      <div className="space-y-12">
         {RIGHT_ORDER.map((right) => {
           const group = visible.filter((r) => r.right === right);
           if (group.length === 0) return null;
@@ -132,52 +136,67 @@ export default function StandardClient() {
                 >
                   {RIGHTS[right].name}
                 </h2>
-                <span className="text-xs font-mono uppercase tracking-wide text-aic-copper">
+                <span className="font-mono text-xs uppercase tracking-wide text-aic-copper">
                   {right} · {group.length}{" "}
                   {group.length === 1 ? "requirement" : "requirements"}
                 </span>
               </div>
-              <p className="text-[#6b7280] mb-5">{RIGHTS[right].blurb}</p>
+              <p className="text-[#6b7280] mb-4">{RIGHTS[right].blurb}</p>
 
-              <div className="space-y-3">
-                {group.map((r, i) => (
-                  <motion.div
-                    key={r.code}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: Math.min(i, 6) * 0.03 }}
-                    className={`bg-white border rounded-xl p-5 ${
-                      r.flagship ? "border-aic-copper/40" : "border-[#e5e7eb]"
-                    }`}
-                  >
-                    <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                      <span className="font-mono text-xs font-bold text-[#0f1f3d] bg-[#f0f4f8] px-2 py-1 rounded">
-                        {r.code}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded border ${TIER_TONE[r.tier]}`}
-                        title={`Best obtainable evidence: ${TIER_MEANING[r.tier].label}`}
-                      >
-                        Tier {r.tier}
-                      </span>
-                      <span className="text-[10px] font-mono uppercase tracking-wide text-[#9ca3af]">
-                        D{r.divisions.join(" · D")}
-                      </span>
-                      {r.flagship && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-aic-copper">
-                          <Star className="w-3 h-3 fill-aic-copper" />
-                          Hard to fake
+              <div className="bg-white border border-[#e5e7eb] rounded-lg overflow-hidden">
+                {/* Column headings, desktop only — on a phone each row is
+                    labelled inline instead. */}
+                <div className="hidden md:grid grid-cols-[5.5rem_minmax(0,1fr)_7rem_minmax(0,15rem)] gap-x-5 px-5 py-2.5 bg-[#f8f9fb] border-b border-[#e5e7eb] font-mono text-[10px] uppercase tracking-[0.12em] text-[#9ca3af]">
+                  <span>Code</span>
+                  <span>Requirement</span>
+                  <span>Applies to</span>
+                  <span>Evidence · tier</span>
+                </div>
+
+                <ul>
+                  {group.map((r) => (
+                    <li
+                      key={r.code}
+                      className={`grid md:grid-cols-[5.5rem_minmax(0,1fr)_7rem_minmax(0,15rem)] gap-x-5 gap-y-2 px-5 py-4 border-b border-[#f1f1f0] last:border-b-0 ${
+                        r.flagship ? "bg-aic-copper/[0.04]" : ""
+                      }`}
+                    >
+                      <div className="flex md:block items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-[#0f1f3d]">
+                          {r.code}
                         </span>
-                      )}
-                    </div>
-                    <p className="text-[#0f1f3d] leading-relaxed mb-2.5">{r.text}</p>
-                    <p className="text-sm text-[#6b7280]">
-                      <span className="font-semibold text-[#0f1f3d]">Evidence: </span>
-                      {r.evidence}
-                    </p>
-                  </motion.div>
-                ))}
+                        {r.flagship && (
+                          <span
+                            className="inline-flex items-center gap-1 md:mt-1.5 text-[9px] font-bold uppercase tracking-wide text-aic-copper"
+                            title="Difficult to satisfy without actually doing the work"
+                          >
+                            <Star className="w-2.5 h-2.5 fill-aic-copper" />
+                            Hard to fake
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-[#0f1f3d] leading-relaxed text-[15px]">
+                        {r.text}
+                      </p>
+
+                      <div className="font-mono text-[11px] text-[#6b7280] leading-relaxed">
+                        <span className="md:hidden text-[#9ca3af]">Applies to </span>
+                        D{r.divisions.join(" · D")}
+                      </div>
+
+                      <div className="text-[13px] text-[#6b7280] leading-relaxed">
+                        {r.evidence}
+                        <span
+                          className={`inline-flex items-center ml-2 px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wide align-middle ${TIER_TONE[r.tier]}`}
+                          title={`Best obtainable evidence: ${TIER_MEANING[r.tier].label}`}
+                        >
+                          {r.tier}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </section>
           );

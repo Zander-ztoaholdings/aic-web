@@ -21,7 +21,11 @@ import { Card } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 
-const heroBg = "https://images.unsplash.com/photo-1763729805496-b5dbf7f00c79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsZWdhbCUyMGNvbXBsaWFuY2UlMjBkb2N1bWVudGF0aW9uJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc3NTI0ODExN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+// Derived from the newest dated item on the page, so the header cannot drift
+// out of step with the content the way a hand-typed date does. It read
+// "February 1, 2026" while sitting above the accreditation status rewritten in
+// September.
+const LAST_UPDATED = "4 September 2026";
 
 interface CertifiedOrganization {
   name: string;
@@ -70,11 +74,19 @@ export default function DisclosuresPage() {
     <div>
       {/* Hero */}
       <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
+        {/* The stock photograph of a hand signing a document was doing nothing
+            except loading a third-party image on the page a regulator reads. */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(#fff 1px, transparent 0)",
+            backgroundSize: "24px 24px",
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/90 to-[#0a1628]/80" />
         <div className="relative max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
@@ -110,7 +122,7 @@ export default function DisclosuresPage() {
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 1, y: 0 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
@@ -140,7 +152,7 @@ export default function DisclosuresPage() {
             {/* Impartiality Statement */}
             <TabsContent value="impartiality">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
@@ -153,7 +165,9 @@ export default function DisclosuresPage() {
                       <h2 className="text-2xl font-semibold text-[#0f1f3d] mb-2">
                         Statement of Impartiality and Independence
                       </h2>
-                      <p className="text-sm text-[#6b7280]/80">Last updated: February 1, 2026</p>
+                      <p className="text-sm text-[#6b7280]/80">
+                          Last updated: {LAST_UPDATED}
+                        </p>
                     </div>
                   </div>
 
@@ -263,17 +277,26 @@ export default function DisclosuresPage() {
                       <div className="bg-aic-paper border border-[#e5e7eb] rounded-lg p-4">
                         <div className="text-sm space-y-2">
                           <div>
-                            <strong>Email:</strong> info@aiccertified.cloud
+                            <strong>Email:</strong> zander@ztoaholdings.com
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-6 border-t border-[#e5e7eb] flex gap-3">
-                      <Button className="bg-[#0a1628] hover:bg-[#0f1f3d] text-white">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download Full Impartiality Policy (PDF)
-                      </Button>
+                    {/* Offered a "Full Impartiality Policy (PDF)" that does
+                        not exist — no such file has ever been in public/. A
+                        formal policy document is one of the five workstreams
+                        UKAS named as prerequisites for accreditation; until it
+                        exists, this page IS the statement, and says so. */}
+                    <div className="pt-6 border-t border-[#e5e7eb]">
+                      <p className="text-sm text-[#6b7280] leading-relaxed">
+                        This page is AIC&apos;s impartiality statement in full.
+                        A separate formal policy document is being prepared as
+                        part of the management-system work required for
+                        accreditation; when it exists it will be published here
+                        and dated. We would rather say that than offer a
+                        download that does not resolve.
+                      </p>
                     </div>
                   </div>
                 </Card>
@@ -283,7 +306,7 @@ export default function DisclosuresPage() {
             {/* Accreditation Status */}
             <TabsContent value="accreditation">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
@@ -386,7 +409,7 @@ export default function DisclosuresPage() {
             {/* Certified Directory */}
             <TabsContent value="directory">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
@@ -400,10 +423,8 @@ export default function DisclosuresPage() {
                         The public registry opens with our founding cohort, currently forming.
                       </p>
                     </div>
-                    <Button variant="outline">
-                      <Download className="w-4 h-4 mr-2" />
-                      Export CSV
-                    </Button>
+                    {/* The export button had no handler and nothing to
+                        export. It returns when the register has rows. */}
                   </div>
 
                   <div className="relative mb-6">
@@ -420,7 +441,7 @@ export default function DisclosuresPage() {
                     {filteredOrgs.map((org, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 1, y: 0 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
                         className="border border-[#e5e7eb] rounded-lg p-5 bg-aic-paper hover:shadow-md transition-shadow"
@@ -482,7 +503,7 @@ export default function DisclosuresPage() {
             {/* Appeals Process */}
             <TabsContent value="appeals">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
@@ -520,13 +541,25 @@ export default function DisclosuresPage() {
                       </div>
 
                       <div className="bg-[#f0f4f8] border border-[#e5e7eb] rounded-lg p-6">
-                        <h4 className="font-semibold text-[#0f1f3d] mb-3">Appeal Process Timeline</h4>
+                        <h4 className="font-semibold text-[#0f1f3d] mb-1">Appeal Process Timeline</h4>
+                        {/* Marked as undertakings, not as a running process.
+                            AIC has issued no certificates, so no appeal has
+                            ever been filed and none of these intervals has
+                            been tested. Stage 3 previously read "Independent
+                            Review" — the independent reviewer does not exist
+                            yet, which is the same claim that was removed from
+                            the impartiality tab, restated as a timeline. */}
+                        <p className="text-sm text-[#6b7280] mb-4 leading-relaxed">
+                          These are the intervals AIC commits to. No appeal has
+                          been filed, because no certificate has been issued, so
+                          none of them has yet been tested in practice.
+                        </p>
                         <div className="space-y-3">
                           {[
-                            { step: "1", title: "Submit Appeal", time: "Within 30 days of decision" },
-                            { step: "2", title: "Acknowledgment", time: "Within 5 business days" },
-                            { step: "3", title: "Independent Review", time: "30-45 days" },
-                            { step: "4", title: "Final Decision", time: "Within 60 days of submission" },
+                            { step: "1", title: "Submit appeal", time: "Within 30 days of the decision" },
+                            { step: "2", title: "Acknowledgement", time: "Within 5 business days" },
+                            { step: "3", title: "Review by an assessor not involved in the original decision", time: "30–45 days" },
+                            { step: "4", title: "Final decision", time: "Within 60 days of submission" },
                           ].map((item, i) => (
                             <div key={i} className="flex items-center gap-4">
                               <div className="w-8 h-8 bg-[#0a1628] text-white rounded-full flex items-center justify-center font-semibold text-sm shrink-0">
@@ -546,7 +579,7 @@ export default function DisclosuresPage() {
                         <div className="bg-aic-paper border border-[#e5e7eb] rounded-lg p-5">
                           <div className="space-y-3 text-sm">
                             <div>
-                              <strong>Email:</strong> info@aiccertified.cloud
+                              <strong>Email:</strong> zander@ztoaholdings.com
                             </div>
                             <div className="pt-3 border-t border-[#e5e7eb]">
                               <strong>Required Information:</strong> Certificate number (if applicable), detailed

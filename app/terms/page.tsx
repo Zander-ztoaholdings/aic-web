@@ -242,8 +242,8 @@ export default function TermsOfUse() {
                   <h3 className="font-bold text-aic-navy mb-2 font-serif text-xl">Legal Enquiries</h3>
                   <p className="text-[#6b7280] mb-1">AI Integrity Certification (Pty) Ltd</p>
                   <p className="text-[#6b7280] mb-4">South Africa</p>
-                  <a href="mailto:zander@ztoaholdings.co.za" className="text-aic-copper underline font-bold text-lg">
-                    zander@ztoaholdings.co.za
+                  <a href="mailto:zander@ztoaholdings.com" className="text-aic-copper underline font-bold text-lg">
+                    zander@ztoaholdings.com
                   </a>
                   <p className="text-[#6b7280]/80 text-sm mt-4 leading-relaxed">
                     For general enquiries and platform support, use the contact form at
