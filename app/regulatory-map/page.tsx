@@ -1,9 +1,36 @@
 import { Globe2 } from "lucide-react";
-import RegulatoryMap from "@/app/components/RegulatoryMap";
+import RegulatoryMap, { type MapUpdate } from "@/app/components/RegulatoryMap";
+import { getPolicyUpdates } from "@/lib/notion";
+import { countriesForJurisdictions } from "@/app/data/regulatory-data";
 
 // Metadata lives in ./layout.tsx alongside every other route's.
 
-export default function RegulatoryMapPage() {
+// The map itself is static data, but the updates attached to it are not.
+export const revalidate = 300;
+
+export default async function RegulatoryMapPage() {
+  // Attach published updates to the countries they affect. This is what makes
+  // the map a record rather than a snapshot: the dataset says where a
+  // jurisdiction stands, and the updates say what moved it there and when.
+  const data = await getPolicyUpdates(100);
+  const updatesByCountry: Record<string, MapUpdate[]> = {};
+
+  for (const update of data?.results ?? []) {
+    if (!update.slug) continue; // no page to link to
+    for (const code of countriesForJurisdictions(update.jurisdictions)) {
+      (updatesByCountry[code] ??= []).push({
+        title: update.title,
+        date: update.date,
+        slug: update.slug,
+        tag: update.tag,
+      });
+    }
+  }
+
+  for (const list of Object.values(updatesByCountry)) {
+    list.sort((a, b) => b.date.localeCompare(a.date));
+  }
+
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
@@ -32,7 +59,7 @@ export default function RegulatoryMapPage() {
       {/* Map */}
       <section className="py-16 md:py-20">
         <div className="max-w-[1600px] mx-auto px-4">
-          <RegulatoryMap />
+          <RegulatoryMap updatesByCountry={updatesByCountry} />
         </div>
       </section>
 

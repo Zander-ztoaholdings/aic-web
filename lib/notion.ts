@@ -149,6 +149,11 @@ export async function getPolicyUpdates(pageSize = 4, startCursor?: string) {
         // blank. Callers must treat a slug-less update as unlinkable rather
         // than linking to /policy/undefined.
         slug: page.properties.Slug?.rich_text[0]?.plain_text || "",
+        // Which jurisdictions this update touches, used to attach it to
+        // countries on the regulatory map and to scope alert subscriptions.
+        jurisdictions: (page.properties.Jurisdictions?.multi_select ?? []).map(
+          (o: any) => o.name
+        ) as string[],
       };
     });
 

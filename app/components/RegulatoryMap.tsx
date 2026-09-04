@@ -6,10 +6,10 @@ import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Download, Mail, X, MapPin } from "lucide-react";
+import { Download, Mail, X, MapPin, CheckCircle2 } from "lucide-react";
 import {
   regulatoryData,
-  regulatoryDataReviewedAt,
+  oldestVerification,
   type CountryRegulation,
 } from "@/app/data/regulatory-data";
 
@@ -28,7 +28,20 @@ interface CountryFeature {
   path: string;
 }
 
-export default function RegulatoryMap() {
+/** A published policy update, as attached to a country on the map. */
+export interface MapUpdate {
+  title: string;
+  date: string;
+  slug: string;
+  tag: string;
+}
+
+export default function RegulatoryMap({
+  updatesByCountry = {},
+}: {
+  /** Country ISO numeric code -> updates affecting it, newest first. */
+  updatesByCountry?: Record<string, MapUpdate[]>;
+}) {
   const [countries, setCountries] = useState<CountryFeature[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -150,8 +163,10 @@ export default function RegulatoryMap() {
           </div>
         </div>
         <p className="text-xs text-[#9ca3af] mt-4">
-          Regulatory status reviewed {regulatoryDataReviewedAt}. General orientation only — not
-          legal advice. Verify against primary sources before relying on it.
+          Every jurisdiction on this map has been checked against its primary
+          source since {oldestVerification()}; each entry carries its own
+          verification date. General orientation only — not legal advice. Verify
+          against primary sources before relying on it.
         </p>
       </div>
 
@@ -187,7 +202,50 @@ export default function RegulatoryMap() {
             <p className="text-xs text-[#9ca3af] uppercase tracking-wide mb-4">
               {selected.authority}
             </p>
-            <p className="text-[#6b7280] text-sm leading-relaxed mb-8">{selected.summary}</p>
+            <p className="text-[#6b7280] text-sm leading-relaxed mb-6">{selected.summary}</p>
+
+            {/* The credibility line. A regulatory map is only worth anything if
+                the reader can tell how current THIS entry is, rather than
+                inferring it from a single date covering the whole dataset. */}
+            <div className="flex items-start gap-2.5 mb-8 p-3 rounded-lg bg-[#f0f4f8] border border-[#e5e7eb]">
+              <CheckCircle2 className="w-4 h-4 text-aic-copper shrink-0 mt-0.5" />
+              <div className="text-xs text-[#6b7280] leading-relaxed">
+                <span className="font-semibold text-[#0f1f3d]">
+                  Checked {selected.verifiedAt}
+                </span>
+                <br />
+                This entry was last verified against its primary source on that
+                date. It is not a live feed.
+              </div>
+            </div>
+
+            {/* The map states a position; these are the dated, sourced changes
+                behind it. Without them the two halves of the site describe the
+                same regulation at different granularities and never meet. */}
+            {(updatesByCountry[selected.id]?.length ?? 0) > 0 && (
+              <div className="mb-8">
+                <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-3">
+                  What has changed here
+                </h5>
+                <ul className="space-y-2">
+                  {updatesByCountry[selected.id].map((u) => (
+                    <li key={u.slug}>
+                      <Link
+                        href={`/policy/${u.slug}`}
+                        className="group block border border-[#e5e7eb] rounded-lg p-3 hover:border-aic-copper/40 hover:bg-[#f0f4f8] transition-all"
+                      >
+                        <span className="block text-[11px] font-mono text-[#9ca3af] mb-1">
+                          {u.date} · {u.tag}
+                        </span>
+                        <span className="block text-sm text-[#0f1f3d] leading-snug group-hover:text-aic-copper transition-colors">
+                          {u.title}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <a
               href={`/compliance-measures/${selected.pdfSlug}.pdf`}
