@@ -6,7 +6,7 @@ import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Download, Mail, X, MapPin, CheckCircle2, Search, ExternalLink } from "lucide-react";
+import { Download, Mail, X, CheckCircle2, Search, ExternalLink } from "lucide-react";
 import {
   regulatoryData,
   oldestVerification,
@@ -171,8 +171,15 @@ export default function RegulatoryMap({
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-      {/* Map */}
-      <div className="flex-1 lg:pr-8">
+      {/* Map. Takes the full width until a country is selected — the side
+          panel was reserving 24rem to hold a "click a country" placeholder,
+          which spent a quarter of the widest element on the site telling the
+          reader to do the thing the map already invites. */}
+      <div
+        className={`flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
+          selectedId ? "lg:pr-8" : "lg:pr-0"
+        }`}
+      >
         {/* Search. Rendered above the map on every breakpoint, and on mobile it
             is the ONLY way in — see the note on the SVG wrapper below. */}
         <div ref={searchRef} className="relative mb-4">
@@ -369,16 +376,20 @@ export default function RegulatoryMap({
         </p>
       </div>
 
-      {/* Side panel (desktop: fixed-width column; mobile: stacks below) */}
-      <div className="w-full lg:w-96 shrink-0 lg:border-l lg:border-[#e5e7eb] lg:pl-8">
-        {!selectedId ? (
-          <div className="h-full flex flex-col items-center justify-center text-center py-16 text-[#9ca3af]">
-            <MapPin className="w-6 h-6 mb-3" />
-            <p className="text-sm max-w-[220px]">
-              Click a country to see its AI regulatory status.
-            </p>
-          </div>
-        ) : selected ? (
+      {/* Side panel. Width is animated rather than the element being unmounted,
+          so the map resizes smoothly instead of the clicked country jumping
+          under the cursor. That is the motion doing a job — preserving spatial
+          continuity through a layout change — rather than decorating one. */}
+      <div
+        className={`overflow-hidden transition-[width] duration-300 ease-out motion-reduce:transition-none ${
+          selectedId
+            ? "w-full lg:w-[26rem] lg:shrink-0"
+            : "hidden lg:block lg:w-0"
+        }`}
+        aria-hidden={!selectedId}
+      >
+        <div className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8">
+        {selected ? (
           <div>
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#0f1f3d]">{selectedName}</h3>
@@ -556,6 +567,7 @@ export default function RegulatoryMap({
             </Link>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
