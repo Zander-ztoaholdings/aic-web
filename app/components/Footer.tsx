@@ -194,7 +194,11 @@ export default function Footer() {
               onClick={() =>
                 window.dispatchEvent(new Event("aic:review-cookie-consent"))
               }
-              className="hover:text-[#c9920a] transition-colors uppercase tracking-widest"
+              /* A <button> does not inherit font-size or font-family from its
+                 parent — the UA stylesheet sets its own — so the utility
+                 classes on the surrounding row applied to the sibling links
+                 and not to this. Stated explicitly so it matches them. */
+              className="text-[10px] font-mono uppercase tracking-widest text-white/50 hover:text-[#c9920a] transition-colors cursor-pointer"
             >
               Analytics Preference
             </button>
