@@ -71,3 +71,51 @@ describe("jurisdiction to country mapping", () => {
     }
   });
 });
+
+describe("jurisdiction depth", () => {
+  const CORE = ["710", "826", "840", "250", "276", "380", "724", "528", "616", "372"];
+
+  it("covers the jurisdictions AIC actually operates in", () => {
+    for (const code of CORE) {
+      expect(regulatoryData[code].detail, code).toBeDefined();
+    }
+  });
+
+  // Depth without a citation is just a longer assertion. If we are going to
+  // tell someone what a law requires, we point them at the law.
+  it("never states obligations without citing something", () => {
+    for (const [code, c] of Object.entries(regulatoryData)) {
+      if (!c.detail) continue;
+      expect(c.detail.obligations.length, code).toBeGreaterThan(0);
+      expect(c.detail.sources.length, code).toBeGreaterThan(0);
+      expect(c.detail.enforcement.trim(), code).not.toBe("");
+    }
+  });
+
+  it("cites https URLs only", () => {
+    for (const [code, c] of Object.entries(regulatoryData)) {
+      for (const src of c.detail?.sources ?? []) {
+        expect(src.url.startsWith("https://"), `${code}: ${src.url}`).toBe(true);
+        expect(src.label.trim()).not.toBe("");
+      }
+    }
+  });
+
+  it("shares one EU detail object across every member state", () => {
+    const eu = ["250", "276", "380", "724", "528", "616", "372"];
+    const first = regulatoryData["250"].detail;
+    for (const code of eu) {
+      expect(regulatoryData[code].detail, code).toBe(first);
+    }
+  });
+
+  // Entries left shallow are a deliberate choice, not an oversight, and the
+  // map says so — so this asserts the shallow ones stay honestly shallow
+  // rather than acquiring half-filled depth nobody verified.
+  it("leaves the rest with no detail rather than partial detail", () => {
+    for (const [code, c] of Object.entries(regulatoryData)) {
+      if (CORE.includes(code)) continue;
+      expect(c.detail, code).toBeUndefined();
+    }
+  });
+});

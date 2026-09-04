@@ -65,6 +65,14 @@ export interface CountryRegulation {
   /** Draft compliance-measures PDF, generated from public framework info. */
   pdfSlug: string;
   /**
+   * Depth, for the jurisdictions where AIC actually operates and where anyone
+   * will check our work. Deliberately absent elsewhere: 28 shallow entries
+   * honestly labelled beat 28 padded ones, and a thin entry on a country
+   * nobody asks about costs nothing, while a thin entry on the EU costs the
+   * reader we most want.
+   */
+  detail?: JurisdictionDetail;
+  /**
    * ISO date this specific entry was last checked against its primary source.
    *
    * Per-entry rather than one date for the whole file, because a single global
@@ -75,6 +83,113 @@ export interface CountryRegulation {
   verifiedAt: string;
 }
 
+export interface JurisdictionDetail {
+  /** What the instrument actually requires, in plain terms. */
+  obligations: string[];
+  /** Dates that have already bitten, or are about to. */
+  keyDates: { date: string; event: string }[];
+  /** Who enforces it, and the ceiling. */
+  enforcement: string;
+  /** The instrument itself, so a reader can check us rather than trust us. */
+  sources: { label: string; url: string }[];
+}
+
+// One object shared by every EU member state on the map. The obligations are
+// the Regulation's, not each country's, and duplicating them seven times would
+// mean seven places to get wrong.
+const EU_AI_ACT_DETAIL: JurisdictionDetail = {
+  obligations: [
+    "Article 5 prohibitions are in force: social scoring, untargeted facial-image scraping, emotion inference in workplaces and schools, and certain biometric categorisation and predictive policing.",
+    "Article 50 transparency applies: people must be told when they are interacting with an AI system, and synthetic audio, image, video and text must be marked in a machine-readable way.",
+    "General-purpose AI model obligations under Articles 51–56 apply to providers, including technical documentation and copyright policy.",
+    "High-risk obligations — risk management, data governance, logging, human oversight, conformity assessment — are deferred, not cancelled. Systems being built now will be in scope on the new dates.",
+  ],
+  keyDates: [
+    { date: "2 Feb 2025", event: "Article 5 prohibitions took effect." },
+    { date: "2 Aug 2025", event: "General-purpose AI model obligations took effect." },
+    { date: "27 Jul 2026", event: "Digital Omnibus on AI entered into force, amending the Act." },
+    { date: "2 Aug 2026", event: "Article 50 transparency obligations took effect." },
+    { date: "2 Dec 2026", event: "Grace period closes for marking content from systems already on the market, and for the new prohibition covering non-consensual intimate imagery and CSAM generation." },
+    { date: "2 Dec 2027", event: "Annex III standalone high-risk obligations apply — deferred from 2 Aug 2026." },
+    { date: "2 Aug 2028", event: "Annex I high-risk obligations for regulated products apply — deferred from 2 Aug 2027." },
+  ],
+  enforcement:
+    "The European AI Office, alongside national market surveillance authorities in each member state. The Omnibus gave the AI Office direct investigation and on-site inspection powers, the ability to accept binding commitments, and the power to impose fines.",
+  sources: [
+    {
+      label: "Regulation (EU) 2024/1689 — the AI Act",
+      url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+    },
+    {
+      label: "Regulation (EU) 2026/1744 — Digital Omnibus on AI",
+      url: "https://eur-lex.europa.eu/eli/reg/2026/1744/oj",
+    },
+  ],
+};
+
+const SOUTH_AFRICA_DETAIL: JurisdictionDetail = {
+  obligations: [
+    "A decision producing legal consequences, or affecting someone to a substantial degree, may not be based solely on automated processing — this expressly covers profiling of work performance, creditworthiness, reliability, location, health, personal preferences and conduct.",
+    "The prohibition lifts where the decision is made in connection with a contract and either the data subject's request has been met or appropriate safeguards are in place, or where a law provides safeguards.",
+    "Where an automated decision is permitted, the data subject must be given an opportunity to make representations about it.",
+    "The responsible party must supply sufficient information about the underlying logic of the processing for that response to be meaningful — which is, in practice, an explainability duty.",
+  ],
+  keyDates: [
+    { date: "1 Jul 2021", event: "POPIA compliance deadline passed; the Act applies in full." },
+    { date: "10 Apr 2026", event: "Draft National AI Policy gazetted." },
+    { date: "12 Jun 2026", event: "Draft National AI Policy withdrawn in its entirety." },
+  ],
+  enforcement:
+    "The Information Regulator. Administrative fines reach R10 million; serious offences carry up to R10 million and/or 10 years' imprisonment. The Regulator has begun issuing administrative fines in practice rather than only enforcement notices.",
+  sources: [
+    {
+      label: "POPIA section 71 — automated decision making",
+      url: "https://popia.co.za/section-71-automated-decision-making/",
+    },
+  ],
+};
+
+const UK_DETAIL: JurisdictionDetail = {
+  obligations: [
+    "No dedicated AI statute and no AI-specific obligations. Existing law applies unchanged: data protection, equality, consumer, financial services and sectoral safety rules all reach AI systems already.",
+    "Five non-statutory principles guide regulators — safety and robustness, transparency and explainability, fairness, accountability and governance, and contestability and redress.",
+    "Obligations arrive through your sector regulator rather than through an AI law, so the compliance question is which regulator you already answer to.",
+  ],
+  keyDates: [
+    { date: "2023", event: "AI White Paper set out the five cross-sectoral principles, on a non-statutory basis." },
+    { date: "4 Jun 2026", event: "An AI Regulation Bill was debated in the House of Lords; the Government's own proposals for the most capable models have not yet been introduced." },
+  ],
+  enforcement:
+    "No single AI regulator. The ICO, FCA, PRA, CMA, Ofcom, MHRA, HSE and NCSC each apply their existing powers and penalties within their own remit.",
+  sources: [
+    {
+      label: "CMS AI Regulation Scanner — United Kingdom",
+      url: "https://cms.law/en/int/expert-guides/ai-regulation-scanner/united-kingdom",
+    },
+  ],
+};
+
+const US_DETAIL: JurisdictionDetail = {
+  obligations: [
+    "No binding federal AI statute. Congress has not preempted state AI law, and previous attempts to do so have failed.",
+    "The NIST AI Risk Management Framework is voluntary. It is the de facto national reference and is what most US procurement language points at, but nothing makes it mandatory.",
+    "Binding obligations come from states, and the state picture is actively unsettled rather than merely fragmented — the leading example was repealed and rewritten in 2026.",
+    "Sector regulators (FTC, EEOC, financial and health regulators) apply existing law to AI, which is where most live enforcement risk actually sits.",
+  ],
+  keyDates: [
+    { date: "14 May 2026", event: "Colorado repealed its original AI Act (SB 24-205) and replaced it with SB 26-189, dropping mandatory risk-management programmes, impact assessments and the standalone anti-discrimination duty." },
+    { date: "1 Jan 2027", event: "Colorado's replacement law takes effect — consumer notice for consequential automated decisions, adverse-outcome disclosure within 30 days, and three-year record retention. Enforcement depends on Attorney General rulemaking, currently subject to a court stay." },
+  ],
+  enforcement:
+    "State attorneys general for state AI statutes; federal sector regulators under existing authority. A federal executive order has directed the Justice Department to challenge state AI laws and threatened federal broadband funding over them, so the preemption question is live and unresolved.",
+  sources: [
+    {
+      label: "NIST AI Risk Management Framework",
+      url: "https://www.nist.gov/itl/ai-risk-management-framework",
+    },
+  ],
+};
+
 export const regulatoryData: Record<string, CountryRegulation> = {
   "840": {
     id: "840",
@@ -83,8 +198,9 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     authority: "U.S. National Institute of Standards and Technology",
     status: "Voluntary framework",
     summary:
-      "No single federal AI law. NIST's AI RMF is the reference voluntary framework at national level; a growing patchwork of state-level rules (e.g. Colorado's AI Act) adds binding obligations for specific sectors and states.",
+      "No single federal AI law, and no federal preemption of state law. NIST's AI RMF is the voluntary national reference. Binding rules come from individual states, and that layer is unsettled rather than merely patchy — Colorado repealed and rewrote its AI Act in 2026, and a federal executive order now directs litigation against state AI laws.",
     pdfSlug: "united-states",
+    detail: US_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "124": {
@@ -129,6 +245,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "As an EU member state, France applies the EU AI Act directly. The Act is risk-tiered (unacceptable / high / limited / minimal risk) and its obligations are phasing in on a multi-year timetable from 2024.",
     pdfSlug: "eu-france",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "276": {
@@ -140,6 +257,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Germany applies the EU AI Act directly as an EU member state, alongside its own data protection and sectoral supervisory bodies for enforcement.",
     pdfSlug: "eu-germany",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "380": {
@@ -151,6 +269,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Italy applies the EU AI Act directly as an EU member state; obligations phase in through 2026–2027 by risk tier.",
     pdfSlug: "eu-italy",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "724": {
@@ -162,6 +281,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Spain applies the EU AI Act directly and has stood up AESIA, a dedicated national AI supervisory agency — one of the first EU states to do so.",
     pdfSlug: "eu-spain",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "528": {
@@ -173,6 +293,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "The Netherlands applies the EU AI Act directly as an EU member state.",
     pdfSlug: "eu-netherlands",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "616": {
@@ -184,6 +305,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Poland applies the EU AI Act directly as an EU member state.",
     pdfSlug: "eu-poland",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "372": {
@@ -195,6 +317,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Ireland applies the EU AI Act directly as an EU member state and hosts EU headquarters for a number of AI-deploying multinationals, raising its practical enforcement profile.",
     pdfSlug: "eu-ireland",
+    detail: EU_AI_ACT_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "826": {
@@ -206,6 +329,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "The UK has deliberately not passed a standalone AI Act, relying instead on existing sector regulators applying shared cross-sectoral principles. This is a live policy area and could change.",
     pdfSlug: "united-kingdom",
+    detail: UK_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "756": {
@@ -239,6 +363,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "South Africa has no standalone AI law. POPIA Section 71 gives data subjects rights around solely automated decision-making with legal or similarly significant effect — the closest existing binding hook for AI accountability, and the anchor for AIC's own methodology.",
     pdfSlug: "south-africa",
+    detail: SOUTH_AFRICA_DETAIL,
     verifiedAt: "2026-09-01",
   },
   "404": {

@@ -6,7 +6,7 @@ import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Download, Mail, X, MapPin, CheckCircle2, Search } from "lucide-react";
+import { Download, Mail, X, MapPin, CheckCircle2, Search, ExternalLink } from "lucide-react";
 import {
   regulatoryData,
   oldestVerification,
@@ -417,6 +417,73 @@ export default function RegulatoryMap({
                 date. It is not a live feed.
               </div>
             </div>
+
+            {/* Depth, where we have it. Absent for most jurisdictions, and
+                that absence is honest rather than hidden: the four AIC works
+                in are the four anyone will check. */}
+            {selected.detail && (
+              <div className="mb-8 space-y-6">
+                <div>
+                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
+                    What it requires
+                  </h5>
+                  <ul className="space-y-2">
+                    {selected.detail.obligations.map((o, i) => (
+                      <li key={i} className="flex gap-2.5 text-sm text-[#6b7280] leading-relaxed">
+                        <span className="text-aic-copper shrink-0 mt-1.5 w-1 h-1 rounded-full bg-aic-copper" />
+                        <span>{o}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
+                    Dates that matter
+                  </h5>
+                  <ul className="space-y-2">
+                    {selected.detail.keyDates.map((d, i) => (
+                      <li key={i} className="text-sm leading-relaxed">
+                        <span className="font-mono text-xs text-aic-copper">{d.date}</span>
+                        <span className="text-[#6b7280]"> — {d.event}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
+                    Enforcement
+                  </h5>
+                  <p className="text-sm text-[#6b7280] leading-relaxed">
+                    {selected.detail.enforcement}
+                  </p>
+                </div>
+
+                {/* Cited so a reader can check us rather than take our word,
+                    which is the whole posture of this organisation. */}
+                <div>
+                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
+                    Read it yourself
+                  </h5>
+                  <ul className="space-y-1.5">
+                    {selected.detail.sources.map((src) => (
+                      <li key={src.url}>
+                        <a
+                          href={src.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-start gap-1.5 text-sm text-aic-copper hover:underline"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                          <span>{src.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
 
             {/* The map states a position; these are the dated, sourced changes
                 behind it. Without them the two halves of the site describe the
