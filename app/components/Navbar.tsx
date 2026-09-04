@@ -234,18 +234,21 @@ export default function Navbar() {
               })}
 
               {/* Copper CTA */}
-              {/* /login is a redirect to NEXT_PUBLIC_PLATFORM_URL (see
-                  next.config.ts), so the platform can move without touching
-                  every link that points at it. */}
-              <Link
-                href="/login"
-                className="ml-2 px-4 py-2.5 rounded text-sm font-semibold text-[#0f1f3d] border border-[#e5e7eb] hover:border-[#0f1f3d] transition-colors"
-              >
-                Log in
-              </Link>
+              {/* LOG IN LINK TEMPORARILY REMOVED — 4 Sep 2026.
+                  app.aiccertified.cloud currently serves a client dashboard to
+                  anyone, with no authentication, populated with a fictional
+                  certified client ("Meridian Financial Group", an Accountable
+                  Person named Dr. Sarah Chen, Division 2, INTEGRITY: SECURE).
+                  Verified from a cookieless fetch, so it is not a stale local
+                  session. Linking the public site to it would advertise a
+                  certified client relationship that does not exist, on a site
+                  whose register correctly says nobody has been certified.
+                  Restore this block once the platform is genuinely gated and
+                  the demo data is gone — the /login redirect is already fixed
+                  and waiting in next.config.ts. */}
               <Link
                 href="/contact"
-                className="ml-1 bg-[#c9920a] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-[#b07d08] transition-all shadow-md active:scale-95"
+                className="ml-2 bg-[#c9920a] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-[#b07d08] transition-all shadow-md active:scale-95"
               >
                 Contact us
               </Link>
@@ -322,13 +325,6 @@ export default function Navbar() {
               </div>
 
               <div className="pt-4 mt-2 flex flex-col gap-3">
-                <Link
-                  href="/login"
-                  className="flex items-center justify-center text-base border border-[#e5e7eb] text-[#0f1f3d] px-4 py-4 rounded font-bold transition-colors hover:border-[#0f1f3d]"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Log in
-                </Link>
                 <Link
                   href="/contact"
                   className="flex items-center justify-center text-base bg-[#c9920a] text-white px-4 py-4 rounded font-bold transition-all hover:bg-[#b07d08]"
