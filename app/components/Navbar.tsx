@@ -9,6 +9,7 @@ import {
   X,
   ChevronDown,
   Shield,
+  ClipboardCheck,
   ShieldCheck,
   Search,
   Scale,
@@ -52,6 +53,7 @@ export const navGroups: NavGroup[] = [
     label: "Certification",
     items: [
       { href: "/certification", label: "Certification Framework", icon: Shield, description: "The Five-Division accountability model" },
+      { href: "/standard", label: "The Standard", icon: ClipboardCheck, description: "All 44 requirements we assess against" },
       { href: "/registry", label: "Public Registry", icon: ShieldCheck, description: "Search certified organisations" },
       { href: "/verify", label: "Verify a Certificate", icon: Search, description: "Confirm a certificate ID in seconds" },
       { href: "/governance-hub#declaration", label: "Algorithmic Rights", icon: Scale, description: "The Declaration of Algorithmic Rights" },
