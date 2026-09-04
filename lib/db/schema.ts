@@ -86,6 +86,10 @@ export const organizations = pgTable('organizations', {
   accreditationStatus: varchar('accreditation_status', { length: 50 }).default('PENDING'),
   iso42001Readiness: integer('iso_42001_readiness_score').default(0),
   certificationStatus: varchar('certification_status', { length: 50 }).default('DRAFT'),
+  // The Division an organisation is assessed as. Absent until now: `tier`
+  // (TIER_1-3) is a different axis and was doing duty for nothing here, while
+  // the entire Five-Division framework had no column to live in.
+  division: varchar('division', { length: 1 }),
   
   // Billing & JIT Provisioning
   stripeCustomerId: varchar('stripe_customer_id', { length: 255 }),
@@ -694,3 +698,84 @@ export const examQuestions = pgTable('exam_questions', {
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
+
+// ── Certification path ────────────────────────────────────────────────────────
+//
+// Deliberately NEW tables rather than an extension of audit_requirements.
+// That table is a generic checklist (title, description, category, status)
+// that predates the requirement matrix, and aic-platform holds its own copy of
+// it — so reshaping it would mean reshaping a table two repos disagree about.
+// These are owned here, where the standard, the scoring, the register and
+// /verify already live, so evidence and the public claim it supports never
+// travel between systems that hold different ideas of what a requirement is.
+
+/** Which Division an organisation is assessed as. 1 Sovereign … 5 Artificial. */
+export const divisionEnum = pgEnum('division_enum', ['1', '2', '3', '4', '5']);
+
+export const assessmentStatusEnum = pgEnum('assessment_status_enum', [
+  'DRAFT',        // scoping, requirements instantiated
+  'EVIDENCE',     // client submitting
+  'REVIEW',       // auditor assessing
+  'COMPLETE',     // scored, decision recorded
+  'WITHDRAWN',
+]);
+
+export const assessments = pgTable('assessments', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  division: divisionEnum('division').notNull(),
+  status: assessmentStatusEnum('status').notNull().default('DRAFT'),
+
+  // Pinned at instantiation. A requirement set that shifts under a live
+  // assessment would make the resulting certificate unauditable — nobody could
+  // later say which version of the standard was actually applied.
+  standardVersion: varchar('standard_version', { length: 20 }).notNull(),
+
+  // Layer 1 of the scoring model: binary gates, checked before any scoring.
+  // Failing one produces no score rather than a low one.
+  gatesPassed: jsonb('gates_passed').$type<string[]>().default([]),
+
+  // Computed on completion, never on read — a score that recalculates when the
+  // scoring code changes is not a record of a decision.
+  overallScore: integer('overall_score'),
+  perRightScores: jsonb('per_right_scores').$type<Record<string, number>>(),
+  resultStatus: varchar('result_status', { length: 60 }),
+  limitedBy: text('limited_by'),
+
+  leadAuditorId: uuid('lead_auditor_id').references(() => users.id),
+  openedAt: timestamp('opened_at', { withTimezone: true }).defaultNow(),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+}, (table) => ({
+  byOrg: index('assessments_org_idx').on(table.orgId),
+}));
+
+export const assessmentRequirements = pgTable('assessment_requirements', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  assessmentId: uuid('assessment_id').notNull().references(() => assessments.id, { onDelete: 'cascade' }),
+
+  /** The published code — HU-7, EX-5. Bound to /api/standard, not re-invented. */
+  code: varchar('code', { length: 10 }).notNull(),
+  right: varchar('right', { length: 2 }).notNull(),
+  /** Best obtainable evidence for this requirement: A, B, C or D. */
+  expectedTier: varchar('expected_tier', { length: 1 }).notNull(),
+  /** What was actually supplied. Null until something is. */
+  providedTier: varchar('provided_tier', { length: 1 }),
+
+  /** EM-7 where a client cannot supply demographic data: scores zero, recorded
+   *  as a documented limitation rather than a failure, and caps the result. */
+  notTestable: boolean('not_testable').default(false),
+
+  evidenceDocId: uuid('evidence_doc_id').references(() => auditDocuments.id, { onDelete: 'set null' }),
+  auditorNote: text('auditor_note'),
+  finding: text('finding'),
+  assessedBy: uuid('assessed_by').references(() => users.id),
+  assessedAt: timestamp('assessed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => ({
+  // One row per requirement per assessment. Without this, a re-instantiation
+  // silently doubles a right's denominator and quietly halves its score.
+  uniqPerAssessment: uniqueIndex('assessment_requirement_unique').on(table.assessmentId, table.code),
+  byAssessment: index('assessment_requirements_assessment_idx').on(table.assessmentId),
+}));

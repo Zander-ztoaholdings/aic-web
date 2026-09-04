@@ -22,6 +22,13 @@
       "when": 1788335558959,
       "tag": "0002_nervous_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788544803382,
+      "tag": "0003_natural_whirlwind",
+      "breakpoints": true
     }
   ]
 }
