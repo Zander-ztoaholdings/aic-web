@@ -218,12 +218,32 @@ export default function PrivacyPolicy() {
 
             {/* 9 */}
             <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">9. Cookies and Analytics</h2>
+            {/* This said the site used Vercel Analytics, stored no personal
+                identifiers and set no tracking cookies. All three were untrue:
+                it runs Google Analytics, which assigns a persistent client
+                identifier and sends behaviour to Google. Corrected 4 Sep 2026,
+                and analytics no longer loads at all without consent. */}
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
-              This website uses Vercel Analytics to collect anonymised, aggregated usage data
-              (page views, referral sources, device type). No personal identifiers are stored.
-              No third-party advertising or tracking cookies are set. You can disable JavaScript
-              in your browser to opt out of analytics entirely, though this may affect site
-              functionality.
+              This website uses <strong className="text-[#0f1f3d]">Google
+              Analytics</strong>, and only if you have explicitly allowed it.
+              Until you do, the script is not loaded and no analytics cookie is
+              set — declining stores a single preference in your browser&apos;s
+              local storage and nothing else.
+            </p>
+            <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
+              If you allow it, Google Analytics sets cookies that assign your
+              browser a persistent identifier and records which pages you visit,
+              how you arrived, and your device and approximate location. That is
+              personal information under POPIA, and it is processed by Google
+              LLC, including on infrastructure outside South Africa. We enable
+              IP anonymisation. We use it to see which pages are read, and for
+              nothing else — there is no advertising, no remarketing, and no
+              profile is built about you by us.
+            </p>
+            <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
+              You can change your mind at any time using the analytics
+              preference link in the footer. Nothing on this site requires
+              analytics to function, so declining costs you nothing.
             </p>
 
             {/* 10 */}

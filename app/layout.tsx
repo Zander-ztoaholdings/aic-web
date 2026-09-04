@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Script from "next/script";
+import CookieConsent from "@/app/components/CookieConsent";
 import { ClientLayout } from "./components/ClientLayout";
 
 const SITE_URL = "https://aiccertified.cloud";
@@ -116,7 +116,10 @@ const websiteLd = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID || "G-G7QB1VX27Q";
+  // No hardcoded fallback: the ID was defaulted to a literal, so unsetting
+  // NEXT_PUBLIC_GA_ID did not disable analytics — the one control that should
+  // have turned it off did nothing.
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html lang="en-ZA">
@@ -149,21 +152,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${gaId}');
-          `}
-        </Script>
       </head>
       <body className="antialiased">
         <ClientLayout>{children}</ClientLayout>
+        <CookieConsent gaId={gaId} />
       </body>
     </html>
   );
