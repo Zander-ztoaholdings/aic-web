@@ -7,6 +7,7 @@ import {
   Download,
   ChevronDown,
   ChevronRight,
+  ArrowRight,
   Scale,
   Map,
   Newspaper,
@@ -107,6 +108,8 @@ export interface PolicyUpdate {
   tag: string;
   title: string;
   summary: string;
+  /** Empty for rows with no slug set; such an update has no page to link to. */
+  slug?: string;
 }
 
 interface GovernanceHubClientProps {
@@ -312,7 +315,7 @@ export default function GovernanceHubClient({
               </h2>
             </div>
             <Link
-              href="/articles"
+              href="/policy"
               className="flex items-center gap-2 text-sm text-[#0f1f3d] border border-[#e5e7eb] px-4 py-2 rounded-lg hover:bg-[#f0f4f8] transition-colors"
             >
               <Newspaper className="w-4 h-4" /> All updates
@@ -361,6 +364,16 @@ export default function GovernanceHubClient({
                 </div>
                 <h3 className="text-[#0f1f3d] font-semibold mb-2 leading-snug">{update.title}</h3>
                 <p className="text-[#6b7280] text-sm leading-relaxed mb-4">{update.summary}</p>
+                {/* Without this the body written for each update was
+                    unreachable: the card showed the summary and stopped. */}
+                {update.slug && (
+                  <Link
+                    href={`/policy/${update.slug}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-aic-copper hover:gap-2.5 transition-all"
+                  >
+                    Read the update <ArrowRight className="w-4 h-4" />
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>

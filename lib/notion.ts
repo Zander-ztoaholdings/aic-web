@@ -145,6 +145,10 @@ export async function getPolicyUpdates(pageSize = 4, startCursor?: string) {
         tag: page.properties.Tag?.select?.name || "Update",
         title: page.properties.Title?.title[0]?.plain_text || "Untitled Update",
         summary: page.properties.Summary?.rich_text[0]?.plain_text || "",
+        // Empty when the row predates the Slug property or an editor left it
+        // blank. Callers must treat a slug-less update as unlinkable rather
+        // than linking to /policy/undefined.
+        slug: page.properties.Slug?.rich_text[0]?.plain_text || "",
       };
     });
 
@@ -155,5 +159,73 @@ export async function getPolicyUpdates(pageSize = 4, startCursor?: string) {
   } catch (error) {
     console.error("Notion API Error (getPolicyUpdates):", error);
     return null;
+  }
+}
+
+/**
+ * A single policy update with its body.
+ *
+ * Same Status filter as getArticleBySlug, and for the same reason: without it
+ * a draft is publicly readable by anyone holding the URL, which defeats the
+ * point of having a draft state. The Slug filter alone is not access control.
+ *
+ * Returns null both for "not found" and "not configured" — the caller renders
+ * notFound() either way, because a 404 is the honest answer to a URL we cannot
+ * serve, and an outage banner on a single update would be noise.
+ */
+export async function getPolicyUpdateBySlug(slug: string) {
+  if (!notion || !n2m || !POLICY_UPDATES_DATABASE_ID) return null;
+
+  try {
+    const response = await notion.databases.query({
+      database_id: POLICY_UPDATES_DATABASE_ID,
+      filter: {
+        and: [
+          { property: "Slug", rich_text: { equals: slug } },
+          { property: "Status", select: { equals: "Published" } },
+        ],
+      },
+    });
+
+    const page = response.results[0];
+    if (!page) return null;
+
+    const mdblocks = await n2m.pageToMarkdown(page.id);
+    const mdString = n2m.toMarkdownString(mdblocks);
+
+    return {
+      id: page.id,
+      title: (page as any).properties.Title?.title[0]?.plain_text || "Untitled Update",
+      summary: (page as any).properties.Summary?.rich_text[0]?.plain_text || "",
+      tag: (page as any).properties.Tag?.select?.name || "Update",
+      date: (page as any).properties.Date?.date?.start || "",
+      slug,
+      content: mdString.parent,
+    };
+  } catch (error) {
+    console.error("Notion API Error (getPolicyUpdateBySlug):", error);
+    return null;
+  }
+}
+
+/**
+ * Slugs of every published update, for generateStaticParams and the sitemap.
+ * Rows without a slug are dropped: they have no addressable URL.
+ */
+export async function getPolicyUpdateSlugs(): Promise<string[]> {
+  if (!notion || !POLICY_UPDATES_DATABASE_ID) return [];
+
+  try {
+    const response = await notion.databases.query({
+      database_id: POLICY_UPDATES_DATABASE_ID,
+      filter: { property: "Status", select: { equals: "Published" } },
+      page_size: 100,
+    });
+    return response.results
+      .map((page: any) => page.properties.Slug?.rich_text[0]?.plain_text || "")
+      .filter(Boolean);
+  } catch (error) {
+    console.error("Notion API Error (getPolicyUpdateSlugs):", error);
+    return [];
   }
 }

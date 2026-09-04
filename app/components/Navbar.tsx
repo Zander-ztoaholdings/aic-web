@@ -76,7 +76,7 @@ export const navGroups: NavGroup[] = [
     label: "News",
     items: [
       { href: "/articles", label: "Articles", icon: Newspaper, description: "Governance insights and updates" },
-      { href: "/governance-hub#policy-updates", label: "Policy Updates", icon: Radio, description: "Real-time policy intelligence" },
+      { href: "/policy", label: "Policy Updates", icon: Radio, description: "Regulatory developments, with their sources" },
     ],
   },
 ];
