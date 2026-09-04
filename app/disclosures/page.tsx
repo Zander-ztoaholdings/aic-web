@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FileText,
@@ -41,6 +41,23 @@ const appealCases: { caseId: string; organization: string; dateSubmitted: string
 export default function DisclosuresPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("impartiality");
+
+  // These tabs are controlled state, so a link to /disclosures#accreditation
+  // would otherwise land on the page showing the impartiality tab instead.
+  // The accreditation status is linked to from the mark in the header and
+  // footer, and from elsewhere on the site, so the deep link has to work.
+  const TAB_IDS = ["impartiality", "accreditation", "directory", "appeals"];
+
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (TAB_IDS.includes(hash)) setActiveTab(hash);
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredOrgs = certifiedOrgs.filter(
     (org) =>
@@ -170,29 +187,67 @@ export default function DisclosuresPage() {
 
                     <div>
                       <h3 className="font-semibold text-[#0f1f3d] mb-2">Independence Safeguards</h3>
+                      <p className="text-sm text-[#6b7280] mb-4">
+                        Each safeguard below is marked with what it actually is
+                        today. A commitment we have made and a mechanism that is
+                        already running are different things, and a certification
+                        body that blurs them has no business grading anyone else.
+                      </p>
                       <div className="grid md:grid-cols-2 gap-4">
                         {[
                           {
-                            title: "Financial Independence",
-                            desc: "Our impartiality policy commits us to: no single client representing more than 15% of annual revenue.",
+                            title: "No advisory relationship",
+                            state: "in force",
+                            // The Arthur Andersen Rule, stated at full strength.
+                            // This previously read "within the preceding 3 years",
+                            // which quietly downgraded an absolute rule to a
+                            // cooling-off period and gained nothing for it.
+                            desc: "AIC never certifies an organisation it has a commercial or advisory relationship with. Not a cooling-off period — a permanent bar, and the rule the entire body is built on.",
                           },
                           {
-                            title: "Personnel Separation",
-                            desc: "Auditors may not assess organisations they have consulted for within the preceding 3 years.",
+                            title: "Client concentration limit",
+                            state: "committed",
+                            desc: "Our impartiality policy commits us to no single client exceeding 15% of annual revenue. AIC has issued no certificates yet, so this commitment has not been tested in practice.",
                           },
                           {
-                            title: "Board Oversight",
-                            desc: "Conflict of interest allegations are referred to an independent ethics committee.",
+                            title: "Independent conflicts panel",
+                            state: "not yet in place",
+                            // Previously asserted as an existing "independent
+                            // ethics committee". It does not exist. Impartiality
+                            // arrangements are one of the five workstreams UKAS
+                            // named as prerequisites for accreditation.
+                            desc: "Conflict allegations are currently handled by AIC's founders, because AIC is a small body and there is no panel yet. An independent panel is a prerequisite for accreditation and will be in place before the first certificate is issued.",
                           },
                           {
-                            title: "Public Accountability",
-                            desc: "Annual impartiality report published and audited by accreditation body.",
+                            title: "Annual impartiality report",
+                            state: "not yet in place",
+                            // Previously asserted as "published and audited by
+                            // accreditation body" — AIC has no accreditation
+                            // body, and no report has ever been published.
+                            desc: "No impartiality report has been published. Once AIC is accredited, its accreditation body reviews these arrangements; until then there is no external auditor of them and we will not imply otherwise.",
                           },
                         ].map((safeguard, i) => (
                           <div key={i} className="flex items-start gap-3 p-4 bg-aic-paper rounded-lg border border-[#e5e7eb]">
-                            <CheckCircle className="w-5 h-5 text-[#c9920a] shrink-0 mt-0.5" />
+                            {safeguard.state === "in force" ? (
+                              <CheckCircle className="w-5 h-5 text-[#0a7a54] shrink-0 mt-0.5" />
+                            ) : (
+                              <AlertCircle className="w-5 h-5 text-[#9ca3af] shrink-0 mt-0.5" />
+                            )}
                             <div>
-                              <div className="font-medium text-[#0f1f3d] mb-1">{safeguard.title}</div>
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className="font-medium text-[#0f1f3d]">{safeguard.title}</span>
+                                <span
+                                  className={`text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full ${
+                                    safeguard.state === "in force"
+                                      ? "bg-[#10b981]/10 text-[#0a7a54]"
+                                      : safeguard.state === "committed"
+                                      ? "bg-[#c9920a]/10 text-[#8a6607]"
+                                      : "bg-[#6b7280]/10 text-[#6b7280]"
+                                  }`}
+                                >
+                                  {safeguard.state}
+                                </span>
+                              </div>
                               <p className="text-sm text-[#6b7280]">{safeguard.desc}</p>
                             </div>
                           </div>
@@ -239,10 +294,88 @@ export default function DisclosuresPage() {
                         <Shield className="w-6 h-6 text-[#c9920a]" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h2 className="text-2xl font-semibold text-[#0f1f3d]">Methodology Assessment</h2>
-                        </div>
-                        <p className="text-sm text-[#6b7280]/80">AIC&apos;s certification methodology is currently undergoing assessment to ensure alignment with international best practices.</p>
+                        <h2 className="text-2xl font-semibold text-[#0f1f3d] mb-2">
+                          AIC is not yet accredited
+                        </h2>
+                        <p className="text-[#0f1f3d] leading-relaxed">
+                          No accreditation body has yet assessed AIC. We are not
+                          accredited by UKAS, SANAS, DAkkS or any other signatory
+                          of the IAF multilateral arrangement, and no certificate
+                          AIC issues today carries accredited status. Anyone
+                          deciding whether to rely on us should know that first,
+                          which is why it is the first line on this page.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-[#e5e7eb] pt-6 space-y-6">
+                      <div>
+                        <h3 className="font-semibold text-[#0f1f3d] mb-2">The scheme we are pursuing</h3>
+                        <p className="text-sm text-[#6b7280] leading-relaxed">
+                          AIC offers certification against{" "}
+                          <strong className="text-[#0f1f3d]">ISO/IEC 42001</strong>, the AI
+                          management system standard. Accrediting a body to certify against a
+                          management system standard is governed by{" "}
+                          <strong className="text-[#0f1f3d]">ISO/IEC 17021-1</strong>, and that is
+                          the standard AIC is being assessed against.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-[#0f1f3d] mb-3">Where the application stands</h3>
+                        <ol className="space-y-3">
+                          {[
+                            {
+                              date: "12 June 2026",
+                              text: "Application forms submitted to UKAS, the United Kingdom Accreditation Service. UKAS is AIC's primary accreditation path.",
+                            },
+                            {
+                              date: "8 July 2026",
+                              text: "UKAS returned an indicative pre-estimate covering application, pre-assessment, initial assessment and the surveillance cycle.",
+                            },
+                            {
+                              date: "July 2026 — current position",
+                              text: "AIC has deliberately paused progression. Accreditation requires witnessed assessments of live certification work, which means real clients being audited in real conditions. We do not have those yet, so an assessment now would be assessing an empty schedule. UKAS confirmed in writing that this sequencing is the right one and that progressing once live certification activity exists places AIC in a stronger position.",
+                            },
+                          ].map((item, i) => (
+                            <li key={i} className="flex gap-4">
+                              <div className="shrink-0 w-8 h-8 rounded-full bg-[#f0f4f8] border border-[#e5e7eb] flex items-center justify-center text-xs font-semibold text-[#0f1f3d]">
+                                {i + 1}
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono uppercase tracking-wide text-[#9ca3af] mb-1">
+                                  {item.date}
+                                </div>
+                                <p className="text-sm text-[#6b7280] leading-relaxed">{item.text}</p>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-[#0f1f3d] mb-2">Other bodies engaged</h3>
+                        <p className="text-sm text-[#6b7280] leading-relaxed">
+                          SANAS, the South African National Accreditation System, has been engaged
+                          and the conversation is open but has not progressed to assessment. DAkkS
+                          in Germany was approached and has not responded. Neither is an
+                          accreditation, and we list them so the picture is complete rather than
+                          flattering.
+                        </p>
+                      </div>
+
+                      <div className="bg-[#f0f4f8] border border-[#e5e7eb] rounded-lg p-6">
+                        <h3 className="font-semibold text-[#0f1f3d] mb-2">
+                          What this means if you are considering certification
+                        </h3>
+                        <p className="text-sm text-[#6b7280] leading-relaxed">
+                          Founding-cohort clients are certified by an unaccredited body, and should
+                          treat the certificate on that basis. In exchange, their audits are the
+                          witnessed activity that accreditation requires — so the founding cohort
+                          is not a discount on rigour, it is the evidence base the accreditation is
+                          built from. We would rather state that plainly than sell a badge whose
+                          standing we have overstated.
+                        </p>
                       </div>
                     </div>
                   </Card>

@@ -58,7 +58,7 @@ export default function Footer() {
             <Link href="/" className="inline-block group">
               <Image
                 src="/AIC-Logo-White.svg"
-                alt="AI Integrity Certification — Methodology Assessed"
+                alt="AI Integrity Certification"
                 width={110}
                 height={180}
                 className="h-[72px] w-auto sm:h-20 group-hover:opacity-90 transition-opacity"
@@ -67,10 +67,17 @@ export default function Footer() {
             <p className="text-white/50 text-sm leading-relaxed">
               Certifying the humans accountable for AI systems. AI Integrity Certification (Pty) Ltd, South Africa.
             </p>
-            <div className="pt-2 flex items-center gap-2 text-[10px] text-[#c9920a] font-mono uppercase tracking-widest">
+            {/* Links to the accreditation status rather than standing alone,
+                so what the mark does and does not assert is published on the
+                site rather than explained after someone challenges it. */}
+            <Link
+              href="/disclosures#accreditation"
+              title="What this mark means, and AIC's accreditation status"
+              className="pt-2 flex items-center gap-2 text-[10px] text-[#c9920a] hover:text-[#dcae4c] font-mono uppercase tracking-widest transition-colors"
+            >
               <Shield className="w-3.5 h-3.5 shrink-0" />
               <span>METHODOLOGY ASSESSED</span>
-            </div>
+            </Link>
             <Link
               href="/verify"
               className="inline-block text-white/40 hover:text-[#c9920a] text-xs font-mono uppercase tracking-widest transition-colors"

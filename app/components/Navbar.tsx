@@ -129,10 +129,14 @@ export default function Navbar() {
       <div className="bg-[#0a1628] text-white/70 text-[10px] uppercase tracking-wider py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5">
+            <Link
+              href="/disclosures#accreditation"
+              title="What this mark means, and AIC's accreditation status"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
               <Globe className="w-3 h-3" />
               METHODOLOGY ASSESSED
-            </span>
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
