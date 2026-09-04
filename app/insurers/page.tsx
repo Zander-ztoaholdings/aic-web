@@ -61,6 +61,20 @@ export default function InsurersPage() {
               form asks. AIC exists to make that answerable — and verifiable by
               you in under thirty seconds, without taking anyone&apos;s word for it.
             </p>
+            {/* Where this argument has the most commercial force: the thing an
+                underwriter is exposed to is not the model, it is the position
+                the insured takes afterwards. */}
+            <p className="text-lg text-white/70 max-w-3xl leading-relaxed mb-8">
+              And when it goes wrong, you already know the shape of what comes
+              back. The system made the call, nobody in the business understood
+              it well enough to be responsible for it, so no individual can be
+              held to it. A certified organisation has closed that door on
+              itself: a named person has signed a declaration accepting
+              personal accountability for those decisions, and was tested on
+              whether they could describe how the system actually behaves
+              without checking with anyone. Neither of those survives
+              &ldquo;nobody knew&rdquo;.
+            </p>
             <p className="text-sm text-white/50 max-w-3xl leading-relaxed border-l-2 border-aic-copper/40 pl-4">
               To be plain about where this stands: no insurer currently
               recognises AIC certification, and no organisation has been

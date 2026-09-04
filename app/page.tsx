@@ -277,6 +277,24 @@ export default function MarketingPage() {
                   AIC certifies that a named human remains accountable — and
                   publishes the result so anyone can check it.
                 </p>
+                {/* The sharpest thing certification actually does, stated as a
+                    cost rather than a benefit. A mark whose only effect is to
+                    make you look better is a mark nobody should believe. */}
+                <p>
+                  Which closes a door. When an automated decision causes harm,
+                  the position available today is that the system did it and
+                  nobody understood it well enough to be responsible — no
+                  individual knew, so no individual answers. A certified
+                  organisation cannot take that position. Someone has signed a
+                  declaration accepting personal accountability for those
+                  decisions, and was tested on whether they could describe how
+                  the system actually behaves without checking with anyone
+                  else.
+                </p>
+                <p>
+                  That is a defence given up, not a badge acquired. It is also
+                  the reason the mark is worth anything.
+                </p>
               </div>
             </div>
 

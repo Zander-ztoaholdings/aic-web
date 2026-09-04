@@ -131,12 +131,40 @@ export default function CertificationPage() {
             <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-10 max-w-2xl">
               AIC certification is structured around how your organisation actually relates to AI in consequential decisions — not a one-size-fits-all compliance checkbox. Choose the Division that reflects your reality.
             </p>
+            {/* Said to the organisation considering certification, in the
+                second person, because they are the party giving something up.
+                Selling this as pure upside would be the easier copy and a
+                worse signal — a mark that costs its holder nothing tells a
+                regulator, an insurer and a claimant nothing either. */}
+            <div className="border-l-2 border-aic-copper/50 pl-5 mb-10 max-w-2xl">
+              <p className="text-white/70 leading-relaxed mb-3">
+                Be clear about what you are agreeing to. Certification closes
+                off the position most organisations still have available when
+                an automated decision causes harm — that the system did it,
+                that nobody understood it well enough to be responsible, and
+                that no individual can therefore be held to it.
+              </p>
+              <p className="text-white/70 leading-relaxed">
+                A named person in your organisation signs a declaration
+                accepting personal accountability for those decisions, and is
+                interviewed on whether they can describe how the system
+                actually behaves without checking with anyone. After that,
+                &ldquo;nobody knew&rdquo; is not available to you. That is the
+                cost, and it is the entire reason the mark carries weight.
+              </p>
+            </div>
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-lg transition-all text-sm font-bold shadow-xl shadow-[#c9920a]/20"
               >
                 Contact us <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/standard#hu"
+                className="inline-flex items-center gap-2 text-white/70 hover:text-white px-2 py-4 transition-colors text-sm font-semibold underline underline-offset-4"
+              >
+                Read the accountability requirements
               </Link>
             </div>
           </motion.div>
