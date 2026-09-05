@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { DURATION, EASE_OUT } from "@/lib/motion";
 import {
   Globe,
   Menu,
@@ -97,6 +99,12 @@ export default function Navbar() {
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const pathname = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion() ?? false;
+
+  // Whether anything is open over the page. Both the desktop dropdown and the
+  // mobile sheet dim and blur what is behind them, for the same reason: while
+  // a menu is open the page is not what you are looking at.
+  const overlayOpen = openGroup !== null || menuOpen;
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -129,8 +137,39 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Top utility bar — solid dark, no transparency */}
-      <div className="bg-[#0a1628] text-white/70 text-[10px] uppercase tracking-wider py-2">
+      {/* Backdrop for an open menu.
+          Only opacity is animated — the motion system permits transform and
+          opacity and nothing else, and animating backdrop-filter from 0 would
+          repaint the blur every frame for no gain. The blur is a fixed value
+          that fades in as a whole.
+          The tint is brand navy rather than neutral grey so the page reads as
+          suspended rather than greyed out, and -webkit- is written explicitly
+          because Safari still wants it. */}
+      <AnimatePresence>
+        {overlayOpen && (
+          <motion.div
+            aria-hidden
+            onClick={() => {
+              setOpenGroup(null);
+              setMenuOpen(false);
+            }}
+            initial={{ opacity: reduced ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: reduced ? 1 : 0 }}
+            transition={{ duration: reduced ? 0 : DURATION.fast, ease: EASE_OUT }}
+            className="fixed inset-0 z-40 bg-[#0a1628]/20"
+            style={{
+              backdropFilter: "blur(10px) saturate(140%)",
+              WebkitBackdropFilter: "blur(10px) saturate(140%)",
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Top utility bar — solid dark, no transparency.
+          relative z-50 keeps it above the backdrop: the header chrome stays
+          sharp while the page behind it blurs. */}
+      <div className="relative z-50 bg-[#0a1628] text-white/70 text-[10px] uppercase tracking-wider py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
@@ -151,7 +190,7 @@ export default function Navbar() {
       {/* Main nav — light background, dark text */}
       <nav
         ref={navRef}
-        className={`transition-all duration-300 ${
+        className={`relative z-50 transition-all duration-300 ${
           scrolled
             ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-[rgba(0,0,0,0.1)]"
             : "bg-white shadow-sm"
@@ -191,7 +230,13 @@ export default function Navbar() {
                     </button>
 
                     {isOpen && (
-                      <div className="absolute left-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-[#e5e7eb] py-2 z-50">
+                      <div
+                        className="absolute left-0 top-full mt-2 w-80 rounded-xl shadow-2xl border border-white/60 py-2 z-50 bg-white/80"
+                        style={{
+                          backdropFilter: "blur(20px) saturate(180%)",
+                          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                        }}
+                      >
                         {group.items.map((item) => {
                           const Icon = item.icon;
                           return (
@@ -271,8 +316,12 @@ export default function Navbar() {
         {/* Mobile menu — accordion by group */}
         {menuOpen && (
           <div
-            className="lg:hidden bg-white border-t border-[rgba(0,0,0,0.1)] overflow-y-auto"
-            style={{ maxHeight: "calc(100dvh - 120px)" }}
+            className="lg:hidden relative z-50 bg-white/85 border-t border-[rgba(0,0,0,0.1)] overflow-y-auto"
+            style={{
+              maxHeight: "calc(100dvh - 120px)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
+            }}
           >
             <div className="px-4 py-6 flex flex-col gap-2">
               {navGroups.map((group) => {
