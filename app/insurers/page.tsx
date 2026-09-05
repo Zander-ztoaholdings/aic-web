@@ -104,11 +104,20 @@ export default function InsurersPage() {
             named individual is accountable for the organisation&apos;s AI-driven decisions, that an
             override process exists, and that the certification is checkable — not just claimed.
           </p>
-          <p className="text-[#6b7280] text-lg leading-relaxed">
+          <p className="text-[#6b7280] text-lg leading-relaxed mb-6">
             A certification that can quietly lapse without anyone noticing isn&apos;t worth much.
             Certified organisations can carry the <strong className="text-[#0f1f3d]">Continuously
             Monitored</strong> overlay when Pulse telemetry is live and coherent — the visible face
             of a mark that stays accountable after the audit, not only on the day of it.
+          </p>
+          <p className="text-[#6b7280] text-lg leading-relaxed">
+            AIC also runs a free, self-declared tool called{" "}
+            <Link href="/aware" className="text-aic-copper font-medium hover:underline">
+              AIC Aware
+            </Link>{" "}
+            for organisations still assessing their own exposure. It carries no independent
+            verification, never appears on the certified register, and is not something an
+            underwriter should price against — that is what the audited mark above is for.
           </p>
         </div>
       </section>

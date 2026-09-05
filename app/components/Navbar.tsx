@@ -21,6 +21,7 @@ import {
   Radio,
   Layers,
   GraduationCap,
+  Gauge,
 } from "lucide-react";
 
 export interface NavLink {
@@ -85,6 +86,7 @@ export const navGroups: NavGroup[] = [
 
 // Standalone links, rendered next to the dropdown groups rather than inside one.
 export const topLevelLinks: TopLevelLink[] = [
+  { href: "/aware", label: "AIC Aware", icon: Gauge },
   { href: "/workshops", label: "Workshops", icon: GraduationCap },
 ];
 

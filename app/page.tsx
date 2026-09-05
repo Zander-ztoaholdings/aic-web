@@ -461,6 +461,43 @@ export default function MarketingPage() {
         </div>
       </section>
 
+      {/* ── AIC AWARE ────────────────────────────────────────────────
+          The free, self-declared entry point. Deliberately placed after the
+          proof section (real figures, real registry) rather than the hero,
+          so the free tool reads as a companion to the evidence above it, not
+          as the headline claim — that is still AIC Certified. */}
+      <section className="bg-aic-paper py-20 md:py-24 border-b border-[#e5e7eb]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-white border border-[#e5e7eb] rounded-2xl p-8 md:p-12 grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-10 items-center shadow-sm">
+            <div>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                Free · Self-Declared
+              </span>
+              <h2
+                className="text-3xl md:text-4xl text-[#0f1f3d] mt-3 mb-4 font-bold leading-[1.1]"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                Not ready for a full audit? Start with AIC Aware.
+              </h2>
+              <p className="text-[#6b7280] leading-relaxed max-w-xl">
+                Twenty questions, the same four categories AIC audits against, about ten minutes.
+                You get a risk-level snapshot and a downloadable PDF — no account, no cost. It is
+                self-declared, not verified, and we say so throughout: only an independent AIC
+                audit earns the Certified mark and a place on the public registry.
+              </p>
+            </div>
+            <div className="flex md:justify-end">
+              <Link
+                href="/aware"
+                className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-full transition-all text-sm font-bold shadow-md hover:-translate-y-0.5"
+              >
+                Take the free self-assessment <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── ALIGNMENT ────────────────────────────────────────────────
           Merged from two near-identical sections that both said "we align to
           frameworks", one immediately after the other. */}

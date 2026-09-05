@@ -322,7 +322,11 @@ export default function CertificationPage() {
               Your Certification Journey
             </h2>
             <p className="text-[#6b7280] max-w-2xl mx-auto">
-              Five steps from self-assessment to certified — with ongoing Pulse monitoring for organisations in Divisions 2, 3, and 4.
+              Five steps from self-assessment to certified — with ongoing Pulse monitoring for organisations in Divisions 2, 3, and 4. Not ready for an audit yet? Start with{" "}
+              <Link href="/aware" className="text-aic-copper font-medium hover:underline">
+                the free, self-declared AIC Aware assessment
+              </Link>
+              .
             </p>
           </motion.div>
 
