@@ -54,6 +54,7 @@ export const navGroups: NavGroup[] = [
     label: "Certification",
     items: [
       { href: "/certification", label: "Certification Framework", icon: Shield, description: "The Five-Division accountability model" },
+      { href: "/aware", label: "AIC Aware", icon: Gauge, description: "Free self-assessment against the standard — self-declared, not certified" },
       { href: "/standard", label: "The Standard", icon: ClipboardCheck, description: "All 44 requirements we assess against" },
       { href: "/registry", label: "Public Registry", icon: ShieldCheck, description: "Search certified organisations" },
       { href: "/verify", label: "Verify a Certificate", icon: Search, description: "Confirm a certificate ID in seconds" },
@@ -86,7 +87,6 @@ export const navGroups: NavGroup[] = [
 
 // Standalone links, rendered next to the dropdown groups rather than inside one.
 export const topLevelLinks: TopLevelLink[] = [
-  { href: "/aware", label: "AIC Aware", icon: Gauge },
   { href: "/workshops", label: "Workshops", icon: GraduationCap },
 ];
 
