@@ -223,8 +223,11 @@ export default function Footer() {
             <Link href="/terms" className="hover:text-[#c9920a] transition-colors">
               Terms of Use
             </Link>
+            <Link href="/impartiality" className="hover:text-[#c9920a] transition-colors">
+              Impartiality
+            </Link>
             <Link href="/disclosures" className="hover:text-[#c9920a] transition-colors">
-              Impartiality Statement
+              Disclosures
             </Link>
             {/* Consent has to be as easy to withdraw as it was to give,
                 otherwise it is not consent. Dispatches an event the banner
