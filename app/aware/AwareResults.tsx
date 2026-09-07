@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -8,11 +9,17 @@ import {
   FileDown,
   Layers,
   Flag,
+  Copy,
+  Check,
+  ImageDown,
 } from "lucide-react";
 import type { AssessmentResult } from "@/lib/scoring";
 import type { AwareAnalysis } from "@/lib/aware-analysis";
 import { RIGHTS, TIER_MEANING, type RightCode } from "@/app/data/requirements-data";
 import { categoryMeta, type Category } from "@/app/data/questions";
+import { slugifyCompany } from "@/lib/slug";
+
+const SITE_URL = "https://aiccertified.cloud";
 
 // The engine's own TierInfo.color values are Tailwind classes pinned by
 // __tests__/lib/scoring.test.ts, and they are not real risk colours —
@@ -44,15 +51,36 @@ export default function AwareResults({
   result,
   analysis,
   organisation,
+  wantsListed,
   onDownload,
 }: {
   result: AssessmentResult;
   analysis: AwareAnalysis;
   organisation: string;
+  wantsListed: boolean;
   onDownload: () => void;
 }) {
   const risk = RISK[result.tier.name] ?? RISK["Tier 2"];
   const { indication, gaps, applicableCount, gapsByRight, flagshipGaps, consistent } = analysis;
+  const [copied, setCopied] = useState(false);
+
+  const badgeSlug = organisation ? slugifyCompany(organisation) : "";
+  const badgeUrl = badgeSlug ? `${SITE_URL}/api/aware-badge/${badgeSlug}` : "";
+  const embedSnippet = badgeUrl
+    ? `<a href="${SITE_URL}/aware/directory"><img src="${badgeUrl}" alt="${organisation} — AIC Aware, self-declared" width="400" height="120" /></a>`
+    : "";
+
+  async function copyEmbed() {
+    try {
+      await navigator.clipboard.writeText(embedSnippet);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API can be denied by the browser — the snippet is still
+      // selectable in the <pre> below, so this fails quietly rather than
+      // showing an error for a non-essential convenience.
+    }
+  }
 
   const rightsWithGaps = (Object.keys(gapsByRight) as RightCode[]).filter(
     (r) => gapsByRight[r] > 0
@@ -350,6 +378,57 @@ export default function AwareResults({
           Read the Declaration <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </section>
+
+      {/* ── Embeddable badge ──────────────────────────────────────────── */}
+      {/* Only for an organisation that opted into the public directory —
+          the badge is that same directory entry rendered as an image
+          (app/api/aware-badge/[slug]/route.tsx), so it can never claim a
+          declaration that isn't publicly listed and checkable. */}
+      {wantsListed && badgeUrl && (
+        <section className="bg-white border border-[#e5e7eb] rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <ImageDown className="w-4 h-4 text-aic-copper" />
+            <span className="text-sm font-bold text-[#0f1f3d]">Your AIC Aware badge</span>
+          </div>
+          <p className="text-sm text-[#6b7280] leading-relaxed mb-4">
+            An embeddable image for {organisation}&apos;s own site. It always renders live from
+            the public directory, so it stays accurate if your listing ever changes — and it
+            says plainly what it is: self-declared, not AIC Certified.
+          </p>
+
+          {/* Server-rendered API image, not a static asset — next/image can't
+              optimise a route handler response, so a plain <img> is correct here. */}
+          <img
+            src={badgeUrl}
+            alt={`${organisation} — AIC Aware, self-declared`}
+            width={400}
+            height={120}
+            className="rounded-lg border border-[#e5e7eb]"
+          />
+
+          <div className="flex flex-wrap gap-3 mt-4">
+            <a
+              href={`${badgeUrl}?download=1`}
+              download
+              className="inline-flex items-center gap-2 bg-[#0f1f3d] hover:bg-[#0a1628] text-white px-5 py-2.5 rounded-full transition-all text-xs font-bold"
+            >
+              <ImageDown className="w-3.5 h-3.5" /> Download badge (PNG)
+            </a>
+            <button
+              type="button"
+              onClick={copyEmbed}
+              className="inline-flex items-center gap-2 border border-[#e5e7eb] hover:bg-[#f0f4f8] text-[#0f1f3d] px-5 py-2.5 rounded-full transition-all text-xs font-bold"
+            >
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? "Copied" : "Copy embed code"}
+            </button>
+          </div>
+
+          <pre className="mt-4 bg-[#f0f4f8] border border-[#e5e7eb] rounded-lg p-3 text-[11px] text-[#374151] overflow-x-auto whitespace-pre-wrap break-all">
+            {embedSnippet}
+          </pre>
+        </section>
+      )}
     </div>
   );
 }

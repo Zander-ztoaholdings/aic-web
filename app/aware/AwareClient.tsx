@@ -583,6 +583,7 @@ export default function AwareClient() {
                 result={result}
                 analysis={analysis}
                 organisation={company.trim()}
+                wantsListed={wantsListed}
                 onDownload={downloadPDF}
               />
             </motion.div>
