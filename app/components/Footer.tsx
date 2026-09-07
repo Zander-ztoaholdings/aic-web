@@ -18,6 +18,26 @@ const standards = [
   { label: "IEEE 7000 Series",          url: "https://standards.ieee.org/ieee/IEEE-7000/6781/" },
 ];
 
+// Brand-accurate marks, not lucide's generic icons — lucide's plain X icon
+// reads as a "close" affordance, and its Linkedin glyph is a looser
+// approximation than the real wordmark. These two paths are the official
+// logos, sized and colored (currentColor) to match every other footer icon.
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.114 20.452H3.558V9h3.556v11.452z" />
+    </svg>
+  );
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  );
+}
+
 export default function Footer() {
   return (
     <footer id="contact" className="bg-[#0a1628] text-white overflow-hidden relative">
@@ -67,6 +87,26 @@ export default function Footer() {
             <p className="text-white/50 text-sm leading-relaxed">
               Certifying the humans accountable for AI systems. AI Integrity Certification (Pty) Ltd, South Africa.
             </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.linkedin.com/company/ai-integrity-certification/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AIC on LinkedIn"
+                className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-white/60 hover:text-[#c9920a] hover:bg-white/10 transition-colors"
+              >
+                <LinkedInIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://x.com/aiccertified"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AIC on X"
+                className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-white/60 hover:text-[#c9920a] hover:bg-white/10 transition-colors"
+              >
+                <XIcon className="w-4 h-4" />
+              </a>
+            </div>
             {/* Links to the accreditation status rather than standing alone,
                 so what the mark does and does not assert is published on the
                 site rather than explained after someone challenges it. */}
