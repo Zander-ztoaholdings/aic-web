@@ -30,13 +30,7 @@
  * scores against are the same bytes, by construction.
  */
 
-import {
-  requirements,
-  requirementsForDivision,
-  TIER_MEANING,
-  type EvidenceTier,
-  type RightCode,
-} from "@/app/data/requirements-data";
+import { requirements, requirementsForDivision, TIER_MEANING, type EvidenceTier, type RightCode, RIGHTS } from "@/app/data/requirements-data";
 
 export const SCORING_VERSION = "1.0.0";
 
@@ -217,6 +211,10 @@ export function standardPayload() {
       divisions: r.divisions,
       flagship: Boolean(r.flagship),
     })),
+    // The five Rights, named. Published here so aic-platform can group an
+    // organisation's requirements by Right without keeping its own copy of the
+    // names — the same reason the requirements themselves are served from here.
+    rights: RIGHTS,
     tiers: TIER_MEANING,
     gates: GATES,
     bands: BANDS,
