@@ -65,7 +65,7 @@ export default async function PolicyUpdatePage({
       name: "AI Integrity Certification",
       logo: {
         "@type": "ImageObject",
-        url: "https://aiccertified.cloud/icon",
+        url: "https://aiccertified.cloud/apple-icon.png",
       },
     },
     mainEntityOfPage: `https://aiccertified.cloud/policy/${slug}`,

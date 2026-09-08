@@ -68,7 +68,7 @@ export default async function ArticlePage({
       name: "AI Integrity Certification",
       logo: {
         "@type": "ImageObject",
-        url: "https://aiccertified.cloud/icon",
+        url: "https://aiccertified.cloud/apple-icon.png",
       },
     },
     mainEntityOfPage: `https://aiccertified.cloud/articles/${slug}`,
