@@ -65,6 +65,17 @@ interface WorldMap {
  */
 const TRAVEL_MS = 1400;
 
+/**
+ * How long the page takes to clear out of the way before the camera moves.
+ *
+ * Opening a country widens the map card and collapses the panel beside it.
+ * Doing that while the camera runs means resizing the SVG underneath a
+ * transform, which is what made the zoom stutter on the first frames. Running
+ * them in sequence costs a third of a second and the motion is clean: the
+ * interface steps aside, then the journey starts.
+ */
+const LAYOUT_MS = 320;
+
 
 /** A published policy update, as attached to a country on the map. */
 export interface MapUpdate {
@@ -247,8 +258,8 @@ export default function RegulatoryMap({
       // These four are duplicated in scripts/build-country-detail.mjs, which
       // simplifies each outline to the precision of the zoom it computes here.
       // Change them there too, and regenerate.
-      const stageW = width * 0.74;
-      const stageH = height * 0.84;
+      const stageW = width * 0.46;
+      const stageH = height * 0.82;
       // Floored so a large country still visibly travels. The ceiling is high
       // because of city-states: Singapore is one unit across in this
       // projection, and at 20x it occupied 2% of the canvas.
@@ -257,7 +268,7 @@ export default function RegulatoryMap({
       const cy = y0 + bh / 2;
       return {
         scale,
-        tx: width / 2 - cx * scale,
+        tx: width * 0.25 - cx * scale,
         ty: height / 2 - cy * scale,
       };
     },
@@ -271,12 +282,10 @@ export default function RegulatoryMap({
       const feature = countries.find((c) => c.id === id);
       setSelectedId(id);
       setExpandedId(id);
-      // A frame's grace before the camera starts, so the panel's swap to the
-      // country card and any scrolling have already been laid out and painted.
-      // The camera then has the main thread to itself for its whole run.
+      // Let the layout finish before the camera starts — see LAYOUT_MS.
       if (feature) {
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => setZoom(frameFor(feature)))
+        timers.current.push(
+          setTimeout(() => setZoom(frameFor(feature)), LAYOUT_MS)
         );
       }
       if (pushUrl) {
@@ -421,8 +430,8 @@ export default function RegulatoryMap({
       setSettled(false);
       return;
     }
-    const a = setTimeout(() => setAnnotated(true), TRAVEL_MS * 0.45);
-    const b = setTimeout(() => setSettled(true), TRAVEL_MS);
+    const a = setTimeout(() => setAnnotated(true), LAYOUT_MS + TRAVEL_MS * 0.45);
+    const b = setTimeout(() => setSettled(true), LAYOUT_MS + TRAVEL_MS);
     return () => {
       clearTimeout(a);
       clearTimeout(b);
@@ -448,14 +457,30 @@ export default function RegulatoryMap({
     return () => cancelAnimationFrame(raf);
   }, [expandedId, detail]);
 
-  // The cue retires the moment it has been obeyed.
+  /**
+   * The cue retires the moment it has been obeyed, and the way back appears in
+   * its place.
+   *
+   * The back button belongs in the annotation, where it is part of the
+   * composition. But the annotation scrolls away with the map, and the record
+   * underneath runs for several screens — so from down there the only way out
+   * of the country was the browser's own back arrow. A floating one costs the
+   * stage nothing because it is not on the stage: it only exists once the map
+   * has left the screen.
+   */
   const [cue, setCue] = useState(true);
+  const [pastMap, setPastMap] = useState(false);
   useEffect(() => {
     if (!expandedId) {
       setCue(true);
+      setPastMap(false);
       return;
     }
-    const onScroll = () => setCue(window.scrollY < 120);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setCue(y < 120);
+      setPastMap(y > 380);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -463,35 +488,14 @@ export default function RegulatoryMap({
 
   return (
     <div ref={stageRef}>
-      {/* Sticky, and a button rather than a link-coloured word.
-          The way back used to be small text inside the annotation, which
-          scrolled away with it — so from anywhere in the record there was no
-          visible way out of the country you were in except the browser's own
-          back arrow. */}
-      {expanded && (
-        <div className="sticky top-20 z-40 bg-aic-paper/95 backdrop-blur-sm border-b border-[#e5e7eb] py-3 mb-6 flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => collapse()}
-            className="inline-flex items-center gap-2 bg-aic-navy text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-colors shrink-0"
-          >
-            <ArrowLeft className="w-4 h-4 text-aic-copper" />
-            Back to the world map
-          </button>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af] truncate">
-            {expandedName}
-          </span>
-        </div>
-      )}
-
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
+      <div className={expanded ? "block" : "flex flex-col lg:flex-row gap-8 lg:gap-0"}>
       {/* Map. Takes the full width until a country is selected — the side
           panel was reserving 24rem to hold a "click a country" placeholder,
           which spent a quarter of the widest element on the site telling the
           reader to do the thing the map already invites. */}
       <div
         className={`relative flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId ? "lg:pr-8" : "lg:pr-0"
+          selectedId && !expanded ? "lg:pr-8" : "lg:pr-0"
         }`}
       >
         {/* Search. Rendered above the map on every breakpoint, and on mobile it
@@ -571,13 +575,17 @@ export default function RegulatoryMap({
             interface: the tap targets for most countries are smaller than a
             fingertip, so it would be decoration that costs a 750KB download.
             Mobile gets the search box above and the region list below. */}
-        {/* Deliberately the same box in both states.
-            Opening a country used to widen this card (padding to zero) and
-            collapse the panel beside it, both animated, WHILE the camera was
-            moving. The SVG was being resized under a transform mid-flight, so
-            the zoom visibly stuttered at the start. Nothing about the layout
-            changes now; the only thing that moves is the camera. */}
-        <div className="hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden p-4 sm:p-8">
+        {/* The card takes the full width for the stage — but it finishes doing
+            so BEFORE the camera starts. Widening the card and collapsing the
+            panel while the zoom was running meant the SVG was being resized
+            under a transform mid-flight, which is what made the zoom stutter.
+            The two are now sequential rather than simultaneous: the layout
+            clears, and then the camera travels. See LAYOUT_MS. */}
+        <div
+          className={`hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden transition-[padding] duration-300 ease-out ${
+            expanded ? "p-0" : "p-4 sm:p-8"
+          }`}
+        >
           {loading ? (
             <div className="aspect-[960/520] flex items-center justify-center text-[#9ca3af] text-sm">
               Loading map…
@@ -686,6 +694,63 @@ export default function RegulatoryMap({
               </g>
             </svg>
           )}
+
+          {/* The annotation.
+              Back inside the card, in the right-hand space the camera
+              deliberately leaves empty, because the country and the claim
+              about it should read as one composition rather than a picture
+              with a caption in a different column. */}
+          {expanded && (
+            <div
+              className="absolute inset-y-0 right-0 w-[46%] flex items-center pr-8 md:pr-12 pointer-events-none"
+              style={{
+                opacity: annotated ? 1 : 0,
+                transform: annotated ? "translateY(0)" : "translateY(12px)",
+                transition:
+                  "opacity 520ms ease-out, transform 520ms cubic-bezier(0.2,0.7,0.3,1)",
+              }}
+            >
+              <div className="pointer-events-auto max-w-sm">
+                {/* A filled button rather than the caps-lock link this used to
+                    be. It sat here quietly enough to be missed entirely. */}
+                <button
+                  type="button"
+                  onClick={() => collapse()}
+                  className="inline-flex items-center gap-2 bg-aic-navy text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-colors mb-6"
+                >
+                  <ArrowLeft className="w-4 h-4 text-aic-copper" />
+                  Back to the world map
+                </button>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                    {expanded.region}
+                  </span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
+                    Verified {expanded.verifiedAt}
+                  </span>
+                </div>
+                <h2
+                  className="text-3xl md:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
+                  style={{ fontFamily: "'Merriweather', serif" }}
+                >
+                  {expandedName}
+                </h2>
+                <span
+                  className={`inline-block text-xs font-semibold px-2.5 py-1 rounded mb-4 ${
+                    STATUS_TONE[expanded.status] ?? "bg-[#f0f4f8] text-[#6b7280]"
+                  }`}
+                >
+                  {expanded.status}
+                </span>
+                <p className="text-[#0f1f3d] font-semibold leading-snug">
+                  {expanded.framework}
+                </p>
+                <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1">
+                  {expanded.authority}
+                </p>
+              </div>
+            </div>
+          )}
           <div className={`items-center gap-6 mt-6 pt-6 border-t border-[#e5e7eb] text-xs text-[#6b7280] ${expanded ? "hidden" : "flex"}`}>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-[#e5e7eb] inline-block" />
@@ -791,11 +856,11 @@ export default function RegulatoryMap({
           continuity through a layout change — rather than decorating one. */}
       <div
         className={`transition-[width] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId
+          selectedId && !expanded
             ? "w-full lg:w-[26rem] lg:shrink-0 lg:self-start"
             : "hidden lg:block lg:w-0 overflow-hidden"
         }`}
-        aria-hidden={!selectedId}
+        aria-hidden={!selectedId || Boolean(expanded)}
       >
         {/* Its own scroll container, stuck below the header. A country's detail
             can run to obligations, dated commencements, enforcement, sources
@@ -805,53 +870,7 @@ export default function RegulatoryMap({
         <div
           className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto overscroll-contain"
         >
-        {/* Zoomed in, this column is the country's name card — the "country on
-            the left, name beside it" composition, made out of the panel that
-            was already there rather than an overlay drawn inside the SVG. That
-            is what lets the map card keep its exact geometry through the zoom.
-            It is sticky, so it stays level with the country while the record
-            scrolls past underneath. */}
-        {expanded ? (
-          <div
-            style={{
-              opacity: annotated ? 1 : 0,
-              transform: annotated ? "translateY(0)" : "translateY(10px)",
-              transition:
-                "opacity 500ms ease-out, transform 500ms cubic-bezier(0.2,0.7,0.3,1)",
-            }}
-          >
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                {expanded.region}
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
-                Verified {expanded.verifiedAt}
-              </span>
-            </div>
-            <h2
-              className="text-3xl xl:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
-              style={{ fontFamily: "'Merriweather', serif" }}
-            >
-              {expandedName}
-            </h2>
-            <span
-              className={`inline-block text-xs font-semibold px-2.5 py-1 rounded mb-4 ${
-                STATUS_TONE[expanded.status] ?? "bg-[#f0f4f8] text-[#6b7280]"
-              }`}
-            >
-              {expanded.status}
-            </span>
-            <p className="text-[#0f1f3d] font-semibold leading-snug">
-              {expanded.framework}
-            </p>
-            <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1 mb-5">
-              {expanded.authority}
-            </p>
-            <p className="text-sm text-[#6b7280] leading-[1.65]">
-              {expanded.summary}
-            </p>
-          </div>
-        ) : selected ? (
+        {selected ? (
           <div>
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#0f1f3d]">{selectedName}</h3>
@@ -1003,6 +1022,31 @@ export default function RegulatoryMap({
           page to stay usable. Below the stage they get the full width and the
           country stays on screen above them. It is the same component the
           standalone page renders, so there is one version of this record. */}
+      {expanded && (
+        <div
+          className="fixed bottom-6 left-6 z-40 hidden lg:block"
+          style={{
+            opacity: pastMap ? 1 : 0,
+            transform: pastMap ? "translateY(0)" : "translateY(8px)",
+            transition: "opacity 260ms ease-out, transform 260ms ease-out",
+            pointerEvents: pastMap ? "auto" : "none",
+          }}
+          aria-hidden={!pastMap}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              collapse();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2 bg-aic-navy text-white px-4 py-3 rounded-lg font-semibold text-sm shadow-lg shadow-aic-navy/20 hover:bg-[#0f1f3d] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 text-aic-copper" />
+            Back to the world map
+          </button>
+        </div>
+      )}
+
       {expanded && settled && (
         <div className="mt-6 lg:mt-8 border-t border-[#e5e7eb]">
           <JurisdictionRecord

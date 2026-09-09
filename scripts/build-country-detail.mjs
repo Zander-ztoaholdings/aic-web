@@ -34,7 +34,7 @@ const W = 960, H = 520;              // the map's viewBox, from RegulatoryMap
 // These four MUST match frameFor() in app/components/RegulatoryMap.tsx. The
 // tolerance each outline is simplified to is derived from the zoom it will be
 // seen at, so a change here without a regenerate makes the detail wrong.
-const STAGE_W = W * 0.74, STAGE_H = H * 0.84;
+const STAGE_W = W * 0.46, STAGE_H = H * 0.82;
 const MIN_SCALE = 1.8;
 // High, because of city-states. Singapore is a single degree across: capped at
 // 20x it occupied 2% of the canvas AND was simplified to a seven-sided lozenge,
