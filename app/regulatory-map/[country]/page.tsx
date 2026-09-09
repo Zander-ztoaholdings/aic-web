@@ -39,14 +39,6 @@ import { getPolicyUpdates } from "@/lib/notion";
 
 const SITE = "https://aiccertified.cloud";
 
-const STATUS_TONE: Record<string, string> = {
-  "In force": "bg-[#10b981]/10 text-[#0a7a54] border-[#10b981]/20",
-  "Enacted — phasing in": "bg-aic-copper/10 text-aic-copper border-aic-copper/20",
-  "Proposed / draft legislation": "bg-[#c9920a]/10 text-[#8a6607] border-[#c9920a]/20",
-  "Voluntary framework": "bg-[#6b7280]/10 text-[#4b5563] border-[#6b7280]/20",
-  "Guidance only": "bg-[#6b7280]/10 text-[#4b5563] border-[#6b7280]/20",
-  "No dedicated AI law identified": "bg-[#f0f4f8] text-[#9ca3af] border-[#e5e7eb]",
-};
 
 /** What a status means for someone deciding whether to act. Plain English. */
 const STATUS_MEANING: Record<string, string> = {
@@ -155,8 +147,19 @@ export default async function JurisdictionPage({
       />
 
       {/* WHERE — and immediately, how current this is. */}
-      <section className="bg-aic-navy text-white py-12 md:py-14">
-        <div className="max-w-5xl mx-auto px-4">
+      {/* lg:min-h is load-bearing, not styling: it guarantees the room the
+          country silhouette needs. The silhouette itself is positioned against
+          a fixed axis in lib/country-flight.ts, and this block is anchored to
+          the top of the section rather than centred in it, so that the heading
+          lands in the same place whether the summary runs to one line or four.
+          The map's hand-off veil reproduces this exact structure. */}
+      <section className="bg-aic-navy text-white py-12 md:py-14 lg:min-h-[30rem]">
+        {/* The right-hand padding is reserving space for the country
+            silhouette, which is not rendered here — it belongs to
+            CountrySilhouetteLayer in the segment layout, because it has to
+            outlive the navigation that brings you to this page. See
+            lib/country-flight.ts. */}
+        <div className="max-w-5xl mx-auto px-4 lg:pr-[23rem]">
           <Link
             href="/regulatory-map"
             className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/50 hover:text-aic-copper transition-colors mb-6"
