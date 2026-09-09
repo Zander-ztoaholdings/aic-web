@@ -227,6 +227,18 @@ export default function RegulatoryMap({
    * map's own stroke texture through the move.
    */
   const [zoom, setZoom] = useState<{ scale: number; tx: number; ty: number } | null>(null);
+  /**
+   * How much of the projection the stage shows, once a country is open.
+   *
+   * The card is a fixed 960x520 window, which suits a world map and suits a
+   * tall country like South Africa — but the United States is framed on its
+   * width and then fills barely half the height, leaving a band of white above
+   * and below it that reads as dead space rather than margin. Cropping the
+   * viewBox to the country's own proportions makes the stage fit what is on it.
+   * The camera is unaffected: it still centres the country at height/2 in the
+   * projection's own coordinates, and this window is centred on that same line.
+   */
+  const [stageBox, setStageBox] = useState<{ y: number; h: number } | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -282,11 +294,14 @@ export default function RegulatoryMap({
       const feature = countries.find((c) => c.id === id);
       setSelectedId(id);
       setExpandedId(id);
-      // Let the layout finish before the camera starts — see LAYOUT_MS.
-      if (feature) {
-        timers.current.push(
-          setTimeout(() => setZoom(frameFor(feature)), LAYOUT_MS)
-        );
+      // The stage resizes with the rest of the layout, before the camera moves.
+      const frame = feature ? frameFor(feature) : null;
+      if (frame) {
+        const f = COUNTRY_FRAMES[id];
+        const drawn = f ? f[3] * frame.scale : height;
+        const h = Math.min(Math.max(drawn / 0.82, 320), height);
+        setStageBox({ y: height / 2 - h / 2, h });
+        timers.current.push(setTimeout(() => setZoom(frame), LAYOUT_MS));
       }
       if (pushUrl) {
         // Next supports the native history API for shallow updates, and this is
@@ -296,12 +311,13 @@ export default function RegulatoryMap({
       }
       if (!isAtTop(stageRef.current)) scrollElementToTop(stageRef.current);
     },
-    [countries, frameFor]
+    [countries, frameFor, height]
   );
 
   const collapse = useCallback((pushUrl = true) => {
     setExpandedId(null);
     setZoom(null);
+    setStageBox(null);
     if (pushUrl) window.history.pushState({}, "", "/regulatory-map");
   }, []);
 
@@ -327,13 +343,19 @@ export default function RegulatoryMap({
     const feature = countries.find((c) => c.id === j.id);
     setSelectedId(j.id);
     setExpandedId(j.id);
-    if (feature) setZoom(frameFor(feature));
+    const frame = feature ? frameFor(feature) : null;
+    if (frame) {
+      const f = COUNTRY_FRAMES[j.id];
+      const drawn = f ? f[3] * frame.scale : height;
+      setStageBox({ y: height / 2 - Math.min(Math.max(drawn / 0.82, 320), height) / 2, h: Math.min(Math.max(drawn / 0.82, 320), height) });
+      setZoom(frame);
+    }
     window.history.replaceState(
       { aicJurisdiction: j.id },
       "",
       `/regulatory-map/${j.slug}`
     );
-  }, [countries, frameFor]);
+  }, [countries, frameFor, height]);
 
   // Back and forward have to work, or the URL was a lie.
   useEffect(() => {
@@ -488,7 +510,12 @@ export default function RegulatoryMap({
 
   return (
     <div ref={stageRef}>
-      <div className={expanded ? "block" : "flex flex-col lg:flex-row gap-8 lg:gap-0"}>
+      {/* Always a row, even when the panel has collapsed to nothing.
+          Switching this to `block` for the stage made the collapsed panel a
+          stacked sibling rather than a column beside the map — so its zero
+          WIDTH hid it while its full content HEIGHT still pushed the record
+          most of a thousand pixels down the page. */}
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
       {/* Map. Takes the full width until a country is selected — the side
           panel was reserving 24rem to hold a "click a country" placeholder,
           which spent a quarter of the widest element on the site telling the
@@ -592,7 +619,11 @@ export default function RegulatoryMap({
             </div>
           ) : (
             <svg
-              viewBox={`0 0 ${width} ${height}`}
+              viewBox={
+                stageBox
+                  ? `0 ${stageBox.y} ${width} ${stageBox.h}`
+                  : `0 0 ${width} ${height}`
+              }
               className="w-full h-auto overflow-hidden"
               role="img"
               aria-label="World map — click a country to see its regulatory status"
@@ -853,7 +884,13 @@ export default function RegulatoryMap({
       {/* Side panel. Width is animated rather than the element being unmounted,
           so the map resizes smoothly instead of the clicked country jumping
           under the cursor. That is the motion doing a job — preserving spatial
-          continuity through a layout change — rather than decorating one. */}
+          continuity through a layout change — rather than decorating one.
+
+          Its CONTENTS, though, are unmounted once a country is open. Clipping
+          a zero-width column hides it, but the browser still lays the content
+          out and the column is still as tall as it, which is dead space
+          wherever that column ends up. Nothing renders here now, so there is
+          nothing to be tall. */}
       <div
         className={`transition-[width] duration-300 ease-out motion-reduce:transition-none ${
           selectedId && !expanded
@@ -870,7 +907,7 @@ export default function RegulatoryMap({
         <div
           className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto overscroll-contain"
         >
-        {selected ? (
+        {expanded ? null : selected ? (
           <div>
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#0f1f3d]">{selectedName}</h3>
