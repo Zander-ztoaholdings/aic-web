@@ -14,85 +14,77 @@ import {
   ChevronRight,
   Award,
 } from "lucide-react";
+import { DIVISION_PROFILES } from "@/app/data/divisions";
 
-const divisions = [
-  {
-    number: "01",
-    name: "Sovereign",
-    tagline: "We make decisions. Humans make them.",
-    who: "Organisations making no use of AI in consequential decisions.",
+/**
+ * Presentation only. The words that describe what a Division IS live in
+ * app/data/divisions.ts, because the regulatory map shows them too and two
+ * copies of the same definition is how a certification body ends up publishing
+ * two different accounts of its own standard.
+ */
+const DIVISION_STYLE: Record<number, {
+  accentBg: string;
+  accentText: string;
+  accentBorderColor: string;
+  accentStripBg: string;
+  what: string;
+  product: string;
+  valueProp?: string;
+  icon: typeof Shield;
+}> = {
+  1: {
+    valueProp: "Prove you are fully human-accountable before regulators, clients, or media ask.",
     accentBg: "bg-[#f0f4f8]",
     accentText: "text-[#c9920a]",
     accentBorderColor: "border-[#e5e7eb]",
     accentStripBg: "bg-[#e5e7eb]",
-    icon: Shield,
     what: "Human accountability structures documented, no undisclosed AI in use, POPIA-compliant human data processing. Shadow AI audit confirms no automated decision systems.",
     product: "Sovereign Assessment — point-in-time audit + annual renewal.",
-    valueProp: "Prove you are fully human-accountable before regulators, clients, or media ask.",
-    kpi: "No AI in consequential decisions — verified annually",
+    icon: Shield,
   },
-  {
-    number: "02",
-    name: "Supervised",
-    tagline: "AI assists. Humans decide.",
-    who: "AI generates recommendations; a named human makes every consequential decision.",
+  2: {
     accentBg: "bg-[#c9920a]",
     accentText: "text-[#c9920a]",
     accentBorderColor: "border-[#c9920a]/40",
     accentStripBg: "bg-[#c9920a]",
-    icon: Users,
-    examples: "Bank using AI credit model where loan officer decides. Hospital using AI diagnostic where clinician signs off. Employer using AI CV screening where recruiter approves shortlist.",
     what: "Every AI system registered. Override process tested and evidenced. Decision records include both AI recommendation and human decision. Explanation mechanisms exist. Rejection communications meet dignity standards. Appeal processes functional. AI involvement disclosed to affected persons.",
     product: "Full Pulse monitoring.",
-    kpi: "Human override rate is the primary KPI.",
+    icon: Users,
   },
-  {
-    number: "03",
-    name: "Reviewed",
-    tagline: "AI decides. Humans review patterns and cases.",
-    who: "AI makes operational decisions; humans conduct periodic reviews and investigate flagged cases.",
+  3: {
     accentBg: "bg-[#1a3160]",
     accentText: "text-[#c9920a]",
     accentBorderColor: "border-[#1a3160]/40",
     accentStripBg: "bg-[#1a3160]",
-    icon: Eye,
-    examples: "Lender with automated credit decisions + compliance officer reviewing weekly flags. HR tech platform auto-screening applications + recruiter reviewing rejected candidates weekly.",
     what: "AI systems registered with documented risk categories. Periodic human review schedules documented and evidenced. Escalation protocols for flagged decisions functional. Bias testing conducted quarterly. Correction SLA ≤ 10 business days. Full transparency to users.",
     product: "Pulse monitoring.",
-    kpi: "Periodic human review rate is the primary KPI.",
+    icon: Eye,
   },
-  {
-    number: "04",
-    name: "Monitored",
-    tagline: "AI operates. Systems and humans monitor outcomes.",
-    who: "AI operates autonomously with continuous technical monitoring; humans monitor aggregate metrics and investigate anomalies.",
+  4: {
     accentBg: "bg-[#0a1628]",
     accentText: "text-[#c9920a]",
     accentBorderColor: "border-[#0a1628]/40",
     accentStripBg: "bg-[#0a1628]",
-    icon: Activity,
-    examples: "E-commerce AI recommendations monitored by algorithm team. AI fraud detection monitored by security team. AI route optimisation monitored by operations management.",
     what: "All AI systems registered with documented purpose and risk category. Continuous technical monitoring in place (drift detection, performance metrics). Annual human review documented. Users informed they are interacting with AI. Anomaly escalation path exists.",
     product: "Pulse monitoring focused on drift detection and aggregate pattern alerts.",
-    kpi: "Drift detection and aggregate outcome pattern monitoring.",
+    icon: Activity,
   },
-  {
-    number: "05",
-    name: "Artificial",
-    tagline: "We build AI. Others use it to make decisions.",
-    who: "Organisations that develop, train, and sell AI systems or models to other organisations. Their accountability is upstream — they are responsible for the accountability architecture their customers' decisions rest on.",
+  5: {
     accentBg: "bg-[#0a1628]",
     accentText: "text-[#c9920a]",
     accentBorderColor: "border-[#0a1628]/40",
     accentStripBg: "bg-[#0a1628]",
-    icon: Code2,
-    examples: "SA LLM company selling to banks. Credit scoring SaaS selling to lenders. AI-powered medical diagnostic tool provider. HR tech company selling AI hiring tools.",
     what: "AI product has documented accountability architecture for downstream users. Product includes human override capabilities. Explanation mechanisms built into the product. Bias testing conducted on training data and documented. Transparency disclosure published for each product. Process exists for receiving and responding to downstream incident reports.",
     product: "Builder Certification — product-level certification. Each AI product sold receives its own certification. Analogous to CE marking or ISO product certification.",
-    kpi: "Product accountability architecture completeness.",
-    note: "Division 5 certification does NOT replace the obligation of the Division 5 company's customers to hold their own AIC certification.",
+    icon: Code2,
   },
-];
+};
+
+const divisions = DIVISION_PROFILES.map((p) => ({
+  ...p,
+  ...DIVISION_STYLE[p.division],
+  number: String(p.division).padStart(2, "0"),
+}));
 
 const journeySteps = [
   { step: "01", title: "Self-Assessment", desc: "Complete AIC's diagnostic questionnaire to identify your Division classification based on how your organisation relates to AI in consequential decisions." },

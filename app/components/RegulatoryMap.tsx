@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import * as d3geo from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -9,10 +8,14 @@ import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
 import { Mail, X, CheckCircle2, Search, ArrowRight, ArrowLeft } from "lucide-react";
 import { scrollElementToTop, isAtTop } from "@/lib/scroll";
-import { beginFlight } from "@/lib/country-flight";
+import JurisdictionRecord, {
+  type RecordUpdate,
+} from "@/app/components/JurisdictionRecord";
+import { COUNTRY_FRAMES } from "@/app/data/country-frames";
 import {
   regulatoryData,
   oldestVerification,
+  jurisdictionBySlug,
   type CountryRegulation,
 } from "@/app/data/regulatory-data";
 
@@ -45,31 +48,16 @@ interface CountryFeature {
   area: number;
 }
 
-/** How long the camera zoom runs. */
-const ZOOM_MS = 1050;
-
 /**
- * When the country is handed to the layout's silhouette layer, as a fraction of
- * the zoom. The camera uses a strongly eased curve, so by 62% of the duration
- * the country has covered most of its distance and is barely moving — which is
- * what matters, because the hand-off reads the country's rect off the DOM at a
- * single instant. Hand off while it is still travelling and the silhouette
- * launches from a position the map has already left.
- */
-const HANDOFF_AT = ZOOM_MS * 0.62;
-
-/**
- * When the route commits — deliberately after the camera has finished, and
- * timed so the silhouette has already reached its resting place.
+ * How long the camera takes to travel.
  *
- * Committing at the end of the zoom was the obvious choice and the wrong one:
- * the jurisdiction page would mount while the country was still mid-flight, so
- * a large copper shape swept across the headline for the better part of a
- * second. Now the whole journey happens under a full-screen navy veil that the
- * hero is then painted behind, and the only thing that changes at the commit is
- * that the rest of the page's text arrives.
+ * Long, and deliberately so. The reference is the way a globe swings round to
+ * a searched country: you watch it arrive, and the distance it covered is part
+ * of what tells you where you are. A quick cut is cheaper and tells you
+ * nothing.
  */
-const COMMIT_AT = ZOOM_MS + 280;
+const TRAVEL_MS = 1400;
+
 
 /** A published policy update, as attached to a country on the map. */
 export interface MapUpdate {
@@ -229,89 +217,152 @@ export default function RegulatoryMap({
     }
   }
 
-  const router = useRouter();
-
   /**
-   * The cinematic step, and the reason it is a transform rather than a route
-   * animation: the paths are already projected and cached, so scaling a <g>
-   * costs nothing, reprojects nothing, and keeps the exact stroke texture the
-   * static map has. Nothing is re-rendered — the camera moves.
+   * Opening a jurisdiction does not leave the map.
    *
-   * The CTA underneath is a real link. If JavaScript never runs, if motion is
-   * reduced, or if the animation is interrupted, the destination is the same
-   * URL and the map stays usable. The animation is decoration over a working
-   * navigation, never the mechanism of it.
+   * It used to: the camera zoomed, a veil came up, and the router pushed
+   * /regulatory-map/<slug>. That page still exists and is still the thing
+   * search engines index and people share — but arriving at it by navigation
+   * threw away the map, so comparing two countries meant going back, finding
+   * the map again and re-clicking. The map IS the product here; leaving it to
+   * read about a country is the wrong shape.
+   *
+   * So the camera moves, the country is framed and outlined, the record opens
+   * around it, and the URL is rewritten to the jurisdiction's own address with
+   * history.pushState. Nothing unmounts. Refresh, share or open in a new tab
+   * and you get the real server-rendered page, because the URL is real.
+   *
+   * The transform is still the mechanism: the paths are already projected and
+   * cached, so scaling a <g> costs nothing, reprojects nothing, and keeps the
+   * map's own stroke texture through the move.
    */
   const [zoom, setZoom] = useState<{ scale: number; tx: number; ty: number } | null>(null);
-  const [veil, setVeil] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  // The rendered path elements, so the hand-off rect can be read off the DOM
-  // rather than recomputed. getBoundingClientRect already accounts for the
-  // projection, the camera transform and the viewBox-to-pixel scaling; doing
-  // that arithmetic a second time by hand is three chances to be a few pixels
-  // out, and a few pixels out is exactly what the reader would notice.
-  const pathRefs = useRef<Map<string, SVGPathElement>>(new Map());
+  const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  const openJurisdiction = useCallback(
-    (e: React.MouseEvent, feature: CountryFeature | undefined, slug: string) => {
-      const reduced =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      // Let the browser handle modified clicks — new tab, new window, download.
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      if (reduced || !feature) return; // plain navigation, no camera move
-
-      e.preventDefault();
-
-      const [[x0, y0], [x1, y1]] = feature.bounds;
-      const bw = Math.max(x1 - x0, 1);
-      const bh = Math.max(y1 - y0, 1);
-      // Cap the scale so a small country does not magnify into a few enormous
-      // pixels, and floor it so a large one still visibly travels.
-      const scale = Math.min(Math.max(Math.min(width / bw, height / bh) * 0.55, 2.2), 14);
-      const cx = (x0 + x1) / 2;
-      const cy = (y0 + y1) / 2;
-
-      setZoom({ scale, tx: width / 2 - cx * scale, ty: height / 2 - cy * scale });
-      // The veil comes in late, so the country is legibly filling the frame
-      // before the navy takes over and hands off to the page header.
-      timers.current.push(setTimeout(() => setVeil(true), ZOOM_MS * 0.55));
-
-      // Hand the country to the layout while the camera is still moving and
-      // the veil is only part-way up. From here the silhouette is no longer
-      // this component's problem: it lives in the shared layout, so it carries
-      // on travelling straight through the route commit below and lands on the
-      // jurisdiction page's hero. That is the difference between an animation
-      // that ends at the navigation and one that ends after it.
-      // Launched unconditionally: whether a silhouette exists for this country
-      // is the layer's business, and asking here would mean importing the
-      // shape data into the map's own bundle, which is exactly what the layer
-      // goes out of its way to avoid.
-      timers.current.push(
-        setTimeout(() => {
-          const el = pathRefs.current.get(feature.id);
-          if (!el) return;
-          const r = el.getBoundingClientRect();
-          if (r.width > 0 && r.height > 0) {
-            beginFlight(feature.id, {
-              left: r.left,
-              top: r.top,
-              width: r.width,
-              height: r.height,
-            });
-          }
-        }, HANDOFF_AT)
-      );
-
-      timers.current.push(
-        setTimeout(() => router.push(`/regulatory-map/${slug}`), COMMIT_AT)
-      );
+  /**
+   * Where the camera comes to rest.
+   *
+   * The country is framed into the left of the canvas rather than the middle,
+   * because the right of it has to hold the label — and because leaving the
+   * surrounding continents visible is what stops the zoom reading as a cut to
+   * an unrelated picture. You should still be able to see where in the world
+   * you have arrived.
+   */
+  const frameFor = useCallback(
+    (feature: CountryFeature) => {
+      // Prefer the generated frame, which is computed on the principal
+      // landmasses only. The feature's own bounds include every territory, so
+      // framing on them puts Alaska and the Aleutians in shot and leaves the
+      // United States 844 units wide of a 960-unit world — no zoom left to
+      // perform. Same story for France, Norway and the Netherlands.
+      const f = COUNTRY_FRAMES[feature.id];
+      const [x0, y0, bw0, bh0] = f ?? [
+        feature.bounds[0][0],
+        feature.bounds[0][1],
+        feature.bounds[1][0] - feature.bounds[0][0],
+        feature.bounds[1][1] - feature.bounds[0][1],
+      ];
+      const bw = Math.max(bw0, 0.2);
+      const bh = Math.max(bh0, 0.2);
+      // These four are duplicated in scripts/build-country-detail.mjs, which
+      // simplifies each outline to the precision of the zoom it computes here.
+      // Change them there too, and regenerate.
+      const stageW = width * 0.46;
+      const stageH = height * 0.82;
+      // Floored so a large country still visibly travels. The ceiling is high
+      // because of city-states: Singapore is one unit across in this
+      // projection, and at 20x it was 2% of the canvas.
+      const scale = Math.min(Math.max(Math.min(stageW / bw, stageH / bh), 1.8), 160);
+      const cx = x0 + bw / 2;
+      const cy = y0 + bh / 2;
+      return {
+        scale,
+        tx: width * 0.25 - cx * scale,
+        ty: height / 2 - cy * scale,
+      };
     },
-    [router, width, height]
+    [width, height]
   );
+
+  const expand = useCallback(
+    (id: string, pushUrl = true) => {
+      const j = regulatoryData[id];
+      if (!j) return;
+      const feature = countries.find((c) => c.id === id);
+      setSelectedId(id);
+      setExpandedId(id);
+      if (feature) setZoom(frameFor(feature));
+      if (pushUrl) {
+        // Next supports the native history API for shallow updates, and this is
+        // the one thing that must not be a router.push: a push would unmount
+        // this component and take the camera with it.
+        window.history.pushState({ aicJurisdiction: id }, "", `/regulatory-map/${j.slug}`);
+      }
+      if (!isAtTop(stageRef.current)) scrollElementToTop(stageRef.current);
+    },
+    [countries, frameFor]
+  );
+
+  const collapse = useCallback((pushUrl = true) => {
+    setExpandedId(null);
+    setZoom(null);
+    if (pushUrl) window.history.pushState({}, "", "/regulatory-map");
+  }, []);
+
+  /**
+   * Arriving from a shared link.
+   *
+   * The standalone jurisdiction page is what gets indexed and posted, and it
+   * has no map on it. /regulatory-map?j=<slug> is the way back in: the map
+   * opens already zoomed to that country, then tidies the URL to the
+   * jurisdiction's own address so what you copy from the bar is the canonical
+   * one rather than the query form.
+   *
+   * Waits for the geometry, because there is nothing to frame until it lands.
+   */
+  const entered = useRef(false);
+  useEffect(() => {
+    if (entered.current || countries.length === 0) return;
+    const slug = new URLSearchParams(window.location.search).get("j");
+    if (!slug) return;
+    const j = jurisdictionBySlug(slug);
+    entered.current = true;
+    if (!j) return;
+    const feature = countries.find((c) => c.id === j.id);
+    setSelectedId(j.id);
+    setExpandedId(j.id);
+    if (feature) setZoom(frameFor(feature));
+    window.history.replaceState(
+      { aicJurisdiction: j.id },
+      "",
+      `/regulatory-map/${j.slug}`
+    );
+  }, [countries, frameFor]);
+
+  // Back and forward have to work, or the URL was a lie.
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      const id = (e.state as { aicJurisdiction?: string } | null)?.aicJurisdiction;
+      if (id && regulatoryData[id]) expand(id, false);
+      else collapse(false);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [expand, collapse]);
+
+  useEffect(() => {
+    if (!expandedId) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") collapse();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [expandedId, collapse]);
+
 
   const selected: CountryRegulation | undefined = useMemo(
     () => (selectedId ? regulatoryData[selectedId] : undefined),
@@ -326,20 +377,82 @@ export default function RegulatoryMap({
     [selectedId, selectedFeature]
   );
 
+  const expanded: CountryRegulation | undefined = useMemo(
+    () => (expandedId ? regulatoryData[expandedId] : undefined),
+    [expandedId]
+  );
+  const expandedName = useMemo(
+    () =>
+      (expandedId ? regulatoryData[expandedId]?.name : undefined) ??
+      countries.find((c) => c.id === expandedId)?.name,
+    [expandedId, countries]
+  );
+
+  /**
+   * The label waits for the camera.
+   *
+   * Arriving with the move would put text on top of a country that is still
+   * crossing the screen, and the eye cannot read and track at the same time.
+   * It comes in just past halfway, as the motion is settling.
+   */
+  /**
+   * High-detail outlines, loaded after hydration.
+   *
+   * 1:50m is right for the world and wrong close up — Singapore is literally
+   * one projected unit across in it. These are the same countries redrawn from
+   * 1:10m in the same projection, so a detail outline registers exactly on top
+   * of the country it replaces. 137KB, needed only once someone opens a
+   * jurisdiction, so it is never on the path to first paint.
+   */
+  const [detail, setDetail] = useState<Record<string, string> | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    const load = () =>
+      import("@/app/data/country-detail").then((m) => {
+        if (!cancelled) setDetail(m.COUNTRY_DETAIL);
+      });
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    const handle = hasIdle
+      ? window.requestIdleCallback(load, { timeout: 3000 })
+      : window.setTimeout(load, 600);
+    return () => {
+      cancelled = true;
+      if (hasIdle) window.cancelIdleCallback(handle);
+      else clearTimeout(handle);
+    };
+  }, []);
+
+  const [annotated, setAnnotated] = useState(false);
+  useEffect(() => {
+    if (!expandedId) {
+      setAnnotated(false);
+      return;
+    }
+    const t = setTimeout(() => setAnnotated(true), TRAVEL_MS * 0.55);
+    return () => clearTimeout(t);
+  }, [expandedId]);
+
   return (
-    <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
+    <div ref={stageRef}>
+      <div
+        className={
+          expanded
+            ? "block"
+            : "flex flex-col lg:flex-row gap-8 lg:gap-0"
+        }
+      >
       {/* Map. Takes the full width until a country is selected — the side
           panel was reserving 24rem to hold a "click a country" placeholder,
           which spent a quarter of the widest element on the site telling the
           reader to do the thing the map already invites. */}
       <div
         className={`relative flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId ? "lg:pr-8" : "lg:pr-0"
+          selectedId && !expanded ? "lg:pr-8" : "lg:pr-0"
         }`}
       >
         {/* Search. Rendered above the map on every breakpoint, and on mobile it
             is the ONLY way in — see the note on the SVG wrapper below. */}
-        <div ref={searchRef} className="relative mb-4">
+        <div ref={searchRef} className={`relative mb-4 ${expanded ? "hidden" : ""}`}>
           <label htmlFor="jurisdiction-search" className="sr-only">
             Search for a country
           </label>
@@ -414,7 +527,11 @@ export default function RegulatoryMap({
             interface: the tap targets for most countries are smaller than a
             fingertip, so it would be decoration that costs a 750KB download.
             Mobile gets the search box above and the region list below. */}
-        <div className="hidden lg:block bg-white border border-[#e5e7eb] rounded-xl p-4 sm:p-8">
+        <div
+          className={`hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden transition-[padding] duration-500 ${
+            expanded ? "p-0" : "p-4 sm:p-8"
+          }`}
+        >
           {loading ? (
             <div className="aspect-[960/520] flex items-center justify-center text-[#9ca3af] text-sm">
               Loading map…
@@ -437,9 +554,7 @@ export default function RegulatoryMap({
                   transformOrigin: "0 0",
                   // Fast out of the gate, settling rather than braking. A linear
                   // or symmetric ease reads as a slideshow; this reads as travel.
-                  transition: zoom
-                    ? `transform ${ZOOM_MS}ms cubic-bezier(0.7, 0, 0.22, 1)`
-                    : "none",
+                  transition: `transform ${TRAVEL_MS}ms cubic-bezier(0.62, 0, 0.20, 1)`,
                 }}
                 className="motion-reduce:!transition-none"
               >
@@ -447,13 +562,10 @@ export default function RegulatoryMap({
                 const hasData = Boolean(regulatoryData[c.id]);
                 const isHovered = hoveredId === c.id;
                 const isSelected = selectedId === c.id;
+                const isExpanded = expandedId === c.id;
                 return (
                   <path
                     key={c.id || c.name}
-                    ref={(el) => {
-                      if (el) pathRefs.current.set(c.id, el);
-                      else pathRefs.current.delete(c.id);
-                    }}
                     d={c.path}
                     className="transition-colors duration-150 cursor-pointer outline-none"
                     fill={
@@ -465,16 +577,26 @@ export default function RegulatoryMap({
                           : "#c4c9d1"
                         : "#e5e7eb"
                     }
-                    stroke="#ffffff"
-                    strokeWidth={0.5}
-                    // Borders stay hairlines at 14x rather than swelling into
-                    // white bands and eating the country they outline.
+                    // The subject gets a hard edge against the ground; everyone
+                    // else keeps the hairline that separates neighbours.
+                    stroke={isExpanded ? "#0a1628" : "#ffffff"}
+                    strokeWidth={isExpanded ? 1.25 : 0.5}
+                    // Borders stay hairlines at 20x rather than swelling into
+                    // bands and eating the country they outline.
                     vectorEffect="non-scaling-stroke"
                     style={
-                      zoom && !isSelected
-                        ? { opacity: 0.25, transition: `opacity ${ZOOM_MS * 0.6}ms ease-out` }
+                      zoom && !isExpanded
+                        ? {
+                            // The rest of the world recedes but does not leave.
+                            // Fading it out entirely turns the move into a cut
+                            // to an unrelated picture, and you lose the one
+                            // thing the zoom was for — knowing where you are.
+                            opacity: 0.28,
+                            transition: `opacity ${TRAVEL_MS * 0.7}ms ease-out`,
+                          }
                         : undefined
                     }
+                    pointerEvents={zoom && !isExpanded ? "none" : undefined}
                     onMouseEnter={() => setHoveredId(c.id)}
                     onMouseLeave={() => setHoveredId((h) => (h === c.id ? null : h))}
                     onClick={() => select(c.id)}
@@ -488,68 +610,78 @@ export default function RegulatoryMap({
                   </path>
                 );
               })}
+
+              {/* The framed country, redrawn at 1:10m.
+                  Laid over the 50m path rather than replacing it, so nothing
+                  swaps mid-flight and any territory the frame deliberately
+                  excludes — Alaska, French Guiana — is still drawn as part of
+                  the country by the map underneath. */}
+              {expandedId && detail?.[expandedId] && (
+                <path
+                  d={detail[expandedId]}
+                  fill="#c9920a"
+                  stroke="#0a1628"
+                  strokeWidth={1.25}
+                  vectorEffect="non-scaling-stroke"
+                  pointerEvents="none"
+                />
+              )}
               </g>
             </svg>
           )}
-          {/* Hand-off.
-              Fixed rather than absolute, so it covers the viewport instead of
-              the map's own box. That is not a flourish: the silhouette flies to
-              where the jurisdiction page's hero will put it, which is near the
-              top of the window and well above the map — over a map-sized veil
-              it would sail off the navy and across this page's own headings.
-              Covering the viewport also means the commit happens navy-to-navy
-              with nothing else on screen.
-              The inner wrapper reproduces the hero's geometry — same 20 offset
-              for the navbar, same vertical padding, same container and
-              right-hand gutter, and content anchored to the top rather than
-              centred — so the region label and the country name are already
-              exactly where the real page is about to draw them. */}
-          {zoom && (
+          {/* The annotation.
+              Sits in the right-hand space the camera deliberately leaves empty,
+              so the country and the claim about it are one composition rather
+              than a picture with a caption somewhere else on the page. */}
+          {expanded && (
             <div
-              className={`fixed inset-0 z-20 bg-aic-navy pointer-events-none transition-opacity duration-[450ms] ease-out motion-reduce:hidden ${
-                veil ? "opacity-100" : "opacity-0"
-              }`}
-              aria-hidden="true"
+              className="absolute inset-y-0 right-0 w-[46%] flex items-center pr-8 md:pr-12 pointer-events-none"
+              style={{
+                opacity: annotated ? 1 : 0,
+                transform: annotated ? "translateY(0)" : "translateY(12px)",
+                transition: "opacity 520ms ease-out, transform 520ms cubic-bezier(0.2,0.7,0.3,1)",
+              }}
             >
-              <div className="pt-20">
-                <div className="py-12 md:py-14">
-                  <div className="max-w-5xl mx-auto px-4 lg:pr-[23rem]">
-                    {/* Deliberately the same three blocks, in the same classes,
-                        as the top of app/regulatory-map/[country]/page.tsx.
-                        Matching the STRUCTURE is what matters, not the text:
-                        the back link and the meta row are what push the title
-                        down to where the real page will draw it. Get those
-                        wrong and the headline jumps at the commit, which is the
-                        one moment the whole sequence exists to hide. The status
-                        badge and summary below it are left out on purpose —
-                        they arrive with the page, and reading as content
-                        landing under a title that did not move. */}
-                    <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/50 mb-6">
-                      <ArrowLeft className="w-3.5 h-3.5" /> Regulatory map
-                    </span>
-                    <div className="flex flex-wrap items-center gap-3 mb-4">
-                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                        {selected?.region}
-                      </span>
-                      {selected?.verifiedAt && (
-                        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
-                          Verified {selected.verifiedAt}
-                        </span>
-                      )}
-                    </div>
-                    <p
-                      className="text-white text-3xl md:text-5xl mb-5 leading-[1.05] tracking-[-0.03em] font-bold text-balance"
-                      style={{ fontFamily: "'Merriweather', serif" }}
-                    >
-                      AI regulation in {selectedName}
-                    </p>
-                  </div>
+              <div className="pointer-events-auto max-w-sm">
+                <button
+                  type="button"
+                  onClick={() => collapse()}
+                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af] hover:text-aic-copper transition-colors mb-5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" /> Back to the world
+                </button>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                    {expanded.region}
+                  </span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
+                    Verified {expanded.verifiedAt}
+                  </span>
                 </div>
+                <h2
+                  className="text-3xl md:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
+                  style={{ fontFamily: "'Merriweather', serif" }}
+                >
+                  {expandedName}
+                </h2>
+                <span
+                  className={`inline-block text-xs font-semibold px-2.5 py-1 rounded mb-4 ${
+                    STATUS_TONE[expanded.status] ?? "bg-[#f0f4f8] text-[#6b7280]"
+                  }`}
+                >
+                  {expanded.status}
+                </span>
+                <p className="text-[#0f1f3d] font-semibold leading-snug">
+                  {expanded.framework}
+                </p>
+                <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1">
+                  {expanded.authority}
+                </p>
               </div>
             </div>
           )}
 
-          <div className="flex items-center gap-6 mt-6 pt-6 border-t border-[#e5e7eb] text-xs text-[#6b7280]">
+          <div className={`items-center gap-6 mt-6 pt-6 border-t border-[#e5e7eb] text-xs text-[#6b7280] ${expanded ? "hidden" : "flex"}`}>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-[#e5e7eb] inline-block" />
               Not yet mapped
@@ -567,7 +699,7 @@ export default function RegulatoryMap({
         {/* Mobile substitute for the map: the 28 covered jurisdictions, grouped
             by region, so someone on a phone can browse rather than having to
             already know the name of the country they want. */}
-        <div className="lg:hidden">
+        <div className={expanded ? "hidden" : "lg:hidden"}>
           {loading ? (
             <div className="bg-white border border-[#e5e7eb] rounded-xl p-6 text-sm text-[#9ca3af]">
               Loading jurisdictions…
@@ -613,7 +745,7 @@ export default function RegulatoryMap({
           )}
         </div>
 
-        <p className="text-xs text-[#9ca3af] mt-4">
+        <p className={`text-xs text-[#9ca3af] mt-4 ${expanded ? "hidden" : ""}`}>
           Every jurisdiction on this map has been checked against its primary
           source since {oldestVerification()}; each entry carries its own
           verification date. General orientation only — not legal advice. Verify
@@ -627,11 +759,11 @@ export default function RegulatoryMap({
           continuity through a layout change — rather than decorating one. */}
       <div
         className={`transition-[width] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId
+          selectedId && !expanded
             ? "w-full lg:w-[26rem] lg:shrink-0 lg:self-start"
             : "hidden lg:block lg:w-0 overflow-hidden"
         }`}
-        aria-hidden={!selectedId}
+        aria-hidden={!selectedId || Boolean(expanded)}
       >
         {/* Its own scroll container, stuck below the header. A country's detail
             can run to obligations, dated commencements, enforcement, sources
@@ -696,15 +828,27 @@ export default function RegulatoryMap({
                 click. */}
             <a
               href={`/regulatory-map/${selected.slug}`}
-              onClick={(e) => openJurisdiction(e, selectedFeature, selected.slug)}
+              onClick={(e) => {
+                // Still a real link: modified clicks, no JavaScript, and
+                // reduced motion all fall through to the server-rendered page.
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
+                  return;
+                if (
+                  window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+                  !selectedFeature
+                )
+                  return;
+                e.preventDefault();
+                expand(selected.id);
+              }}
               className="group w-full inline-flex items-center justify-between gap-3 bg-aic-navy text-white px-5 py-4 rounded-lg hover:bg-[#0f1f3d] transition-colors mb-3"
             >
               <span className="text-left">
                 <span className="block font-semibold text-sm">Open {selectedName}</span>
                 <span className="block text-[11px] text-white/50 mt-0.5">
                   {selected.detail
-                    ? "Obligations, dates, enforcement, primary sources"
-                    : "Verification record and what we have not yet mapped"}
+                    ? "Zoom in — obligations, dates, enforcement, sources"
+                    : "Zoom in — verification record and what is not yet mapped"}
                 </span>
               </span>
               <ArrowRight className="w-4 h-4 shrink-0 text-aic-copper transition-transform group-hover:translate-x-0.5" />
@@ -772,6 +916,23 @@ export default function RegulatoryMap({
         )}
         </div>
       </div>
+      </div>
+
+      {/* The record, in the page rather than in a panel.
+          This is the sacrifice the in-place model asks for and it is worth
+          making: obligations, dated commencements, enforcement and sources do
+          not belong in a 26rem column that has to scroll independently of the
+          page to stay usable. Below the stage they get the full width and the
+          country stays on screen above them. It is the same component the
+          standalone page renders, so there is one version of this record. */}
+      {expanded && (
+        <div className="mt-6 lg:mt-8 border-t border-[#e5e7eb]">
+          <JurisdictionRecord
+            j={expanded}
+            updates={(updatesByCountry[expanded.id] ?? []) as RecordUpdate[]}
+          />
+        </div>
+      )}
     </div>
   );
 }
