@@ -34,20 +34,20 @@ const W = 960, H = 520;              // the map's viewBox, from RegulatoryMap
 // These four MUST match frameFor() in app/components/RegulatoryMap.tsx. The
 // tolerance each outline is simplified to is derived from the zoom it will be
 // seen at, so a change here without a regenerate makes the detail wrong.
-const STAGE_W = W * 0.46, STAGE_H = H * 0.82;
+const STAGE_W = W * 0.74, STAGE_H = H * 0.84;
 const MIN_SCALE = 1.8;
 // High, because of city-states. Singapore is a single degree across: capped at
 // 20x it occupied 2% of the canvas AND was simplified to a seven-sided lozenge,
 // since the tolerance is derived from the cap. A country you cannot see is not
 // a country you have mapped.
-const MAX_SCALE = 160;
+const MAX_SCALE = 200;
 
 const IDS = ["840","124","484","076","250","276","380","724","528","616","372","826","756","578","710","404","566","646","784","682","376","156","392","410","702","356","036","554"];
 
 // The projection has to be the one the map uses, or the detail outline lands
 // somewhere other than the country it replaces. The map fits to the whole 50m
 // collection, so fit to exactly that — then project 10m coordinates through it.
-const world50 = JSON.parse(fs.readFileSync("public/data/countries-50m.json", "utf8"));
+const world50 = JSON.parse(fs.readFileSync("data/countries-50m.json", "utf8"));
 const geo50 = topojson.feature(world50, world50.objects.countries);
 const proj = d3.geoNaturalEarth1().fitSize([W, H], geo50);
 

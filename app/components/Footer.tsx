@@ -206,6 +206,17 @@ export default function Footer() {
                     zander@ztoaholdings.com
                   </a>
                 </div>
+                <div className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4 text-[#c9920a]" />
+                  </div>
+                  <a
+                    href="mailto:albert@ztoaholdings.com"
+                    className="hover:text-white transition-colors break-all"
+                  >
+                    albert@ztoaholdings.com
+                  </a>
+                </div>
               </li>
             </ul>
           </div>

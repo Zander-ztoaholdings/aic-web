@@ -223,7 +223,7 @@ function ContactForm() {
                     </div>
                     <div>
                       <div className="text-sm text-[#0f1f3d] uppercase tracking-wider font-bold opacity-70">General Enquiries</div>
-                      <div className="text-[#0f1f3d] font-medium">zander@ztoaholdings.com</div>
+                      <div className="text-[#0f1f3d] font-medium">albert@ztoaholdings.com</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">

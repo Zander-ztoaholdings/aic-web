@@ -1,12 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as d3geo from "d3-geo";
-import * as topojson from "topojson-client";
-import type { Topology, GeometryCollection } from "topojson-specification";
-import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Mail, X, CheckCircle2, Search, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Mail,
+  X,
+  CheckCircle2,
+  Search,
+  ArrowRight,
+  ArrowLeft,
+  ChevronDown,
+} from "lucide-react";
 import { scrollElementToTop, isAtTop } from "@/lib/scroll";
 import JurisdictionRecord, {
   type RecordUpdate,
@@ -42,10 +46,13 @@ interface CountryFeature {
   id: string;
   name: string;
   path: string;
-  /** Projected bounding box, for framing the country during the zoom. */
-  bounds: [[number, number], [number, number]];
-  /** Projected area, used only to settle duplicate ids. */
-  area: number;
+}
+
+/** The shape of public/data/world-map.json — see scripts/build-world-map.mjs. */
+interface WorldMap {
+  w: number;
+  h: number;
+  countries: { i: string; n: string; d: string }[];
 }
 
 /**
@@ -92,52 +99,24 @@ export default function RegulatoryMap({
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/data/countries-50m.json")
+    // Already projected, already simplified, already de-duplicated. This used
+    // to fetch 756KB of topology and then decode it, fit a projection and
+    // generate every path string in the browser — a second of network on a
+    // cold cache followed by a lump of main-thread work, with "Loading map…"
+    // on screen throughout. See scripts/build-world-map.mjs.
+    fetch("/data/world-map.json")
       .then((r) => r.json())
-      .then((topo: Topology) => {
+      .then((world: WorldMap) => {
         if (cancelled) return;
-        const geo = topojson.feature(
-          topo,
-          topo.objects.countries as GeometryCollection
-        ) as unknown as FeatureCollection<Geometry, { name?: string }>;
-
-        const projection = d3geo
-          .geoNaturalEarth1()
-          .fitSize([width, height], geo);
-        const path = d3geo.geoPath(projection);
-
-        const built: CountryFeature[] = geo.features
-          .map((f) => {
-            const d = path(f);
-            if (!d) return null;
-            const id = String(f.id ?? "");
-            return {
-              id,
-              // Our own name wins where we have one. countries-50m.json carries
-              // TWO features with id "036" — Australia and Ashmore and Cartier
-              // Is., an uninhabited sandbar — so whichever resolved last was
-              // deciding what the map called Australia.
-              name: regulatoryData[id]?.name ?? f.properties?.name ?? "Unknown",
-              path: d,
-              bounds: path.bounds(f) as [[number, number], [number, number]],
-              area: path.area(f),
-            };
-          })
-          .filter((f): f is CountryFeature => f !== null);
-
-        // Same collision, second consequence: two paths answering to one id
-        // means hover, selection and keyboard focus can land on the wrong
-        // geometry. Keep the larger one; a country is never the smaller of two
-        // shapes sharing its code.
-        const byId = new Map<string, CountryFeature>();
-        for (const f of built) {
-          if (!f.id) continue;
-          const prev = byId.get(f.id);
-          if (!prev || f.area > prev.area) byId.set(f.id, f);
-        }
-        const features = Array.from(byId.values());
-
-        setCountries(features);
+        setCountries(
+          world.countries.map((c) => ({
+            // Our own name wins where we have one: Natural Earth's differ from
+            // the ones the dataset uses, and the search reads these.
+            id: c.i,
+            name: regulatoryData[c.i]?.name ?? c.n,
+            path: c.d,
+          }))
+        );
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -254,34 +233,31 @@ export default function RegulatoryMap({
    */
   const frameFor = useCallback(
     (feature: CountryFeature) => {
-      // Prefer the generated frame, which is computed on the principal
-      // landmasses only. The feature's own bounds include every territory, so
-      // framing on them puts Alaska and the Aleutians in shot and leaves the
-      // United States 844 units wide of a 960-unit world — no zoom left to
-      // perform. Same story for France, Norway and the Netherlands.
+      // Frames are computed on the principal landmasses only. A country's own
+      // bounds include every territory, so framing on those puts Alaska and
+      // the Aleutians in shot and leaves the United States 844 units wide of a
+      // 960-unit world — no zoom left to perform. Same for France, Norway and
+      // the Netherlands. Only mapped jurisdictions can be opened, and every one
+      // of those has a frame (there is a test).
       const f = COUNTRY_FRAMES[feature.id];
-      const [x0, y0, bw0, bh0] = f ?? [
-        feature.bounds[0][0],
-        feature.bounds[0][1],
-        feature.bounds[1][0] - feature.bounds[0][0],
-        feature.bounds[1][1] - feature.bounds[0][1],
-      ];
-      const bw = Math.max(bw0, 0.2);
-      const bh = Math.max(bh0, 0.2);
+      if (!f) return null;
+      const bw = Math.max(f[2], 0.2);
+      const bh = Math.max(f[3], 0.2);
+      const [x0, y0] = f;
       // These four are duplicated in scripts/build-country-detail.mjs, which
       // simplifies each outline to the precision of the zoom it computes here.
       // Change them there too, and regenerate.
-      const stageW = width * 0.46;
-      const stageH = height * 0.82;
+      const stageW = width * 0.74;
+      const stageH = height * 0.84;
       // Floored so a large country still visibly travels. The ceiling is high
       // because of city-states: Singapore is one unit across in this
-      // projection, and at 20x it was 2% of the canvas.
-      const scale = Math.min(Math.max(Math.min(stageW / bw, stageH / bh), 1.8), 160);
+      // projection, and at 20x it occupied 2% of the canvas.
+      const scale = Math.min(Math.max(Math.min(stageW / bw, stageH / bh), 1.8), 200);
       const cx = x0 + bw / 2;
       const cy = y0 + bh / 2;
       return {
         scale,
-        tx: width * 0.25 - cx * scale,
+        tx: width / 2 - cx * scale,
         ty: height / 2 - cy * scale,
       };
     },
@@ -295,7 +271,14 @@ export default function RegulatoryMap({
       const feature = countries.find((c) => c.id === id);
       setSelectedId(id);
       setExpandedId(id);
-      if (feature) setZoom(frameFor(feature));
+      // A frame's grace before the camera starts, so the panel's swap to the
+      // country card and any scrolling have already been laid out and painted.
+      // The camera then has the main thread to itself for its whole run.
+      if (feature) {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => setZoom(frameFor(feature)))
+        );
+      }
       if (pushUrl) {
         // Next supports the native history API for shallow updates, and this is
         // the one thing that must not be a router.push: a push would unmount
@@ -423,31 +406,92 @@ export default function RegulatoryMap({
   }, []);
 
   const [annotated, setAnnotated] = useState(false);
+  /**
+   * The record is not mounted until the camera has landed.
+   *
+   * Mounting it — the full jurisdiction record plus the standard layer — in the
+   * same commit that starts the zoom put a few hundred nodes into the document
+   * on exactly the frame the animation needed, and the motion stuttered before
+   * it got going. It is below the fold for the whole flight anyway.
+   */
+  const [settled, setSettled] = useState(false);
   useEffect(() => {
     if (!expandedId) {
       setAnnotated(false);
+      setSettled(false);
       return;
     }
-    const t = setTimeout(() => setAnnotated(true), TRAVEL_MS * 0.55);
-    return () => clearTimeout(t);
+    const a = setTimeout(() => setAnnotated(true), TRAVEL_MS * 0.45);
+    const b = setTimeout(() => setSettled(true), TRAVEL_MS);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+    };
+  }, [expandedId]);
+
+  /**
+   * The detail outline always arrives as a cross-fade.
+   *
+   * It is loaded on idle, so it is normally in hand long before anyone opens a
+   * country — but if it resolves DURING a zoom, React inserts a several-hundred
+   * vertex path on a frame the animation needs, and you see it. Fading it in
+   * costs nothing and makes both cases identical: the shape underneath is the
+   * same country, so what the reader sees is the coastline getting sharper.
+   */
+  const [detailIn, setDetailIn] = useState(false);
+  useEffect(() => {
+    if (!expandedId || !detail?.[expandedId]) {
+      setDetailIn(false);
+      return;
+    }
+    const raf = requestAnimationFrame(() => setDetailIn(true));
+    return () => cancelAnimationFrame(raf);
+  }, [expandedId, detail]);
+
+  // The cue retires the moment it has been obeyed.
+  const [cue, setCue] = useState(true);
+  useEffect(() => {
+    if (!expandedId) {
+      setCue(true);
+      return;
+    }
+    const onScroll = () => setCue(window.scrollY < 120);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [expandedId]);
 
   return (
     <div ref={stageRef}>
-      <div
-        className={
-          expanded
-            ? "block"
-            : "flex flex-col lg:flex-row gap-8 lg:gap-0"
-        }
-      >
+      {/* Sticky, and a button rather than a link-coloured word.
+          The way back used to be small text inside the annotation, which
+          scrolled away with it — so from anywhere in the record there was no
+          visible way out of the country you were in except the browser's own
+          back arrow. */}
+      {expanded && (
+        <div className="sticky top-20 z-40 bg-aic-paper/95 backdrop-blur-sm border-b border-[#e5e7eb] py-3 mb-6 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => collapse()}
+            className="inline-flex items-center gap-2 bg-aic-navy text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-colors shrink-0"
+          >
+            <ArrowLeft className="w-4 h-4 text-aic-copper" />
+            Back to the world map
+          </button>
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af] truncate">
+            {expandedName}
+          </span>
+        </div>
+      )}
+
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
       {/* Map. Takes the full width until a country is selected — the side
           panel was reserving 24rem to hold a "click a country" placeholder,
           which spent a quarter of the widest element on the site telling the
           reader to do the thing the map already invites. */}
       <div
         className={`relative flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId && !expanded ? "lg:pr-8" : "lg:pr-0"
+          selectedId ? "lg:pr-8" : "lg:pr-0"
         }`}
       >
         {/* Search. Rendered above the map on every breakpoint, and on mobile it
@@ -527,11 +571,13 @@ export default function RegulatoryMap({
             interface: the tap targets for most countries are smaller than a
             fingertip, so it would be decoration that costs a 750KB download.
             Mobile gets the search box above and the region list below. */}
-        <div
-          className={`hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden transition-[padding] duration-500 ${
-            expanded ? "p-0" : "p-4 sm:p-8"
-          }`}
-        >
+        {/* Deliberately the same box in both states.
+            Opening a country used to widen this card (padding to zero) and
+            collapse the panel beside it, both animated, WHILE the camera was
+            moving. The SVG was being resized under a transform mid-flight, so
+            the zoom visibly stuttered at the start. Nothing about the layout
+            changes now; the only thing that moves is the camera. */}
+        <div className="hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden p-4 sm:p-8">
           {loading ? (
             <div className="aspect-[960/520] flex items-center justify-center text-[#9ca3af] text-sm">
               Loading map…
@@ -591,7 +637,14 @@ export default function RegulatoryMap({
                             // Fading it out entirely turns the move into a cut
                             // to an unrelated picture, and you lose the one
                             // thing the zoom was for — knowing where you are.
-                            opacity: 0.28,
+                            //
+                            // Except at city-state magnification. Past about
+                            // 60x the neighbours are 1:50m coastlines blown up
+                            // forty times, so they stop being context and
+                            // become big featureless slabs that read as a
+                            // rendering fault. At that point they are better
+                            // nearly gone.
+                            opacity: (zoom?.scale ?? 0) > 60 ? 0.09 : 0.28,
                             transition: `opacity ${TRAVEL_MS * 0.7}ms ease-out`,
                           }
                         : undefined
@@ -624,63 +677,15 @@ export default function RegulatoryMap({
                   strokeWidth={1.25}
                   vectorEffect="non-scaling-stroke"
                   pointerEvents="none"
+                  style={{
+                    opacity: detailIn ? 1 : 0,
+                    transition: "opacity 380ms ease-out",
+                  }}
                 />
               )}
               </g>
             </svg>
           )}
-          {/* The annotation.
-              Sits in the right-hand space the camera deliberately leaves empty,
-              so the country and the claim about it are one composition rather
-              than a picture with a caption somewhere else on the page. */}
-          {expanded && (
-            <div
-              className="absolute inset-y-0 right-0 w-[46%] flex items-center pr-8 md:pr-12 pointer-events-none"
-              style={{
-                opacity: annotated ? 1 : 0,
-                transform: annotated ? "translateY(0)" : "translateY(12px)",
-                transition: "opacity 520ms ease-out, transform 520ms cubic-bezier(0.2,0.7,0.3,1)",
-              }}
-            >
-              <div className="pointer-events-auto max-w-sm">
-                <button
-                  type="button"
-                  onClick={() => collapse()}
-                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af] hover:text-aic-copper transition-colors mb-5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Back to the world
-                </button>
-                <div className="flex flex-wrap items-center gap-3 mb-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                    {expanded.region}
-                  </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
-                    Verified {expanded.verifiedAt}
-                  </span>
-                </div>
-                <h2
-                  className="text-3xl md:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
-                  style={{ fontFamily: "'Merriweather', serif" }}
-                >
-                  {expandedName}
-                </h2>
-                <span
-                  className={`inline-block text-xs font-semibold px-2.5 py-1 rounded mb-4 ${
-                    STATUS_TONE[expanded.status] ?? "bg-[#f0f4f8] text-[#6b7280]"
-                  }`}
-                >
-                  {expanded.status}
-                </span>
-                <p className="text-[#0f1f3d] font-semibold leading-snug">
-                  {expanded.framework}
-                </p>
-                <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1">
-                  {expanded.authority}
-                </p>
-              </div>
-            </div>
-          )}
-
           <div className={`items-center gap-6 mt-6 pt-6 border-t border-[#e5e7eb] text-xs text-[#6b7280] ${expanded ? "hidden" : "flex"}`}>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-[#e5e7eb] inline-block" />
@@ -745,6 +750,33 @@ export default function RegulatoryMap({
           )}
         </div>
 
+        {/* There is a great deal below this and no way to tell from the stage,
+            which shows one country and its name and otherwise looks finished. */}
+        {expanded && (
+          <div
+            className="hidden lg:flex justify-center mt-5"
+            style={{
+              opacity: settled && cue ? 1 : 0,
+              transition: "opacity 400ms ease-out",
+              pointerEvents: settled && cue ? "auto" : "none",
+            }}
+            aria-hidden={!(settled && cue)}
+          >
+            <button
+              type="button"
+              onClick={() =>
+                window.scrollBy({ top: window.innerHeight * 0.72, behavior: "smooth" })
+              }
+              className="group inline-flex flex-col items-center gap-1.5 text-[#9ca3af] hover:text-aic-copper transition-colors"
+            >
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em]">
+                Scroll for the full record
+              </span>
+              <ChevronDown className="w-5 h-5 animate-bounce motion-reduce:animate-none" />
+            </button>
+          </div>
+        )}
+
         <p className={`text-xs text-[#9ca3af] mt-4 ${expanded ? "hidden" : ""}`}>
           Every jurisdiction on this map has been checked against its primary
           source since {oldestVerification()}; each entry carries its own
@@ -759,11 +791,11 @@ export default function RegulatoryMap({
           continuity through a layout change — rather than decorating one. */}
       <div
         className={`transition-[width] duration-300 ease-out motion-reduce:transition-none ${
-          selectedId && !expanded
+          selectedId
             ? "w-full lg:w-[26rem] lg:shrink-0 lg:self-start"
             : "hidden lg:block lg:w-0 overflow-hidden"
         }`}
-        aria-hidden={!selectedId || Boolean(expanded)}
+        aria-hidden={!selectedId}
       >
         {/* Its own scroll container, stuck below the header. A country's detail
             can run to obligations, dated commencements, enforcement, sources
@@ -773,7 +805,53 @@ export default function RegulatoryMap({
         <div
           className="w-full lg:w-[26rem] lg:border-l lg:border-[#e5e7eb] lg:pl-8 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto overscroll-contain"
         >
-        {selected ? (
+        {/* Zoomed in, this column is the country's name card — the "country on
+            the left, name beside it" composition, made out of the panel that
+            was already there rather than an overlay drawn inside the SVG. That
+            is what lets the map card keep its exact geometry through the zoom.
+            It is sticky, so it stays level with the country while the record
+            scrolls past underneath. */}
+        {expanded ? (
+          <div
+            style={{
+              opacity: annotated ? 1 : 0,
+              transform: annotated ? "translateY(0)" : "translateY(10px)",
+              transition:
+                "opacity 500ms ease-out, transform 500ms cubic-bezier(0.2,0.7,0.3,1)",
+            }}
+          >
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                {expanded.region}
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
+                Verified {expanded.verifiedAt}
+              </span>
+            </div>
+            <h2
+              className="text-3xl xl:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
+              style={{ fontFamily: "'Merriweather', serif" }}
+            >
+              {expandedName}
+            </h2>
+            <span
+              className={`inline-block text-xs font-semibold px-2.5 py-1 rounded mb-4 ${
+                STATUS_TONE[expanded.status] ?? "bg-[#f0f4f8] text-[#6b7280]"
+              }`}
+            >
+              {expanded.status}
+            </span>
+            <p className="text-[#0f1f3d] font-semibold leading-snug">
+              {expanded.framework}
+            </p>
+            <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1 mb-5">
+              {expanded.authority}
+            </p>
+            <p className="text-sm text-[#6b7280] leading-[1.65]">
+              {expanded.summary}
+            </p>
+          </div>
+        ) : selected ? (
           <div>
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#0f1f3d]">{selectedName}</h3>
@@ -925,7 +1003,7 @@ export default function RegulatoryMap({
           page to stay usable. Below the stage they get the full width and the
           country stays on screen above them. It is the same component the
           standalone page renders, so there is one version of this record. */}
-      {expanded && (
+      {expanded && settled && (
         <div className="mt-6 lg:mt-8 border-t border-[#e5e7eb]">
           <JurisdictionRecord
             j={expanded}

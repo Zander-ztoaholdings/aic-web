@@ -57,6 +57,17 @@ export default async function RegulatoryMapPage() {
       </section>
 
       {/* Map */}
+      {/* Starts the world fetch with the document rather than after hydration.
+          It is the largest thing this page needs and nothing can be drawn
+          without it, so waiting for React to boot before even asking for it
+          was the difference between a map and a "Loading map…". */}
+      <link
+        rel="preload"
+        href="/data/world-map.json"
+        as="fetch"
+        crossOrigin="anonymous"
+      />
+
       <section className="py-16 md:py-20">
         <div className="max-w-[1600px] mx-auto px-4">
           <RegulatoryMap updatesByCountry={updatesByCountry} />
