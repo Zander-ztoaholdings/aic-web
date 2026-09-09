@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getArticles, getPolicyUpdateSlugs } from "@/lib/notion";
+import { allJurisdictions } from "@/app/data/regulatory-data";
 
 // Async because the editorial routes are driven by the CMS. Previously this
 // listed only static routes, so no article or policy update was ever submitted
@@ -54,5 +55,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...articleRoutes, ...policyRoutes];
+  // One page per mapped jurisdiction. These are the map's actual addressable
+  // surface — a social post can point at a country, which a world map alone
+  // cannot be. lastModified is the entry's own verification date rather than
+  // the build time, so a crawler is told when the content genuinely changed
+  // instead of every page claiming to be fresh on every deploy.
+  const jurisdictionRoutes: MetadataRoute.Sitemap = allJurisdictions().map((j) => ({
+    url: `${base}/regulatory-map/${j.slug}`,
+    lastModified: new Date(j.verifiedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...articleRoutes, ...policyRoutes, ...jurisdictionRoutes];
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import * as d3geo from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import Link from "next/link";
-import { Download, Mail, X, CheckCircle2, Search, ExternalLink } from "lucide-react";
+import { Mail, X, CheckCircle2, Search, ArrowRight } from "lucide-react";
 import { scrollElementToTop, isAtTop } from "@/lib/scroll";
 import {
   regulatoryData,
@@ -37,7 +38,14 @@ interface CountryFeature {
   id: string;
   name: string;
   path: string;
+  /** Projected bounding box, for framing the country during the zoom. */
+  bounds: [[number, number], [number, number]];
+  /** Projected area, used only to settle duplicate ids. */
+  area: number;
 }
+
+/** How long the zoom runs before the route commits. */
+const ZOOM_MS = 1050;
 
 /** A published policy update, as attached to a country on the map. */
 export interface MapUpdate {
@@ -86,17 +94,36 @@ export default function RegulatoryMap({
           .fitSize([width, height], geo);
         const path = d3geo.geoPath(projection);
 
-        const features: CountryFeature[] = geo.features
+        const built: CountryFeature[] = geo.features
           .map((f) => {
             const d = path(f);
             if (!d) return null;
+            const id = String(f.id ?? "");
             return {
-              id: String(f.id ?? ""),
-              name: f.properties?.name ?? "Unknown",
+              id,
+              // Our own name wins where we have one. countries-50m.json carries
+              // TWO features with id "036" — Australia and Ashmore and Cartier
+              // Is., an uninhabited sandbar — so whichever resolved last was
+              // deciding what the map called Australia.
+              name: regulatoryData[id]?.name ?? f.properties?.name ?? "Unknown",
               path: d,
+              bounds: path.bounds(f) as [[number, number], [number, number]],
+              area: path.area(f),
             };
           })
           .filter((f): f is CountryFeature => f !== null);
+
+        // Same collision, second consequence: two paths answering to one id
+        // means hover, selection and keyboard focus can land on the wrong
+        // geometry. Keep the larger one; a country is never the smaller of two
+        // shapes sharing its code.
+        const byId = new Map<string, CountryFeature>();
+        for (const f of built) {
+          if (!f.id) continue;
+          const prev = byId.get(f.id);
+          if (!prev || f.area > prev.area) byId.set(f.id, f);
+        }
+        const features = Array.from(byId.values());
 
         setCountries(features);
         setLoading(false);
@@ -178,13 +205,66 @@ export default function RegulatoryMap({
     }
   }
 
+  const router = useRouter();
+
+  /**
+   * The cinematic step, and the reason it is a transform rather than a route
+   * animation: the paths are already projected and cached, so scaling a <g>
+   * costs nothing, reprojects nothing, and keeps the exact stroke texture the
+   * static map has. Nothing is re-rendered — the camera moves.
+   *
+   * The CTA underneath is a real link. If JavaScript never runs, if motion is
+   * reduced, or if the animation is interrupted, the destination is the same
+   * URL and the map stays usable. The animation is decoration over a working
+   * navigation, never the mechanism of it.
+   */
+  const [zoom, setZoom] = useState<{ scale: number; tx: number; ty: number } | null>(null);
+  const [veil, setVeil] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  const openJurisdiction = useCallback(
+    (e: React.MouseEvent, feature: CountryFeature | undefined, slug: string) => {
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Let the browser handle modified clicks — new tab, new window, download.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if (reduced || !feature) return; // plain navigation, no camera move
+
+      e.preventDefault();
+
+      const [[x0, y0], [x1, y1]] = feature.bounds;
+      const bw = Math.max(x1 - x0, 1);
+      const bh = Math.max(y1 - y0, 1);
+      // Cap the scale so a small country does not magnify into a few enormous
+      // pixels, and floor it so a large one still visibly travels.
+      const scale = Math.min(Math.max(Math.min(width / bw, height / bh) * 0.55, 2.2), 14);
+      const cx = (x0 + x1) / 2;
+      const cy = (y0 + y1) / 2;
+
+      setZoom({ scale, tx: width / 2 - cx * scale, ty: height / 2 - cy * scale });
+      // The veil comes in late, so the country is legibly filling the frame
+      // before the navy takes over and hands off to the page header.
+      timers.current.push(setTimeout(() => setVeil(true), ZOOM_MS * 0.55));
+      timers.current.push(setTimeout(() => router.push(`/regulatory-map/${slug}`), ZOOM_MS));
+    },
+    [router, width, height]
+  );
+
   const selected: CountryRegulation | undefined = useMemo(
     () => (selectedId ? regulatoryData[selectedId] : undefined),
     [selectedId]
   );
-  const selectedName = useMemo(
-    () => countries.find((c) => c.id === selectedId)?.name,
+  const selectedFeature = useMemo(
+    () => countries.find((c) => c.id === selectedId),
     [countries, selectedId]
+  );
+  const selectedName = useMemo(
+    () => (selectedId ? regulatoryData[selectedId]?.name : undefined) ?? selectedFeature?.name,
+    [selectedId, selectedFeature]
   );
 
   return (
@@ -194,7 +274,7 @@ export default function RegulatoryMap({
           which spent a quarter of the widest element on the site telling the
           reader to do the thing the map already invites. */}
       <div
-        className={`flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
+        className={`relative flex-1 min-w-0 transition-[padding] duration-300 ease-out motion-reduce:transition-none ${
           selectedId ? "lg:pr-8" : "lg:pr-0"
         }`}
       >
@@ -283,10 +363,27 @@ export default function RegulatoryMap({
           ) : (
             <svg
               viewBox={`0 0 ${width} ${height}`}
-              className="w-full h-auto"
+              className="w-full h-auto overflow-hidden"
               role="img"
               aria-label="World map — click a country to see its regulatory status"
             >
+              {/* The camera. Scaling this group leaves every projected path
+                  untouched, which is what keeps the map's own texture through
+                  the move — no reprojection, no tile swap, no second renderer. */}
+              <g
+                style={{
+                  transform: zoom
+                    ? `translate(${zoom.tx}px, ${zoom.ty}px) scale(${zoom.scale})`
+                    : "none",
+                  transformOrigin: "0 0",
+                  // Fast out of the gate, settling rather than braking. A linear
+                  // or symmetric ease reads as a slideshow; this reads as travel.
+                  transition: zoom
+                    ? `transform ${ZOOM_MS}ms cubic-bezier(0.7, 0, 0.22, 1)`
+                    : "none",
+                }}
+                className="motion-reduce:!transition-none"
+              >
               {countries.map((c) => {
                 const hasData = Boolean(regulatoryData[c.id]);
                 const isHovered = hoveredId === c.id;
@@ -307,6 +404,14 @@ export default function RegulatoryMap({
                     }
                     stroke="#ffffff"
                     strokeWidth={0.5}
+                    // Borders stay hairlines at 14x rather than swelling into
+                    // white bands and eating the country they outline.
+                    vectorEffect="non-scaling-stroke"
+                    style={
+                      zoom && !isSelected
+                        ? { opacity: 0.25, transition: `opacity ${ZOOM_MS * 0.6}ms ease-out` }
+                        : undefined
+                    }
                     onMouseEnter={() => setHoveredId(c.id)}
                     onMouseLeave={() => setHoveredId((h) => (h === c.id ? null : h))}
                     onClick={() => select(c.id)}
@@ -320,8 +425,33 @@ export default function RegulatoryMap({
                   </path>
                 );
               })}
+              </g>
             </svg>
           )}
+          {/* Hand-off. The jurisdiction page opens on aic-navy with the country
+              name in the same place, so the commit is a continuation rather
+              than a flash of white. */}
+          {zoom && (
+            <div
+              className={`absolute inset-0 z-20 flex items-end p-8 md:p-12 bg-aic-navy pointer-events-none transition-opacity duration-[450ms] ease-out motion-reduce:hidden ${
+                veil ? "opacity-100" : "opacity-0"
+              }`}
+              aria-hidden="true"
+            >
+              <div>
+                <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+                  {selected?.region}
+                </span>
+                <p
+                  className="text-white text-3xl md:text-5xl font-bold tracking-[-0.03em] mt-2"
+                  style={{ fontFamily: "'Merriweather', serif" }}
+                >
+                  {selectedName}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-6 mt-6 pt-6 border-t border-[#e5e7eb] text-xs text-[#6b7280]">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-[#e5e7eb] inline-block" />
@@ -454,72 +584,34 @@ export default function RegulatoryMap({
               </div>
             </div>
 
-            {/* Depth, where we have it. Absent for most jurisdictions, and
-                that absence is honest rather than hidden: the four AIC works
-                in are the four anyone will check. */}
-            {selected.detail && (
-              <div className="mb-8 space-y-6">
-                <div>
-                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
-                    What it requires
-                  </h5>
-                  <ul className="space-y-2">
-                    {selected.detail.obligations.map((o, i) => (
-                      <li key={i} className="flex gap-2.5 text-sm text-[#6b7280] leading-relaxed">
-                        <span className="text-aic-copper shrink-0 mt-1.5 w-1 h-1 rounded-full bg-aic-copper" />
-                        <span>{o}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            {/* The doorway.
+                
+                The panel used to carry the entire record — obligations, dated
+                commencements, enforcement, every source — inside a 26rem column
+                that had to scroll independently of the page to stay usable.
+                That is a symptom, not a feature. All of it now lives at a URL
+                that can be posted, indexed and cited, and the panel answers the
+                question the map actually asks: where does this country stand?
 
-                <div>
-                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
-                    Dates that matter
-                  </h5>
-                  <ul className="space-y-2">
-                    {selected.detail.keyDates.map((d, i) => (
-                      <li key={i} className="text-sm leading-relaxed">
-                        <span className="font-mono text-xs text-aic-copper">{d.date}</span>
-                        <span className="text-[#6b7280]"> — {d.event}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
-                    Enforcement
-                  </h5>
-                  <p className="text-sm text-[#6b7280] leading-relaxed">
-                    {selected.detail.enforcement}
-                  </p>
-                </div>
-
-                {/* Cited so a reader can check us rather than take our word,
-                    which is the whole posture of this organisation. */}
-                <div>
-                  <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-2">
-                    Read it yourself
-                  </h5>
-                  <ul className="space-y-1.5">
-                    {selected.detail.sources.map((src) => (
-                      <li key={src.url}>
-                        <a
-                          href={src.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-start gap-1.5 text-sm text-aic-copper hover:underline"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                          <span>{src.label}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
+                Labelled with the country rather than "Open Intelligence".
+                Naming the destination tells the reader where they are going;
+                product-speak makes them guess, and a guess is a reason not to
+                click. */}
+            <a
+              href={`/regulatory-map/${selected.slug}`}
+              onClick={(e) => openJurisdiction(e, selectedFeature, selected.slug)}
+              className="group w-full inline-flex items-center justify-between gap-3 bg-aic-navy text-white px-5 py-4 rounded-lg hover:bg-[#0f1f3d] transition-colors mb-3"
+            >
+              <span className="text-left">
+                <span className="block font-semibold text-sm">Open {selectedName}</span>
+                <span className="block text-[11px] text-white/50 mt-0.5">
+                  {selected.detail
+                    ? "Obligations, dates, enforcement, primary sources"
+                    : "Verification record and what we have not yet mapped"}
+                </span>
+              </span>
+              <ArrowRight className="w-4 h-4 shrink-0 text-aic-copper transition-transform group-hover:translate-x-0.5" />
+            </a>
 
             {/* The map states a position; these are the dated, sourced changes
                 behind it. Without them the two halves of the site describe the
@@ -549,17 +641,6 @@ export default function RegulatoryMap({
               </div>
             )}
 
-            <a
-              href={`/compliance-measures/${selected.pdfSlug}.pdf`}
-              className="w-full inline-flex items-center justify-center gap-2 bg-aic-navy text-white px-5 py-3 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-all"
-            >
-              <Download className="w-4 h-4" />
-              Download draft compliance measures
-            </a>
-            <p className="text-xs text-[#9ca3af] mt-3 leading-relaxed">
-              Draft summary, generated from public framework information. Not yet reviewed by
-              counsel — treat as a starting point, not a compliance certificate.
-            </p>
           </div>
         ) : (
           <div>

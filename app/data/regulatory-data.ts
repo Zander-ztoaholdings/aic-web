@@ -51,6 +51,21 @@ export type RegStatus =
 export interface CountryRegulation {
   /** ISO 3166-1 numeric id — matches world-atlas topojson feature.id */
   id: string;
+  /**
+   * Display name.
+   *
+   * Stored here rather than read from the topojson, because countries-50m.json
+   * contains TWO features with id "036" — Australia and Ashmore and Cartier Is.
+   * (an uninhabited external territory). Whichever the lookup reached last won,
+   * so the map could label Australia with the name of a sandbar.
+   */
+  name: string;
+  /**
+   * URL slug for /regulatory-map/<slug>. Deliberately separate from pdfSlug:
+   * the EU member states share one PDF (eu-france.pdf carries the Regulation,
+   * not French law) but each needs its own page and its own canonical URL.
+   */
+  slug: string;
   region:
     | "North America"
     | "Latin America"
@@ -193,6 +208,8 @@ const US_DETAIL: JurisdictionDetail = {
 export const regulatoryData: Record<string, CountryRegulation> = {
   "840": {
     id: "840",
+    name: "United States",
+    slug: "united-states",
     region: "North America",
     framework: "NIST AI Risk Management Framework",
     authority: "U.S. National Institute of Standards and Technology",
@@ -205,6 +222,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "124": {
     id: "124",
+    name: "Canada",
+    slug: "canada",
     region: "North America",
     framework: "No federal AI-specific bill currently before Parliament",
     authority: "Innovation, Science and Economic Development Canada",
@@ -216,6 +235,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "484": {
     id: "484",
+    name: "Mexico",
+    slug: "mexico",
     region: "North America",
     framework: "General data protection law only",
     authority: "Secretaría Anticorrupción y Buen Gobierno (data protection)",
@@ -227,6 +248,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "076": {
     id: "076",
+    name: "Brazil",
+    slug: "brazil",
     region: "Latin America",
     framework: "PL 2338/2023 (AI Legal Framework Bill)",
     authority: "Brazilian Congress / ANPD",
@@ -238,6 +261,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "250": {
     id: "250",
+    name: "France",
+    slug: "france",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / national market surveillance authorities",
@@ -250,6 +275,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "276": {
     id: "276",
+    name: "Germany",
+    slug: "germany",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / BNetzA and other national authorities",
@@ -262,6 +289,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "380": {
     id: "380",
+    name: "Italy",
+    slug: "italy",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / national authorities",
@@ -274,6 +303,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "724": {
     id: "724",
+    name: "Spain",
+    slug: "spain",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / AESIA (Spain's AI supervisory agency)",
@@ -286,6 +317,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "528": {
     id: "528",
+    name: "Netherlands",
+    slug: "netherlands",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / national authorities",
@@ -298,6 +331,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "616": {
     id: "616",
+    name: "Poland",
+    slug: "poland",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / national authorities",
@@ -310,6 +345,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "372": {
     id: "372",
+    name: "Ireland",
+    slug: "ireland",
     region: "Europe",
     framework: "EU Artificial Intelligence Act",
     authority: "European Commission / national authorities",
@@ -322,6 +359,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "826": {
     id: "826",
+    name: "United Kingdom",
+    slug: "united-kingdom",
     region: "Europe",
     framework: "Pro-innovation, principles-based approach",
     authority: "Sector regulators (ICO, FCA, CMA, etc.), coordinated centrally",
@@ -334,6 +373,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "756": {
     id: "756",
+    name: "Switzerland",
+    slug: "switzerland",
     region: "Europe",
     framework: "No dedicated AI law; Council of Europe AI treaty signatory",
     authority: "Federal Council / sector regulators",
@@ -345,6 +386,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "578": {
     id: "578",
+    name: "Norway",
+    slug: "norway",
     region: "Europe",
     framework: "EEA extension of EU AI Act under discussion",
     authority: "Nkom (Norwegian Communications Authority)",
@@ -356,6 +399,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "710": {
     id: "710",
+    name: "South Africa",
+    slug: "south-africa",
     region: "Africa",
     framework: "POPIA Section 71 (automated decision-making)",
     authority: "Information Regulator (South Africa)",
@@ -368,6 +413,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "404": {
     id: "404",
+    name: "Kenya",
+    slug: "kenya",
     region: "Africa",
     framework: "National AI strategy (non-binding)",
     authority: "Ministry of ICT",
@@ -379,6 +426,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "566": {
     id: "566",
+    name: "Nigeria",
+    slug: "nigeria",
     region: "Africa",
     framework: "National AI strategy (draft)",
     authority: "National Information Technology Development Agency (NITDA)",
@@ -390,6 +439,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "646": {
     id: "646",
+    name: "Rwanda",
+    slug: "rwanda",
     region: "Africa",
     framework: "National AI Policy (non-binding)",
     authority: "Ministry of ICT and Innovation",
@@ -401,6 +452,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "784": {
     id: "784",
+    name: "United Arab Emirates",
+    slug: "united-arab-emirates",
     region: "Middle East",
     framework: "National AI strategy + emirate-level initiatives",
     authority: "UAE AI Office / DIFC, ADGM free-zone regulators",
@@ -412,6 +465,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "682": {
     id: "682",
+    name: "Saudi Arabia",
+    slug: "saudi-arabia",
     region: "Middle East",
     framework: "SDAIA AI Ethics Principles",
     authority: "Saudi Data & AI Authority (SDAIA)",
@@ -423,6 +478,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "376": {
     id: "376",
+    name: "Israel",
+    slug: "israel",
     region: "Middle East",
     framework: "Draft AI policy / regulation principles",
     authority: "Ministry of Innovation, Science and Technology",
@@ -434,6 +491,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "156": {
     id: "156",
+    name: "China",
+    slug: "china",
     region: "Asia-Pacific",
     framework: "Interim Measures for Generative AI + algorithm regulations",
     authority: "Cyberspace Administration of China (CAC)",
@@ -445,6 +504,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "392": {
     id: "392",
+    name: "Japan",
+    slug: "japan",
     region: "Asia-Pacific",
     framework: "AI Promotion Act + AI Guidelines for Business",
     authority: "Cabinet AI Strategy Headquarters / METI",
@@ -456,6 +517,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "410": {
     id: "410",
+    name: "South Korea",
+    slug: "south-korea",
     region: "Asia-Pacific",
     framework: "AI Framework Act (Basic Act on AI)",
     authority: "Ministry of Science and ICT",
@@ -467,6 +530,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "702": {
     id: "702",
+    name: "Singapore",
+    slug: "singapore",
     region: "Asia-Pacific",
     framework: "Model AI Governance Framework (MGAI)",
     authority: "Infocomm Media Development Authority (IMDA)",
@@ -478,6 +543,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "356": {
     id: "356",
+    name: "India",
+    slug: "india",
     region: "Asia-Pacific",
     framework: "IT Rules + draft national AI governance guidelines",
     authority: "Ministry of Electronics and Information Technology (MeitY)",
@@ -489,6 +556,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "036": {
     id: "036",
+    name: "Australia",
+    slug: "australia",
     region: "Asia-Pacific",
     framework: "Voluntary AI Safety Standard + proposed mandatory guardrails",
     authority: "Department of Industry, Science and Resources",
@@ -500,6 +569,8 @@ export const regulatoryData: Record<string, CountryRegulation> = {
   },
   "554": {
     id: "554",
+    name: "New Zealand",
+    slug: "new-zealand",
     region: "Asia-Pacific",
     framework: "No dedicated AI law identified",
     authority: "—",
@@ -551,4 +622,14 @@ export function countriesForJurisdictions(labels: string[]): string[] {
     for (const code of JURISDICTION_COUNTRIES[label] ?? []) codes.add(code);
   }
   return [...codes];
+}
+
+/** Every mapped jurisdiction, for route generation and listings. */
+export function allJurisdictions(): CountryRegulation[] {
+  return Object.values(regulatoryData).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Look a jurisdiction up by its URL slug. */
+export function jurisdictionBySlug(slug: string): CountryRegulation | undefined {
+  return Object.values(regulatoryData).find((c) => c.slug === slug);
 }
