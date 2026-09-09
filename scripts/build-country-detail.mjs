@@ -132,6 +132,34 @@ function keepLandmasses(scored) {
 
 const r = (n) => Math.round(n * 100) / 100;
 
+/**
+ * The rings d3 actually draws, rather than each coordinate projected by hand.
+ *
+ * Projecting point by point skips the projection stream, and the stream is
+ * what performs antimeridian cutting. A polygon crossing 180 degrees then
+ * comes back as a single ring whose last vertex is at the far right of the map
+ * and whose next is at the far left — which draws as a band straight across
+ * the world. Russia did exactly that, three times over, and so did Fiji.
+ *
+ * Feeding geoPath a context collects the same coordinates it would have drawn,
+ * already clipped and already cut into separate rings, which can then be
+ * simplified like any other.
+ */
+function ringsOf(feature, projection) {
+  const rings = [];
+  let cur = null;
+  const ctx = {
+    beginPath() { cur = null; },
+    moveTo(x, y) { cur = [[x, y]]; },
+    lineTo(x, y) { if (cur) cur.push([x, y]); },
+    closePath() { if (cur && cur.length > 2) rings.push(cur); cur = null; },
+    arc() {},
+  };
+  d3.geoPath(projection, ctx)(feature);
+  if (cur && cur.length > 2) rings.push(cur);
+  return rings;
+}
+
 const frames = {}, detail = {}, report = [];
 for (const id of IDS) {
   if (!best[id]) { console.warn("MISSING", id); continue; }
@@ -141,17 +169,15 @@ for (const id of IDS) {
   const kept = keepLandmasses(scored);
 
   // Project first, then decide tolerance from how far in the camera will go.
-  const rings = [];
+  const rings = ringsOf(
+    { type: "Feature", properties: {}, geometry: { type: "MultiPolygon", coordinates: kept.map((s) => s.c) } },
+    proj
+  );
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const { c } of kept) {
-    for (const ring of c) {
-      const pts = ring.slice(0, -1).map((p) => proj(p)).filter((p) => p && isFinite(p[0]) && isFinite(p[1]));
-      if (pts.length < 4) continue;
-      for (const p of pts) {
-        if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0];
-        if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1];
-      }
-      rings.push(pts);
+  for (const ring of rings) {
+    for (const p of ring) {
+      if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0];
+      if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1];
     }
   }
   if (!rings.length) { console.warn("EMPTY", id); continue; }

@@ -62,6 +62,34 @@ function rdpRing(pts, eps) {
 const r = (n) => Math.round(n * 10) / 10;
 
 /**
+ * The rings d3 actually draws, rather than each coordinate projected by hand.
+ *
+ * Projecting point by point skips the projection stream, and the stream is
+ * what performs antimeridian cutting. A polygon crossing 180 degrees then
+ * comes back as a single ring whose last vertex is at the far right of the map
+ * and whose next is at the far left — which draws as a band straight across
+ * the world. Russia did exactly that, three times over, and so did Fiji.
+ *
+ * Feeding geoPath a context collects the same coordinates it would have drawn,
+ * already clipped and already cut into separate rings, which can then be
+ * simplified like any other.
+ */
+function ringsOf(feature, projection) {
+  const rings = [];
+  let cur = null;
+  const ctx = {
+    beginPath() { cur = null; },
+    moveTo(x, y) { cur = [[x, y]]; },
+    lineTo(x, y) { if (cur) cur.push([x, y]); },
+    closePath() { if (cur && cur.length > 2) rings.push(cur); cur = null; },
+    arc() {},
+  };
+  d3.geoPath(projection, ctx)(feature);
+  if (cur && cur.length > 2) rings.push(cur);
+  return rings;
+}
+
+/**
  * Natural Earth ships two features for some ids — 036 is both Australia and
  * Ashmore and Cartier Is., an uninhabited sandbar. The map used to resolve this
  * in the browser by comparing projected areas; doing it here means the browser
@@ -82,16 +110,11 @@ let raw = 0;
 for (const [id, { f }] of best) {
   const g = f.geometry;
   if (!g) continue;
-  const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
   let d = "";
-  for (const poly of polys) {
-    for (const ring of poly) {
-      const pts = ring.slice(0, -1).map((p) => proj(p)).filter((p) => p && isFinite(p[0]) && isFinite(p[1]));
-      if (pts.length < 4) continue;
-      const s = rdpRing(pts, TOL);
-      if (s.length < 4) continue;
-      d += "M" + s.map((p) => r(p[0]) + " " + r(p[1])).join("L") + "Z";
-    }
+  for (const ring of ringsOf(f, proj)) {
+    const s = rdpRing(ring, TOL);
+    if (s.length < 4) continue;
+    d += "M" + s.map((p) => r(p[0]) + " " + r(p[1])).join("L") + "Z";
   }
   if (!d) continue;
   raw += (path(f) ?? "").length;
