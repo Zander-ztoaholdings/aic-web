@@ -1,4 +1,5 @@
 import { Globe2 } from "lucide-react";
+import Link from "next/link";
 import RegulatoryMap, { type MapUpdate } from "@/app/components/RegulatoryMap";
 import { getPolicyUpdates } from "@/lib/notion";
 import { countriesForJurisdictions } from "@/app/data/regulatory-data";
@@ -70,6 +71,31 @@ export default async function RegulatoryMapPage() {
 
       <section className="py-16 md:py-20">
         <div className="max-w-[1600px] mx-auto px-4">
+          {/* Draft-one notice. First public version; the map's own honesty
+              posture only works if the version it is at is stated up front,
+              not discovered. */}
+          <div className="mb-8 border border-aic-copper/30 bg-aic-copper/[0.06] rounded-xl p-5 md:p-6">
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper font-semibold">
+                Draft one
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
+                First published version
+              </span>
+            </div>
+            <p className="text-sm text-[#0f1f3d] leading-[1.7] max-w-3xl">
+              This is the first public release of the regulatory map, and it
+              will change. Coverage is partial on purpose — 28 jurisdictions,
+              each carrying its own verification date, and most of them not yet
+              mapped to obligation level, which each page says plainly rather
+              than papering over. Treat it as orientation, not legal advice, and
+              read the primary sources before relying on any of it.{" "}
+              <Link href="/contact" className="text-aic-copper hover:underline font-semibold">
+                Tell us what is wrong or missing
+              </Link>{" "}
+              and it goes into the next draft.
+            </p>
+          </div>
           <RegulatoryMap updatesByCountry={updatesByCountry} />
         </div>
       </section>

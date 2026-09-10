@@ -167,6 +167,32 @@ export default async function JurisdictionPage({
         </div>
       </section>
 
+      {/* The same draft-one notice as the map. This page is what a shared
+          link opens, so most readers will never see the map's copy of it. */}
+      <section className="pt-10 md:pt-12">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="border border-aic-copper/30 bg-aic-copper/[0.06] rounded-xl p-5">
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper font-semibold">
+                Draft one
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
+                First published version
+              </span>
+            </div>
+            <p className="text-sm text-[#0f1f3d] leading-[1.7]">
+              This is the first public release of AIC&apos;s regulatory map and it
+              will change. Orientation, not legal advice — read the primary
+              sources before relying on it.{" "}
+              <Link href="/contact" className="text-aic-copper hover:underline font-semibold">
+                Tell us what is wrong or missing
+              </Link>{" "}
+              and it goes into the next draft.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <JurisdictionRecord j={j} updates={updates} />
 
       {/* Scope limit, stated at the bottom of every jurisdiction page. */}
