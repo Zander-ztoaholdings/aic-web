@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ANALYTICS_DEFAULT_ON } from "@/lib/analytics-mode";
 import { Shield, Lock, Eye, UserCheck, Mail } from "lucide-react";
 
 export default function PrivacyPolicy() {
@@ -223,13 +224,29 @@ export default function PrivacyPolicy() {
                 it runs Google Analytics, which assigns a persistent client
                 identifier and sends behaviour to Google. Corrected 4 Sep 2026,
                 and analytics no longer loads at all without consent. */}
-            <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
-              This website uses <strong className="text-[#0f1f3d]">Google
-              Analytics</strong>, and only if you have explicitly allowed it.
-              Until you do, the script is not loaded and no analytics cookie is
-              set — declining stores a single preference in your browser&apos;s
-              local storage and nothing else.
-            </p>
+            {ANALYTICS_DEFAULT_ON ? (
+              <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
+                This website uses <strong className="text-[#0f1f3d]">Google
+                Analytics</strong>, and it currently loads for every visitor
+                without asking first. We are not going to describe that as
+                anything other than what it is: analytics cookies are set on
+                your first page view, and you are not given the choice
+                beforehand. If you would rather not be measured, block the
+                script or use your browser&apos;s tracking protection —{" "}
+                <a href="mailto:albert@ztoaholdings.com" className="text-aic-copper underline">
+                  or tell us
+                </a>{" "}
+                and we will remove your data.
+              </p>
+            ) : (
+              <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
+                This website uses <strong className="text-[#0f1f3d]">Google
+                Analytics</strong>, and only if you have explicitly allowed it.
+                Until you do, the script is not loaded and no analytics cookie is
+                set — declining stores a single preference in your browser&apos;s
+                local storage and nothing else.
+              </p>
+            )}
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
               If you allow it, Google Analytics sets cookies that assign your
               browser a persistent identifier and records which pages you visit,

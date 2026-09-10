@@ -28,6 +28,8 @@ import { DURATION, EASE_OUT } from "@/lib/motion";
  * The choice lives in localStorage, not a cookie, so declining sets nothing.
  */
 
+import { ANALYTICS_DEFAULT_ON } from "@/lib/analytics-mode";
+
 const STORAGE_KEY = "aic-analytics-consent";
 type Consent = "granted" | "denied";
 
@@ -47,6 +49,14 @@ export default function CookieConsent({ gaId }: { gaId?: string }) {
   const [asked, setAsked] = useState(true);
 
   useEffect(() => {
+    // Default-on mode: analytics loads for everyone and the banner never
+    // appears. /privacy reads the same flag, so what the page says stays true.
+    if (ANALYTICS_DEFAULT_ON) {
+      setConsent("granted");
+      setAsked(true);
+      return;
+    }
+
     const stored = readConsent();
     setConsent(stored);
     setAsked(stored !== null);
