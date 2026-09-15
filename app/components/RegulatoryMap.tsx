@@ -178,9 +178,21 @@ export default function RegulatoryMap({
    * search result, mobile region button — so the framing is the same however
    * you got there.
    */
+  /**
+   * Where framing scrolls to. The map card when it is actually on screen
+   * (desktop — the SVG is `hidden lg:block`, and a hidden element measures
+   * as a zero-size rect, which would send scrollElementToTop nowhere useful);
+   * the search box on mobile, same as before.
+   */
+  function frameTarget(): HTMLElement | null {
+    const card = mapCardRef.current;
+    if (card && card.offsetHeight > 0) return card;
+    return searchRef.current;
+  }
+
   function select(id: string) {
     setSelectedId(id);
-    if (!isAtTop(searchRef.current)) scrollElementToTop(searchRef.current);
+    if (!isAtTop(frameTarget())) scrollElementToTop(frameTarget());
   }
 
   function choose(id: string) {
@@ -242,6 +254,15 @@ export default function RegulatoryMap({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const stageRef = useRef<HTMLDivElement>(null);
+  // The map card itself, not the whole component root (which starts at
+  // the search box). Framing scrolls target this so the viewport centres
+  // on the map, not on whatever sits above the search box on the page
+  // that embeds this component (the "draft one" notice, on /regulatory-map).
+  const mapCardRef = useRef<HTMLDivElement>(null);
+  // The centre-screen "back to the world map" button, so the floating
+  // corner one can wait until this one has actually scrolled out of view
+  // instead of guessing a fixed scroll distance.
+  const centerBackRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
@@ -309,7 +330,7 @@ export default function RegulatoryMap({
         // this component and take the camera with it.
         window.history.pushState({ aicJurisdiction: id }, "", `/regulatory-map/${j.slug}`);
       }
-      if (!isAtTop(stageRef.current)) scrollElementToTop(stageRef.current);
+      if (!isAtTop(frameTarget())) scrollElementToTop(frameTarget());
     },
     [countries, frameFor, height]
   );
@@ -501,7 +522,13 @@ export default function RegulatoryMap({
     const onScroll = () => {
       const y = window.scrollY;
       setCue(y < 120);
-      setPastMap(y > 380);
+      // The floating corner button is a stand-in for the centre one once
+      // that one is gone, so it must not appear a moment before the centre
+      // button actually leaves the viewport - otherwise both sit on screen
+      // at once, doing the same job. Measure the real button rather than
+      // guess the distance from a fixed scrollY number.
+      const btn = centerBackRef.current;
+      setPastMap(btn ? btn.getBoundingClientRect().bottom < 0 : y > 380);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -609,6 +636,7 @@ export default function RegulatoryMap({
             The two are now sequential rather than simultaneous: the layout
             clears, and then the camera travels. See LAYOUT_MS. */}
         <div
+          ref={mapCardRef}
           className={`hidden lg:block bg-white border border-[#e5e7eb] rounded-xl overflow-hidden transition-[padding] duration-300 ease-out ${
             expanded ? "p-0" : "p-4 sm:p-8"
           }`}
@@ -745,6 +773,7 @@ export default function RegulatoryMap({
                 {/* A filled button rather than the caps-lock link this used to
                     be. It sat here quietly enough to be missed entirely. */}
                 <button
+                  ref={centerBackRef}
                   type="button"
                   onClick={() => collapse()}
                   className="inline-flex items-center gap-2 bg-aic-navy text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-colors mb-6"
