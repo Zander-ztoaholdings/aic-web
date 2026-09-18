@@ -22,8 +22,9 @@ import { calculateAssessmentResult, type AssessmentResult } from "@/lib/scoring"
 import { analyseAware, type AwareAnalysis } from "@/lib/aware-analysis";
 import { requirements, RIGHTS } from "@/app/data/requirements-data";
 import AwareResults from "./AwareResults";
+import AwareWelcome from "./AwareWelcome";
 
-type Stage = "intro" | "section" | "quiz" | "review" | "gate" | "results";
+type Stage = "welcome" | "intro" | "section" | "quiz" | "review" | "gate" | "results";
 
 const CATEGORY_LABEL: Record<Category, string> = {
   USAGE: "AI Usage Context",
@@ -114,7 +115,7 @@ function RequirementAnchor({ question }: { question: Question }) {
 }
 
 export default function AwareClient() {
-  const [stage, setStage] = useState<Stage>("intro");
+  const [stage, setStage] = useState<Stage>("welcome");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [returnToReview, setReturnToReview] = useState(false);
@@ -235,6 +236,10 @@ export default function AwareClient() {
 
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
+      {stage === "welcome" ? (
+        <AwareWelcome onComplete={() => setStage("intro")} />
+      ) : (
+      <>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="bg-aic-navy text-white py-20 md:py-24 relative overflow-hidden">
         <div
@@ -590,6 +595,8 @@ export default function AwareClient() {
           )}
         </AnimatePresence>
       </div>
+      </>
+      )}
     </div>
   );
 }
