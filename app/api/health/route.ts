@@ -100,7 +100,8 @@ export async function GET() {
       checks.database = {
         status: "ok",
         latency_ms: Date.now() - dbStart,
-        ...(hideTarget ? {} : { target: safeTarget() }),
+        // No target when healthy: it only helps when something is wrong, and
+        // a public endpoint has no reason to describe working infrastructure.
       };
     } catch (err) {
       const { code, message } = rootCause(err);
