@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,17 +8,16 @@ import {
   FileDown,
   Layers,
   Flag,
-  Copy,
-  Check,
-  ImageDown,
+  BadgeCheck,
 } from "lucide-react";
 import type { AssessmentResult } from "@/lib/scoring";
 import type { AwareAnalysis } from "@/lib/aware-analysis";
 import { RIGHTS, TIER_MEANING, type RightCode } from "@/app/data/requirements-data";
 import { categoryMeta, type Category } from "@/app/data/questions";
-import { slugifyCompany } from "@/lib/slug";
 
-const SITE_URL = "https://aiccertified.cloud";
+// Inlined at build. Falls back to production so a missing variable sends
+// people to the real platform, never to a dead link.
+const PLATFORM_URL = (process.env.NEXT_PUBLIC_PLATFORM_URL || "https://app.aiccertified.cloud").replace(/\/+$/, "");
 
 // The engine's own TierInfo.color values are Tailwind classes pinned by
 // __tests__/lib/scoring.test.ts, and they are not real risk colours —
@@ -51,36 +49,18 @@ export default function AwareResults({
   result,
   analysis,
   organisation,
-  wantsListed,
   onDownload,
 }: {
   result: AssessmentResult;
   analysis: AwareAnalysis;
   organisation: string;
-  wantsListed: boolean;
   onDownload: () => void;
 }) {
   const risk = RISK[result.tier.name] ?? RISK["Tier 2"];
   const { indication, gaps, applicableCount, gapsByRight, flagshipGaps, consistent } = analysis;
-  const [copied, setCopied] = useState(false);
-
-  const badgeSlug = organisation ? slugifyCompany(organisation) : "";
-  const badgeUrl = badgeSlug ? `${SITE_URL}/api/aware-badge/${badgeSlug}` : "";
-  const embedSnippet = badgeUrl
-    ? `<a href="${SITE_URL}/aware/directory"><img src="${badgeUrl}" alt="${organisation} — AIC Aware, self-declared" width="400" height="120" /></a>`
-    : "";
-
-  async function copyEmbed() {
-    try {
-      await navigator.clipboard.writeText(embedSnippet);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard API can be denied by the browser — the snippet is still
-      // selectable in the <pre> below, so this fails quietly rather than
-      // showing an error for a non-essential convenience.
-    }
-  }
+  const signupUrl = `${PLATFORM_URL}/signup?intent=aware${
+    organisation ? `&organisation=${encodeURIComponent(organisation)}` : ""
+  }`;
 
   const rightsWithGaps = (Object.keys(gapsByRight) as RightCode[]).filter(
     (r) => gapsByRight[r] > 0
@@ -368,8 +348,8 @@ export default function AwareResults({
         </div>
         <p className="text-sm text-[#6b7280] leading-relaxed mb-2">
           This is what AIC Aware confers: an endorsement of the five rights, declared by you. It is
-          not the AIC Certified mark, it does not appear on the public registry, and no third party
-          can verify it — only an independent audit produces a checkable result.
+          not the AIC Certified mark and it does not appear on the public registry. A badge confirms
+          that a named person declared these answers; only an independent audit verifies them.
         </p>
         <Link
           href="/governance-hub#declaration"
@@ -379,56 +359,30 @@ export default function AwareResults({
         </Link>
       </section>
 
-      {/* ── Embeddable badge ──────────────────────────────────────────── */}
-      {/* Only for an organisation that opted into the public directory —
-          the badge is that same directory entry rendered as an image
-          (app/api/aware-badge/[slug]/route.tsx), so it can never claim a
-          declaration that isn't publicly listed and checkable. */}
-      {wantsListed && badgeUrl && (
-        <section className="bg-white border border-[#e5e7eb] rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <ImageDown className="w-4 h-4 text-aic-copper" />
-            <span className="text-sm font-bold text-[#0f1f3d]">Your AIC Aware badge</span>
-          </div>
-          <p className="text-sm text-[#6b7280] leading-relaxed mb-4">
-            An embeddable image for {organisation}&apos;s own site. It always renders live from
-            the public directory, so it stays accurate if your listing ever changes — and it
-            says plainly what it is: self-declared, not AIC Certified.
-          </p>
-
-          {/* Server-rendered API image, not a static asset — next/image can't
-              optimise a route handler response, so a plain <img> is correct here. */}
-          <img
-            src={badgeUrl}
-            alt={`${organisation} — AIC Aware, self-declared`}
-            width={400}
-            height={120}
-            className="rounded-lg border border-[#e5e7eb]"
-          />
-
-          <div className="flex flex-wrap gap-3 mt-4">
-            <a
-              href={`${badgeUrl}?download=1`}
-              download
-              className="inline-flex items-center gap-2 bg-[#0f1f3d] hover:bg-[#0a1628] text-white px-5 py-2.5 rounded-full transition-all text-xs font-bold"
-            >
-              <ImageDown className="w-3.5 h-3.5" /> Download badge (PNG)
-            </a>
-            <button
-              type="button"
-              onClick={copyEmbed}
-              className="inline-flex items-center gap-2 border border-[#e5e7eb] hover:bg-[#f0f4f8] text-[#0f1f3d] px-5 py-2.5 rounded-full transition-all text-xs font-bold"
-            >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "Copied" : "Copy embed code"}
-            </button>
-          </div>
-
-          <pre className="mt-4 bg-[#f0f4f8] border border-[#e5e7eb] rounded-lg p-3 text-[11px] text-[#374151] overflow-x-auto whitespace-pre-wrap break-all">
-            {embedSnippet}
-          </pre>
-        </section>
-      )}
+      {/* ── Badge: issued from a platform account ───────────────────── */}
+      {/* This page used to issue the badge itself, keyed on whatever company
+          name was typed into the form — so anyone could badge any company.
+          Badges now come from a free platform account: a registered
+          organisation, a named accountable person, a unique code with a public
+          verify page, valid for twelve months. */}
+      <section className="rounded-2xl border border-[#e5e7eb] bg-white p-7 shadow-[0_1px_4px_rgba(10,22,40,0.05)]">
+        <div className="flex items-center gap-2 mb-2">
+          <BadgeCheck className="w-4 h-4 text-aic-copper" />
+          <span className="text-sm font-bold text-[#0f1f3d]">Get your verifiable AIC Aware badge</span>
+        </div>
+        <p className="text-sm text-[#6b7280] leading-relaxed mb-5 max-w-2xl">
+          Create a free AIC account{organisation ? ` for ${organisation}` : ""}, name the person accountable for
+          your AI, and confirm your answers there. You&apos;ll receive a badge with its own code and a public
+          verify page, an optional listing in the AIC Aware directory, and a place to track what it takes to get
+          certified. The badge is valid for twelve months.
+        </p>
+        <a
+          href={signupUrl}
+          className="inline-flex items-center gap-2 bg-[#0f1f3d] hover:bg-[#0a1628] text-white px-6 py-3 rounded-full transition-all text-sm font-bold"
+        >
+          Create a free account <ArrowRight className="w-4 h-4" />
+        </a>
+      </section>
     </div>
   );
 }

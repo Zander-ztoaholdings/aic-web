@@ -122,7 +122,6 @@ export default function AwareClient() {
 
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
-  const [wantsListed, setWantsListed] = useState(false);
   const [attested, setAttested] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -190,10 +189,6 @@ export default function AwareClient() {
       setSubmitError("Please confirm the declaration — it is what the endorsement rests on.");
       return;
     }
-    if (wantsListed && !company.trim()) {
-      setSubmitError("A company name is required to appear in the AIC Aware directory.");
-      return;
-    }
 
     setSubmitting(true);
     try {
@@ -203,7 +198,6 @@ export default function AwareClient() {
         body: JSON.stringify({
           email,
           company: company.trim() || undefined,
-          wantsListed,
           score: result.integrityScore,
           tier:
             result.tier.name === "Tier 1"
@@ -522,8 +516,7 @@ export default function AwareClient() {
                 </div>
                 <div>
                   <label htmlFor="aware-company" className="block text-sm font-medium text-[#0f1f3d] mb-1.5">
-                    Organisation name{" "}
-                    {wantsListed && <span className="text-[#c9920a]">(required to be listed)</span>}
+                    Organisation name
                   </label>
                   <input
                     id="aware-company"
@@ -531,23 +524,13 @@ export default function AwareClient() {
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-[#e5e7eb] bg-white focus:border-[#c9920a] focus:outline-none text-sm"
-                    placeholder="Optional, unless listing"
+                    placeholder="Optional"
                   />
                 </div>
 
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={wantsListed}
-                    onChange={(e) => setWantsListed(e.target.checked)}
-                    className="mt-1 w-4 h-4 accent-[#c9920a]"
-                  />
-                  <span className="text-sm text-[#6b7280] leading-relaxed">
-                    List my organisation in the public AIC Aware directory, by name and date only.
-                    My score, my answers and my gap register are never published.
-                  </span>
-                </label>
-
+                {/* The badge and directory listing are issued from a free platform
+                    account, not from here: a checkbox on an anonymous form let anyone
+                    list, and badge, any company name. See app/aware/AwareResults.tsx. */}
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -588,7 +571,6 @@ export default function AwareClient() {
                 result={result}
                 analysis={analysis}
                 organisation={company.trim()}
-                wantsListed={wantsListed}
                 onDownload={downloadPDF}
               />
             </motion.div>

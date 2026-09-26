@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSystemDb, leads } from '@/lib/db';
+import { getSystemDb, leads, sql } from '@/lib/db';
 import { isValidEmail, isValidScore, isValidTier, isNonEmptyString, safeParseJSON } from '@/lib/validation';
 import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Invalid request body.' }, { status: 400 });
     }
 
-    const { email, score, tier, answers, company, wantsListed } = body;
+    const { email, score, tier, answers, company } = body;
 
     if (!isValidEmail(email)) {
       return NextResponse.json({ success: false, message: 'Valid email is required.' }, { status: 400 });
@@ -31,11 +31,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Answers object is required.' }, { status: 400 });
     }
 
-    // Company is required only to be *listed* in the AIC Aware directory — an
-    // anonymous email can still get a score and a PDF without naming an
-    // organisation, it just can't opt into the public list (there'd be
-    // nothing honest to show next to the email address).
-    const wantsToBeListed = wantsListed === true;
+    // The website no longer lists anyone in the AIC Aware directory or issues
+    // badges. Both come from a free platform account, where an organisation is
+    // registered and a named accountable person makes the declaration. An
+    // anonymous form could list, and badge, any company name.
     let companyName: string | undefined;
     if (company !== undefined && company !== null && company !== '') {
       if (!isNonEmptyString(company, 200)) {
@@ -43,34 +42,30 @@ export async function POST(request: Request) {
       }
       companyName = company;
     }
-    if (wantsToBeListed && !companyName) {
-      return NextResponse.json({ success: false, message: 'A company name is required to appear in the AIC Aware directory.' }, { status: 400 });
-    }
 
     const db = getSystemDb();
 
-    // 1. Record the Lead (Assessment results are merged into lead scoring).
-    // status: 'LISTED' is a self-declared opt-in into the public AIC Aware
-    // directory (see lib/aware-directory.ts) — distinct from 'NEW' and
-    // 're-engaged', which are internal lead-pipeline states only.
-    const status = wantsToBeListed ? 'LISTED' : 'NEW';
-    const reEngagedStatus = wantsToBeListed ? 'LISTED' : 'RE-ENGAGED';
-
+    // 1. Record the lead. Rows already LISTED are legacy directory entries from
+    // before badges moved to the platform: a retake by the same email must not
+    // silently delist them or rename the company they were listed under, so
+    // their status and company are left as they are.
     await db
       .insert(leads)
       .values({
         email,
         score: Math.round(score),
         source: 'QUIZ',
-        status,
+        status: 'NEW',
         ...(companyName ? { company: companyName } : {}),
       })
       .onConflictDoUpdate({
         target: leads.email,
         set: {
           score: Math.round(score),
-          status: reEngagedStatus,
-          ...(companyName ? { company: companyName } : {}),
+          status: sql`CASE WHEN ${leads.status} = 'LISTED' THEN 'LISTED' ELSE 'RE-ENGAGED' END`,
+          ...(companyName
+            ? { company: sql`CASE WHEN ${leads.status} = 'LISTED' THEN ${leads.company} ELSE ${companyName} END` }
+            : {}),
         },
       });
 
