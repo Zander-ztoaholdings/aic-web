@@ -19,8 +19,8 @@ import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("en-ZA", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 
-function render(opts: { company: string; tag: string; line: string; muted?: boolean }) {
-  const { company, tag, line, muted = false } = opts;
+function render(opts: { company: string; tag: string; line: string; verify?: string; muted?: boolean }) {
+  const { company, tag, line, verify, muted = false } = opts;
   const accent = muted ? "#9ca3af" : "#c9920a";
   return (
     (
@@ -33,7 +33,7 @@ function render(opts: { company: string; tag: string; line: string; muted?: bool
           background: "#ffffff",
           border: "2px solid #e5e7eb",
           borderRadius: 16,
-          padding: "20px 26px",
+          padding: "16px 22px",
           fontFamily: "sans-serif",
         }}
       >
@@ -96,6 +96,11 @@ function render(opts: { company: string; tag: string; line: string; muted?: bool
           <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>
             {line}
           </div>
+          {verify && (
+            <div style={{ fontSize: 11, color: muted ? "#9ca3af" : "#0f1f3d", marginTop: 2, fontWeight: 600 }}>
+              {verify}
+            </div>
+          )}
         </div>
       </div>
     )
@@ -144,8 +149,12 @@ export async function GET(
         company: badge.organisation,
         tag: valid ? "Self-Declared" : badge.status === "expired" ? "Expired" : "Revoked",
         line: valid
-          ? `${badge.code} · valid to ${fmt(badge.expiresAt)} · not AIC Certified`
+          ? `${badge.code} · valid to ${fmt(badge.expiresAt)}`
           : `${badge.code} · ${badge.status === "expired" ? `expired ${fmt(badge.expiresAt)}` : "no longer valid"}`,
+        // Printed on the image itself, because a downloaded PNG carries no link:
+        // wherever the badge ends up — a slide, a PDF, a printed proposal —
+        // the reader can still find its registry entry.
+        verify: "Verify this code at aiccertified.cloud/registry",
         muted: !valid,
       }),
       `aic-aware-badge-${badge.code}.png`,

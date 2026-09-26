@@ -1,5 +1,6 @@
 import { listRegistry } from "@/lib/registry";
 import RegistryClient from "./RegistryClient";
+import AwareLookup from "./AwareLookup";
 
 // Server-rendered so the register reflects real data rather than a hardcoded
 // array. force-dynamic: a certification status must never be served stale from
@@ -13,5 +14,10 @@ export const dynamic = "force-dynamic";
 // would turn a fault into a false claim about certificates.
 export default async function RegistryPage() {
   const entries = await listRegistry();
-  return <RegistryClient entries={entries} />;
+  return (
+    <>
+      <RegistryClient entries={entries} />
+      <AwareLookup />
+    </>
+  );
 }

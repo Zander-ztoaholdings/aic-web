@@ -81,7 +81,7 @@ export default async function AwareDirectoryPage() {
                   <span className="flex items-center gap-2 text-[#0f1f3d] font-medium">
                     <BadgeCheck className="w-4 h-4 text-[#2c5f2d] shrink-0" /> {e.organisation}
                   </span>
-                  <Link href={`/aware/verify/${e.code}`} className="text-sm text-[#6b7280] font-mono hover:text-[#0f1f3d]">
+                  <Link href={`/registry/aware/${e.code}`} className="text-sm text-[#6b7280] font-mono hover:text-[#0f1f3d]">
                     {e.code} · {fmt(e.issuedAt)}
                   </Link>
                 </li>
