@@ -10,7 +10,11 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 16px;
+  /* The site's base size. Every rem-based size and spacing (Tailwind's text,
+     padding, margins, gaps, max-widths) scales from this, so 90% reads like
+     the browser zoomed out one step: the same layout with more room around
+     it. Change this one value to tune overall density. */
+  --font-size: 90%;
   --background: #ffffff;
   --foreground: #0f1f3d;
   --card: #FFFFFF;
@@ -168,6 +172,17 @@
 
   html {
     font-size: var(--font-size);
+  }
+
+  /* iOS Safari zooms the whole page when a field under 16px is focused, which
+     is jarring on forms like the AIC Aware email step. Keep fields at 16px on
+     phones regardless of the base size. */
+  @media (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
   }
 
   h1 {
