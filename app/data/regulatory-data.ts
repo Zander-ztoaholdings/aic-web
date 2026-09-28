@@ -218,7 +218,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "No single federal AI law, and no federal preemption of state law. NIST's AI RMF is the voluntary national reference. Binding rules come from individual states, and that layer is unsettled rather than merely patchy — Colorado repealed and rewrote its AI Act in 2026, and a federal executive order now directs litigation against state AI laws.",
     pdfSlug: "united-states",
     detail: US_DETAIL,
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "124": {
     id: "124",
@@ -257,7 +257,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "A comprehensive, EU-style risk-tiered AI bill has been under legislative debate. Brazil's data protection authority (ANPD) already has relevant automated-decision powers under the LGPD in the meantime.",
     pdfSlug: "brazil",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "250": {
     id: "250",
@@ -369,7 +369,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "The UK has deliberately not passed a standalone AI Act, relying instead on existing sector regulators applying shared cross-sectoral principles. This is a live policy area and could change.",
     pdfSlug: "united-kingdom",
     detail: UK_DETAIL,
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "756": {
     id: "756",
@@ -382,7 +382,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Switzerland is not an EU member and has no domestic AI-specific statute. It is a signatory to the Council of Europe's Framework Convention on AI, a human-rights-oriented treaty rather than direct regulation.",
     pdfSlug: "switzerland",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "578": {
     id: "578",
@@ -409,20 +409,20 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "South Africa has no standalone AI law. POPIA Section 71 gives data subjects rights around solely automated decision-making with legal or similarly significant effect — the closest existing binding hook for AI accountability, and the anchor for AIC's own methodology.",
     pdfSlug: "south-africa",
     detail: SOUTH_AFRICA_DETAIL,
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "404": {
     id: "404",
     name: "Kenya",
     slug: "kenya",
     region: "Africa",
-    framework: "National AI strategy (non-binding)",
-    authority: "Ministry of ICT",
-    status: "Guidance only",
+    framework: "Artificial Intelligence Bill, 2026 (Senate Bill No. 4) + national AI strategy",
+    authority: "Kenyan Senate / Ministry of ICT",
+    status: "Proposed / draft legislation",
     summary:
-      "Kenya has published national AI strategy documents oriented around economic development and ethics principles, without binding AI-specific obligations to date.",
+      "Kenya has moved beyond its earlier non-binding national AI strategy: the Artificial Intelligence Bill, 2026 was published 19 February 2026 and read a First Time in the Senate on 2 April 2026. It proposes an Office of the Artificial Intelligence Commissioner, a four-tier risk classification system, mandatory impact assessments for high-risk systems, and penalties for non-compliance. The bill has not yet been enacted.",
     pdfSlug: "kenya",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "566": {
     id: "566",
@@ -448,7 +448,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Rwanda has published a national AI policy setting ethical and economic-development principles, without binding AI-specific legal obligations identified to date.",
     pdfSlug: "rwanda",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "784": {
     id: "784",
@@ -461,7 +461,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "The UAE has an active national AI strategy and free-zone-specific initiatives (Dubai, Abu Dhabi) but no single binding cross-sector AI statute identified at federal level.",
     pdfSlug: "uae",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "682": {
     id: "682",
@@ -474,7 +474,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "SDAIA has published national AI ethics principles as voluntary guidance. No binding AI-specific statute identified to date.",
     pdfSlug: "saudi-arabia",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "376": {
     id: "376",
@@ -533,39 +533,39 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     name: "Singapore",
     slug: "singapore",
     region: "Asia-Pacific",
-    framework: "Model AI Governance Framework (MGAI)",
+    framework: "Model AI Governance Framework (MGF) + Model AI Governance Framework for Agentic AI",
     authority: "Infocomm Media Development Authority (IMDA)",
     status: "Voluntary framework",
     summary:
-      "Singapore's MGAI is a widely-referenced voluntary governance framework, paired with the AI Verify testing toolkit, rather than binding cross-sector legislation.",
+      "Singapore's original MGF remains the core voluntary governance reference, paired with the AI Verify testing toolkit. IMDA released a companion Model AI Governance Framework for Agentic AI in January 2026, extending the same voluntary approach to agentic AI systems. Neither is binding cross-sector legislation.",
     pdfSlug: "singapore",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "356": {
     id: "356",
     name: "India",
     slug: "india",
     region: "Asia-Pacific",
-    framework: "IT Rules + draft national AI governance guidelines",
+    framework: "IT Rules amendment on synthetic media (in force) + India AI Governance Guidelines",
     authority: "Ministry of Electronics and Information Technology (MeitY)",
-    status: "Proposed / draft legislation",
+    status: "In force",
     summary:
-      "India regulates AI-adjacent activity through amendments to its IT Rules and has circulated draft national AI governance guidelines. No standalone binding AI statute identified to date.",
+      "MeitY notified binding amendments to the IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, effective 10 February 2026, requiring labelling of synthetic/AI-generated content, user declarations, and takedown obligations. MeitY also released the non-binding India AI Governance Guidelines (the \"Sutras\") the same month, and a further draft amendment on intermediary compliance was out for consultation as of April 2026. No standalone comprehensive AI statute has been identified beyond these IT Rules amendments.",
     pdfSlug: "india",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "036": {
     id: "036",
     name: "Australia",
     slug: "australia",
     region: "Asia-Pacific",
-    framework: "Voluntary AI Safety Standard + proposed mandatory guardrails",
+    framework: "Voluntary AI Safety Standard + National AI Plan (existing law, no new AI statute)",
     authority: "Department of Industry, Science and Resources",
-    status: "Proposed / draft legislation",
+    status: "Voluntary framework",
     summary:
-      "Australia has published a Voluntary AI Safety Standard and proposed mandatory guardrails for high-risk AI use, which have not yet been enacted as binding law.",
+      "The government's National AI Plan (December 2025) confirmed it will not proceed, for now, with the previously proposed mandatory guardrails for high-risk AI. Australia instead relies on its existing, technology-neutral legal frameworks plus the Voluntary AI Safety Standard, with new AI-specific legislation reserved for if gaps emerge.",
     pdfSlug: "australia",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
   "554": {
     id: "554",
@@ -578,7 +578,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "No AI-specific statute identified. Existing privacy and consumer-protection law applies to AI systems without AI-specific accountability requirements.",
     pdfSlug: "new-zealand",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-09-28",
   },
 };
 
