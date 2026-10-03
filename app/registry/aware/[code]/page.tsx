@@ -79,7 +79,8 @@ export default async function VerifyBadgePage({ params }: { params: Promise<{ co
         <p className="mt-8 text-center text-xs leading-relaxed text-[#9ca3af]">
           AIC Aware is a self-declaration. It is not AIC Certified and has not been independently audited.
           Certified organisations appear on the{" "}
-          <Link href="/registry" className="underline underline-offset-2 hover:text-[#0f1f3d]">public registry</Link>.
+          <Link href="/registry" className="underline underline-offset-2 hover:text-[#0f1f3d]">public registry</Link>.{" "}
+          <Link href="/aware/badge-rules" className="underline underline-offset-2 hover:text-[#0f1f3d]">Badge rules</Link>.
         </p>
 
         <div className="mt-8 text-center">

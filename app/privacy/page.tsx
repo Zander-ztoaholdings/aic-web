@@ -31,7 +31,7 @@ export default function PrivacyPolicy() {
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4">
           <div className="prose prose-aic prose-lg max-w-none">
-            <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: April 2026</p>
+            <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: October 2026</p>
 
             {/* Principles strip */}
             <div className="grid md:grid-cols-3 gap-6 my-12">
@@ -74,7 +74,8 @@ export default function PrivacyPolicy() {
                 { label: "Organisational information", desc: "Business name, registration number, sector, and address of applicant organisations." },
                 { label: "Audit evidence", desc: "Governance documents, policy records, decision logs, and bias assessment data submitted for certification review." },
                 { label: "Practitioner data", desc: "Education records, CPD logs, examination results, and competency evidence for CAAP candidates." },
-                { label: "Website usage data", desc: "Anonymised analytics data (page visits, session duration) collected via Vercel Analytics. No personal identifiers are stored." },
+                { label: "AIC Aware accounts", desc: "For organisations that register for an AIC Aware badge: the name, job title and email of the named Accountable Person, the answers to the AIC Aware questions, the name of the person who confirmed the declaration and when, and a one-way hash of the IP address used to accept it (never the address itself)." },
+                { label: "Website usage data", desc: "Google Analytics, and only if you allow it (see Section 9)." },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <div className="w-2 h-2 rounded-full bg-aic-copper shrink-0 mt-2.5" />
@@ -134,11 +135,12 @@ export default function PrivacyPolicy() {
             </p>
             <div className="space-y-4 mb-8">
               {[
-                { who: "Accreditation bodies", what: "SANAS and equivalent bodies may review our assessment records as part of accreditation oversight. They are bound by confidentiality obligations." },
+                { who: "Accreditation bodies", what: "AIC is not currently accredited. If it becomes accredited, the accreditation body may review assessment records as part of its oversight, under confidentiality obligations." },
                 { who: "Auditors and assessors", what: "Independent auditors assigned to an assessment receive only the information necessary to conduct that assessment." },
                 { who: "Infrastructure providers", what: "Cloud hosting and analytics providers (operating under data processing agreements) may process data on our behalf. They are contractually prohibited from using it for their own purposes." },
                 { who: "Legal and regulatory authorities", what: "Where required by South African law, court order, or the Information Regulator." },
-                { who: "Public registry", what: "The organisation name, certification tier, Integrity Score, and certificate number are published on the public registry at aiccertified.cloud/registry. No personal information is published without consent." },
+                { who: "Public registry", what: "For certified organisations: the organisation name, certification status band and certificate number. No numeric score is published. No personal information is published without consent." },
+                { who: "AIC Aware badge verification", what: "Anyone checking a badge code sees the organisation's name as registered when the badge was issued, the issue and expiry dates, whether the badge is valid, expired or revoked (with the reason if revoked), and that a named person is accountable, but never that person's name, the organisation's answers or any result. Organisations that opt in are also listed in the AIC Aware directory by name and date." },
               ].map((item, i) => (
                 <div key={i} className="border border-[#e5e7eb] rounded-xl p-6">
                   <p className="font-bold text-aic-navy mb-1">{item.who}</p>
@@ -161,6 +163,9 @@ export default function PrivacyPolicy() {
                   {[
                     ["Certification records and audit evidence", "Duration of certification + 5 years"],
                     ["Accountable Person declarations", "Duration of certification + 5 years"],
+                    ["AIC Aware badges and declarations", "Life of the badge + 5 years"],
+                    ["AIC Aware answers (platform account)", "While the account is active + 2 years"],
+                    ["AIC Aware self-check on the website (email, company, result)", "24 months from last contact"],
                     ["Practitioner examination records", "Duration of credential + 7 years"],
                     ["CPD logs", "7 years from the relevant CPD cycle"],
                     ["Website enquiry data", "24 months from last contact"],

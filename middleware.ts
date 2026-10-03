@@ -14,6 +14,12 @@ export function middleware() {
     'max-age=31536000; includeSubDomains'
   )
 
+  // Staging must never be indexed, even if its password protection is
+  // switched off. Set AIC_ENV=staging on the staging app only.
+  if (process.env['AIC_ENV'] === 'staging') {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
+
   return response
 }
 
