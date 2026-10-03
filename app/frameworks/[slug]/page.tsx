@@ -64,7 +64,7 @@ export default async function FrameworkDetailPage({
       />
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <Link
             href="/frameworks"
             className="inline-flex items-center gap-2 text-white/50 hover:text-white text-xs uppercase tracking-widest font-mono mb-8 transition-colors"
@@ -104,7 +104,7 @@ export default async function FrameworkDetailPage({
 
       {/* Positioning */}
       <section className="py-20 border-b border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-4">
           <span className="text-aic-copper text-[0.7rem] uppercase tracking-[0.3em] font-bold">
             Positioning
           </span>
@@ -117,7 +117,7 @@ export default async function FrameworkDetailPage({
 
       {/* Translation table */}
       <section className="py-20 bg-white border-b border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <span className="text-aic-copper text-[0.7rem] uppercase tracking-[0.3em] font-bold">
             Translation
           </span>
@@ -159,7 +159,7 @@ export default async function FrameworkDetailPage({
 
       {/* Safety measures */}
       <section className="py-20 border-b border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <span className="text-aic-copper text-[0.7rem] uppercase tracking-[0.3em] font-bold">
             Assessed Against
           </span>
@@ -182,7 +182,7 @@ export default async function FrameworkDetailPage({
 
       {/* Gap warning */}
       <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-4">
           <div className="flex items-start gap-4 border border-[#e5e7eb] rounded-xl p-8">
             <AlertTriangle className="w-6 h-6 text-aic-copper shrink-0 mt-1" />
             <div>
@@ -214,7 +214,7 @@ export default async function FrameworkDetailPage({
 
       {/* CTA */}
       <section className="py-24 bg-aic-navy text-white text-center">
-        <div className="max-w-2xl mx-auto px-4">
+        <div className="max-w-2xl mx-auto px-5 md:px-4">
           <h2
             className="text-3xl md:text-4xl mb-6 leading-[1.1] tracking-[-0.03em] font-bold"
             style={{ fontFamily: "'Merriweather', serif" }}

@@ -117,7 +117,7 @@ export default function InsurersPage() {
       {/* Opening. Compact on purpose — it states the problem and where AIC
           actually stands, then gets out of the way. */}
       <section className="bg-aic-navy text-white py-14 md:py-16">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <Kicker>For insurers &amp; underwriters</Kicker>
           <h1
             className="text-3xl md:text-5xl mt-3 mb-5 leading-[1.05] tracking-[-0.03em] font-bold max-w-3xl text-balance"
@@ -154,7 +154,7 @@ export default function InsurersPage() {
           an underwriter already has, so this is the first thing after the
           opening rather than a supporting detail further down. */}
       <section className="py-14 md:py-16 border-b border-[#e5e7eb]">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <Kicker>The signal</Kicker>
           <H2>What you have today, and what this adds</H2>
           <p className="text-[#6b7280] text-[17px] leading-[1.65] max-w-[68ch] mb-8">
@@ -205,7 +205,7 @@ export default function InsurersPage() {
       {/* The artefact. An underwriter does not want to be told verification is
           fast — they want to see what comes back. */}
       <section className="py-14 md:py-16 bg-[#0a1628]">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-12 items-start">
             <div className="lg:sticky lg:top-32">
               <Kicker>What you would get back</Kicker>
@@ -276,7 +276,7 @@ export default function InsurersPage() {
       {/* Verification + what the mark actually covers, side by side. These were
           two full-height sections; they are one screen of reading. */}
       <section className="py-14 md:py-16 bg-white border-b border-[#e5e7eb]">
-        <div className="max-w-5xl mx-auto px-4 grid lg:grid-cols-2 gap-10 lg:gap-16">
+        <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-2 gap-10 lg:gap-16">
           <div>
             <Kicker>How verification works</Kicker>
             <H2>Confirm a status directly from AIC — never from the insured</H2>
@@ -336,7 +336,7 @@ export default function InsurersPage() {
       {/* Recognition and the boundary. Previously two sections; they are one
           argument, and the boundary is the more important half. */}
       <section className="py-14 md:py-16 border-b border-[#e5e7eb]">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <Kicker>Recognition</Kicker>
           <H2>Naming who recognises the mark — not what AIC does for you</H2>
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
@@ -393,7 +393,7 @@ export default function InsurersPage() {
 
       {/* Close. An invitation to test the signal, not a request to bless it. */}
       <section className="py-14 md:py-16 bg-aic-navy text-white">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <div className="max-w-3xl">
             <Kicker>Testing the signal</Kicker>
             <h2

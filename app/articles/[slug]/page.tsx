@@ -122,7 +122,7 @@ export default async function ArticlePage({
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 -mt-10 relative z-10">
+      <div className="max-w-4xl mx-auto px-5 md:px-4 -mt-10 relative z-10">
         <Card className="p-8 md:p-12 shadow-2xl border-none">
           <div className="flex items-center gap-4 mb-10 pb-8 border-b border-[#e5e7eb]">
             <div className="w-12 h-12 rounded-full bg-[#0a1628] flex items-center justify-center text-white">

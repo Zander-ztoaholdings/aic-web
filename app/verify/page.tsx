@@ -18,7 +18,7 @@ export default function VerifyIndexPage() {
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <QrCode className="w-6 h-6 text-aic-copper" />
@@ -38,7 +38,7 @@ export default function VerifyIndexPage() {
       </section>
 
       <section className="py-20 border-b border-[#e5e7eb]">
-        <div className="max-w-2xl mx-auto px-4">
+        <div className="max-w-2xl mx-auto px-5 md:px-4">
           <form onSubmit={handleSubmit} className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6b7280]" />
             <input

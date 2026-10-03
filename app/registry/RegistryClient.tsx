@@ -56,7 +56,7 @@ export default function RegistryClient({
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <ShieldCheck className="w-6 h-6 text-aic-copper" />
@@ -80,7 +80,7 @@ export default function RegistryClient({
 
       {/* Search */}
       <section className="py-16 border-b border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6b7280]" />
             <label htmlFor="registry-search" className="sr-only">
@@ -112,7 +112,7 @@ export default function RegistryClient({
 
       {/* Results / empty state / unavailable */}
       <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           {entries === null ? (
             /* Outage — never render this as "no organisation is certified",
                which would be a false statement rather than an empty one. */
@@ -215,7 +215,7 @@ export default function RegistryClient({
 
       {/* Status bands explainer */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <h2
             className="text-2xl md:text-3xl text-[#0f1f3d] mb-10 font-bold"
             style={{ fontFamily: "'Merriweather', serif" }}

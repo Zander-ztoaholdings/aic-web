@@ -54,7 +54,7 @@ export default function JurisdictionRecord({
 }) {
   return (
       <section className="py-12 md:py-14">
-        <div className="max-w-5xl mx-auto px-4 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] gap-10 lg:gap-14 items-start">
+        <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] gap-10 lg:gap-14 items-start">
           {/* Main column — WHAT, WHEN, WHO ENFORCES */}
           <div className="space-y-10">
             <div>

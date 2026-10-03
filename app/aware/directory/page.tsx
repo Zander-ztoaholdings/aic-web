@@ -21,7 +21,7 @@ export default async function AwareDirectoryPage() {
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-20">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <div className="flex items-center gap-2 mb-4">
             <Gauge className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -49,7 +49,7 @@ export default async function AwareDirectoryPage() {
       </section>
 
       <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           {entries === null ? (
             <div className="flex items-start gap-3 bg-[#fef3f2] border border-[#fecaca] rounded-xl p-6">
               <AlertTriangle className="w-5 h-5 text-[#c41e3a] mt-0.5 shrink-0" />

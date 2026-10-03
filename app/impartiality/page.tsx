@@ -119,7 +119,7 @@ export default function ImpartialityStatement() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-aic-paper py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-6 h-6 text-aic-copper" />
@@ -139,7 +139,7 @@ export default function ImpartialityStatement() {
 
       {/* Where AIC actually stands */}
       <section className="py-12 border-b border-[#e5e7eb] bg-white">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-[#c9920a] shrink-0 mt-1" />
             <div>
@@ -165,7 +165,7 @@ export default function ImpartialityStatement() {
 
       {/* Content */}
       <section className="py-24">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <div className="prose prose-aic prose-lg max-w-none">
             <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">
               Version 2.0 — 7 September 2026 · Next scheduled review: December 2026

@@ -92,7 +92,7 @@ export default function DisclosuresPage() {
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/90 to-[#0a1628]/80" />
-        <div className="relative max-w-7xl mx-auto px-4">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
           <motion.div
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
@@ -118,7 +118,7 @@ export default function DisclosuresPage() {
 
       {/* Trust Indicators */}
       <section className="py-12 bg-aic-paper border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { icon: Shield, label: "Methodology", value: "Assessed" },
@@ -148,7 +148,7 @@ export default function DisclosuresPage() {
 
       {/* Main Content */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div ref={tabsRef} className="scroll-mt-32">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-8">
@@ -654,7 +654,7 @@ export default function DisclosuresPage() {
 
       {/* Contact CTA */}
       <section className="py-16 bg-aic-paper border-t border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-5 md:px-4 text-center">
           <h2 className="text-3xl text-[#0f1f3d] mb-4" style={{ fontFamily: "'Merriweather', serif" }}>
             Questions About Our Processes?
           </h2>

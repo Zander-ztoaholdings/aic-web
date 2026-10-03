@@ -32,7 +32,7 @@ export default function StandardPage() {
           }}
         />
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aic-copper to-transparent" />
-        <div className="max-w-4xl mx-auto px-4 relative">
+        <div className="max-w-4xl mx-auto px-5 md:px-4 relative">
           <div className="flex items-center gap-2 mb-4">
             <ClipboardCheck className="w-5 h-5 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -56,7 +56,7 @@ export default function StandardPage() {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 -mt-8 relative z-10">
+      <div className="max-w-4xl mx-auto px-5 md:px-4 -mt-8 relative z-10">
         {/* What is withheld, and why. Stating this up front is the point: a
             reader should not have to discover an omission. */}
         <div className="bg-white border border-[#e5e7eb] rounded-xl p-6 mb-8">

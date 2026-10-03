@@ -36,7 +36,7 @@ export default async function RegulatoryMapPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <Globe2 className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -70,7 +70,7 @@ export default async function RegulatoryMapPage() {
       />
 
       <section className="py-16 md:py-20">
-        <div className="max-w-[1600px] mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
           {/* Draft-one notice. First public version; the map's own honesty
               posture only works if the version it is at is stated up front,
               not discovered. */}
@@ -102,7 +102,7 @@ export default async function RegulatoryMapPage() {
 
       {/* Disclaimer strip */}
       <section className="py-16 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <h2 className="text-lg font-semibold text-[#0f1f3d] mb-3">
             How to use this map
           </h2>

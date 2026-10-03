@@ -170,7 +170,7 @@ export default function Navbar() {
           relative z-50 keeps it above the backdrop: the header chrome stays
           sharp while the page behind it blurs. */}
       <div className="relative z-50 bg-[#0a1628] text-white/70 text-[10px] uppercase tracking-wider py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-5 md:px-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href="/disclosures#accreditation"

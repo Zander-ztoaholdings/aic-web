@@ -240,7 +240,7 @@ export default function AwareClient() {
           className="absolute inset-0 pointer-events-none opacity-[0.15]"
           style={{ background: "radial-gradient(circle at 15% 20%, #c9920a 0%, transparent 45%)" }}
         />
-        <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="max-w-5xl mx-auto px-5 md:px-4 relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <Gauge className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -261,7 +261,7 @@ export default function AwareClient() {
         </div>
       </section>
 
-      <div className="max-w-3xl mx-auto px-4 py-14 md:py-20">
+      <div className="max-w-3xl mx-auto px-5 md:px-4 py-14 md:py-20">
         <AnimatePresence mode="wait">
           {/* ── Intro ──────────────────────────────────────────────── */}
           {stage === "intro" && (

@@ -22,7 +22,7 @@ export default function AwareLookup() {
 
   return (
     <section className="py-16 bg-white border-t border-[#e5e7eb]">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-5 md:px-4">
         <div className="flex items-center gap-2 mb-3">
           <BadgeCheck className="w-5 h-5 text-aic-copper" />
           <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">AIC Aware</span>

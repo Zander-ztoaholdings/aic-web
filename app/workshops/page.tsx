@@ -37,7 +37,7 @@ export default function WorkshopsPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <GraduationCap className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -60,7 +60,7 @@ export default function WorkshopsPage() {
 
       {/* Industry selector + rotating teaser */}
       <section className="py-20 md:py-24">
-        <div className="max-w-[1600px] mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
           {/* Tabs */}
           <div className="flex flex-wrap gap-3 mb-12">
             {workshopIndustries.map((w) => {
@@ -162,7 +162,7 @@ export default function WorkshopsPage() {
 
       {/* Boundary statement — the Andersen firewall, stated plainly */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-4">
           <div className="flex items-start gap-4 border border-[#e5e7eb] rounded-xl p-8">
             <CircleSlash className="w-6 h-6 text-[#6b7280] shrink-0 mt-1" />
             <div>
@@ -191,7 +191,7 @@ export default function WorkshopsPage() {
           to answer a workshop enquiry were exactly the two we did not collect,
           and every reply began by asking for them. */}
       <section id="enquire" className="py-20 md:py-24 bg-[#f0f4f8] border-t border-[#e5e7eb]">
-        <div className="max-w-[1600px] mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-16 items-start">
             <div className="lg:sticky lg:top-32">
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">

@@ -41,7 +41,7 @@ function Shell({
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-20">
-        <div className="max-w-[1600px] mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -53,7 +53,7 @@ function Shell({
       </section>
 
       <section className="py-20">
-        <div className="max-w-2xl mx-auto px-4">
+        <div className="max-w-2xl mx-auto px-5 md:px-4">
           {children}
           <p className="text-sm text-[#6b7280] mt-8 text-center">
             Looking for the full list of certified organisations?{" "}

@@ -126,7 +126,7 @@ export default async function JurisdictionPage({
 
       {/* WHERE — and immediately, how current this is. */}
       <section className="bg-aic-navy text-white py-12 md:py-14">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           {/* Back to the map AND to this country on it. A shared link lands
               here, and this page has no map on it, so without the query the
               only route back into the thing people actually came to use is to
@@ -170,7 +170,7 @@ export default async function JurisdictionPage({
       {/* The same draft-one notice as the map. This page is what a shared
           link opens, so most readers will never see the map's copy of it. */}
       <section className="pt-10 md:pt-12">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <div className="border border-aic-copper/30 bg-aic-copper/[0.06] rounded-xl p-5">
             <div className="flex flex-wrap items-center gap-3 mb-2">
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper font-semibold">
@@ -197,7 +197,7 @@ export default async function JurisdictionPage({
 
       {/* Scope limit, stated at the bottom of every jurisdiction page. */}
       <section className="py-10 border-t border-[#e5e7eb] bg-white">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-4">
           <p className="text-sm text-[#6b7280] leading-[1.7] max-w-3xl">
             This page is a general orientation guide built from public sources, not legal
             advice, and it does not establish that any organisation complies with{" "}

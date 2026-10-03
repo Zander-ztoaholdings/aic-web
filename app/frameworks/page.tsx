@@ -14,7 +14,7 @@ export default function FrameworksPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <Layers className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -40,7 +40,7 @@ export default function FrameworksPage() {
 
       {/* Framework cards */}
       <section className="py-20 md:py-24">
-        <div className="max-w-[1600px] mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
           <div className="grid md:grid-cols-3 gap-8">
             {frameworks.map((fw) => (
               <Link
@@ -76,7 +76,7 @@ export default function FrameworksPage() {
 
       {/* Boundary note */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-4">
           <h2 className="text-lg font-semibold text-[#0f1f3d] mb-3">
             What these pages are, and aren&apos;t
           </h2>

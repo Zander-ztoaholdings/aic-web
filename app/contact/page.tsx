@@ -182,7 +182,7 @@ function ContactForm() {
       <section className="relative py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-[#0a1628]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/95 to-[#0a1628]/80" />
-        <div className="relative max-w-7xl mx-auto px-4">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -208,7 +208,7 @@ function ContactForm() {
 
       {/* Main Content */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column: Info */}
             <div className="space-y-8">
@@ -420,7 +420,7 @@ function ContactForm() {
 
       {/* Trust Section */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-5 md:px-4 text-center">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

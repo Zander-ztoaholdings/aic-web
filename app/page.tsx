@@ -135,7 +135,7 @@ export default function MarketingPage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 pt-20 pb-32 w-full">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-4 pt-20 pb-32 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <motion.div
               initial="hidden"
@@ -246,7 +246,7 @@ export default function MarketingPage() {
           things are of identical importance" — they are not. The argument
           leads; the letter is the evidence that makes it land. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-12 lg:gap-16 items-start">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -325,7 +325,7 @@ export default function MarketingPage() {
           The only place on the site where a visitor is asked to make a
           judgement rather than receive one. Everything above sets it up. */}
       <section className="bg-[#f0f4f8] py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="max-w-3xl mb-10">
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
               Try the standard
@@ -354,7 +354,7 @@ export default function MarketingPage() {
           published standard — which connects the philosophy to the thing that
           makes it testable. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl">
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -413,7 +413,7 @@ export default function MarketingPage() {
           proof sat unlinked in the navigation. Every number here is real, and
           the zero is deliberately included. */}
       <section className="bg-[#0a1628] py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -467,7 +467,7 @@ export default function MarketingPage() {
           so the free tool reads as a companion to the evidence above it, not
           as the headline claim — that is still AIC Certified. */}
       <section className="bg-aic-paper py-20 md:py-24 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="bg-white border border-[#e5e7eb] rounded-2xl p-8 md:p-12 grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-10 items-center shadow-sm">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -502,7 +502,7 @@ export default function MarketingPage() {
           Merged from two near-identical sections that both said "we align to
           frameworks", one immediately after the other. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-12 lg:gap-16 items-center">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -550,7 +550,7 @@ export default function MarketingPage() {
 
       {/* ── CLOSE ────────────────────────────────────────────────── */}
       <section className="bg-[#0a1628] py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-4">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
             Founding cohort
           </span>

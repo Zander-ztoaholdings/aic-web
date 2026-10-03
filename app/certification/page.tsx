@@ -103,7 +103,7 @@ export default function CertificationPage() {
       <section className="relative py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0f1f3d] to-[#162640]" />
         <div className="absolute inset-0 subtle-grid opacity-5" />
-        <div className="relative max-w-7xl mx-auto px-4">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,7 +172,7 @@ export default function CertificationPage() {
           had no idea which chapter you were in or how to get to the Division
           that actually applied to you. Both now sit in a rail that stays. */}
       <section id="divisions" className="py-12 lg:py-24 bg-[#f0f4f8]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <StickyChapter
             eyebrow="The framework"
             title="Your relationship with AI decides what we certify"
@@ -302,7 +302,7 @@ export default function CertificationPage() {
 
       {/* Certification Journey */}
       <section className="py-12 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -356,7 +356,7 @@ export default function CertificationPage() {
             backgroundImage: "radial-gradient(circle at 30% 50%, #c9920a 0%, transparent 60%)",
           }}
         />
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
+        <div className="relative max-w-4xl mx-auto px-5 md:px-4 text-center">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
