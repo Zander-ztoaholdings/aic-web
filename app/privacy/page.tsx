@@ -75,6 +75,7 @@ export default function PrivacyPolicy() {
                 { label: "Audit evidence", desc: "Governance documents, policy records, decision logs, and bias assessment data submitted for certification review." },
                 { label: "Practitioner data", desc: "Education records, CPD logs, examination results, and competency evidence for CAAP candidates." },
                 { label: "AIC Aware accounts", desc: "For organisations that register for an AIC Aware badge: the name, job title and email of the named Accountable Person, the answers to the AIC Aware questions, the name of the person who confirmed the declaration and when, and a one-way hash of the IP address used to accept it (never the address itself)." },
+                { label: "Connected systems", desc: "For organisations that connect GitHub or an AI provider (OpenAI, Anthropic) to the platform: repository names and their branch, review and alert settings; the GitHub usernames of the authors and reviewers of recently merged pull requests; the list of packages a repository depends on; and daily usage and cost per AI model. We do not read source code, prompts, model outputs or your customers' data. If you choose to give us a read-only provider admin key instead of running our exporter, it is stored encrypted, used only to read usage, and deleted when you disconnect." },
                 { label: "Website usage data", desc: "Google Analytics, and only if you allow it (see Section 9)." },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
