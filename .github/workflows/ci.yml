@@ -1,0 +1,32 @@
+# Runs on every pull request and every push to main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Types, tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Type check
+        run: npx tsc --noEmit -p .
+      - name: Tests
+        run: npx vitest run
+      - name: Production build
+        run: NODE_OPTIONS=--max-old-space-size=4096 npx next build

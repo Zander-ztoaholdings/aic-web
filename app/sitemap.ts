@@ -31,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/articles`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/policy`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/security`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   // A CMS outage must not empty the sitemap: getArticles returns null when it

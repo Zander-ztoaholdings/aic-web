@@ -234,6 +234,9 @@ export default function Footer() {
             <Link href="/terms" className="hover:text-[#c9920a] transition-colors">
               Terms of Use
             </Link>
+            <Link href="/security" className="hover:text-[#c9920a] transition-colors">
+              Security
+            </Link>
             <Link href="/impartiality" className="hover:text-[#c9920a] transition-colors">
               Impartiality
             </Link>

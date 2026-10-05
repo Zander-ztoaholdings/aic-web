@@ -49,7 +49,7 @@ const mockJsPDFInstance = {
   splitTextToSize: mockSplitTextToSize,
 };
 
-const mockJsPDF = vi.fn(() => mockJsPDFInstance);
+const mockJsPDF = vi.fn((_options?: unknown) => mockJsPDFInstance);
 
 // Inline implementation of generatePDFReport for testing
 // This mirrors the actual implementation in lib/report-generator.ts

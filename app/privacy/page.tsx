@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
             <div className="grid md:grid-cols-3 gap-6 my-12">
               {[
                 { icon: <Eye className="w-6 h-6 text-aic-copper mb-4" />, title: "Transparency", desc: "We clearly disclose what data we collect, why we collect it, and how it is used — before we collect it." },
-                { icon: <Shield className="w-6 h-6 text-aic-copper mb-4" />, title: "Security", desc: "All data is stored in encrypted environments with strict role-based access controls and regular security reviews." },
+                { icon: <Shield className="w-6 h-6 text-aic-copper mb-4" />, title: "Security", desc: "Traffic is encrypted, stored secrets are encrypted individually, and access inside AIC is by role, with every administrative change recorded." },
                 { icon: <UserCheck className="w-6 h-6 text-aic-copper mb-4" />, title: "Your Rights", desc: "You have the right to access, correct, delete, and object to the processing of your personal information at any time." },
               ].map((item, i) => (
                 <div key={i} className="p-8 bg-aic-paper rounded-2xl border border-[#e5e7eb] shadow-sm">

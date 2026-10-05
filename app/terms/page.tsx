@@ -30,7 +30,7 @@ export default function TermsOfUse() {
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-5 md:px-4">
           <div className="prose prose-aic prose-lg max-w-none">
-            <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: April 2026</p>
+            <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: October 2026</p>
 
             {/* 1 */}
             <h2 className="text-aic-navy font-serif italic text-3xl mb-4">1. Parties and Acceptance</h2>
@@ -142,6 +142,29 @@ export default function TermsOfUse() {
               AIC reserves the right to suspend or permanently revoke platform access, and to
               withdraw or refuse certification, for any breach of these acceptable use obligations.
             </p>
+
+            {/* 5A */}
+            <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">5A. Connected Systems</h2>
+            <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
+              You may connect systems you control, such as GitHub or an AI provider account, to the
+              Platform so that AIC can run automated checks against them. By connecting a system you
+              confirm you are authorised to grant that access on behalf of your organisation, and you agree that:
+            </p>
+            <div className="space-y-3 mb-8">
+              {[
+                "Access is read-only. AIC reads settings, review records, alerts, dependency lists and usage totals to run its checks, and does not change anything in a connected system.",
+                "You choose the scope: which repositories the AIC GitHub app may read, and whether AI-provider usage reaches AIC through the exporter you run or through a read-only key you give AIC.",
+                "A provider key you give AIC is stored encrypted, used only to read usage for your organisation, and deleted when you disconnect. You remain responsible for creating, rotating and revoking it with the provider.",
+                "You can disconnect at any time from the Platform, and uninstall the AIC app from GitHub at any time. Results already recorded remain part of your organisation's record.",
+                "Automated checks are evidence towards controls. They are not a certification decision, a legal opinion, or a guarantee that a connected system is secure.",
+                "AIC depends on third-party interfaces it does not control. If a provider changes or withdraws one, a check may stop running until AIC adapts; AIC will show it as “could not check” rather than as passing.",
+              ].map((item, i) => (
+                <div key={i} className="flex gap-3 items-start py-2 border-b border-[#e5e7eb] last:border-0">
+                  <Globe className="w-4 h-4 text-aic-copper shrink-0 mt-1" />
+                  <p className="text-[#6b7280] text-base leading-relaxed">{item}</p>
+                </div>
+              ))}
+            </div>
 
             {/* 6 */}
             <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">6. Intellectual Property</h2>
