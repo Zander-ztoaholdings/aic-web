@@ -242,9 +242,9 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     authority: "Secretaría Anticorrupción y Buen Gobierno (data protection)",
     status: "No dedicated AI law identified",
     summary:
-      "No AI-specific statute has been enacted. Data protection oversight moved from INAI (dissolved April 2025, per the Diario Oficial de la Federación) to the Secretaría Anticorrupción y Buen Gobierno. Several AI-specific bills are pending in Congress (per the Cámara de Diputados' Gaceta Parlamentaria) but none has passed as of this review.",
+      "No comprehensive AI statute has been enacted, but a narrow, sector-specific AI provision has: a reform to the Federal Labor Law and Federal Copyright Law requiring consent and compensation for using performing artists' voice or image via AI was published in the Diario Oficial de la Federación on 14 May 2026 (Decree 54, per the Cámara de Diputados' own reform-history record). Data protection oversight remains with the Secretaría Anticorrupción y Buen Gobierno, which took over from INAI (dissolved April 2025). Broader, general AI bills remain pending in Congress.",
     pdfSlug: "mexico",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "076": {
     id: "076",
@@ -271,7 +271,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "As an EU member state, France applies the EU AI Act directly. The Act is risk-tiered (unacceptable / high / limited / minimal risk) and its obligations are phasing in on a multi-year timetable from 2024.",
     pdfSlug: "eu-france",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "276": {
     id: "276",
@@ -285,7 +285,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "Germany applies the EU AI Act directly as an EU member state, alongside its own data protection and sectoral supervisory bodies for enforcement.",
     pdfSlug: "eu-germany",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "380": {
     id: "380",
@@ -299,7 +299,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "Italy applies the EU AI Act directly as an EU member state; obligations phase in through 2026–2027 by risk tier.",
     pdfSlug: "eu-italy",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "724": {
     id: "724",
@@ -313,7 +313,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "Spain applies the EU AI Act directly and has stood up AESIA, a dedicated national AI supervisory agency — one of the first EU states to do so.",
     pdfSlug: "eu-spain",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "528": {
     id: "528",
@@ -327,7 +327,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "The Netherlands applies the EU AI Act directly as an EU member state.",
     pdfSlug: "eu-netherlands",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "616": {
     id: "616",
@@ -341,7 +341,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "Poland applies the EU AI Act directly as an EU member state.",
     pdfSlug: "eu-poland",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "372": {
     id: "372",
@@ -355,7 +355,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "Ireland applies the EU AI Act directly as an EU member state and hosts EU headquarters for a number of AI-deploying multinationals, raising its practical enforcement profile.",
     pdfSlug: "eu-ireland",
     detail: EU_AI_ACT_DETAIL,
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "826": {
     id: "826",
@@ -395,7 +395,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "As an EEA (not EU) member, Norway's incorporation of the EU AI Act into the EEA Agreement is still pending — no EEA Joint Committee Decision has been adopted (per EFTA's eea-lex tracker). Norway's domestic implementing law (KI-loven) has not passed the Storting; the government now plans a further hearing in autumn 2026, reflecting the EU's Digital Omnibus changes, before presenting the bill in spring 2027 (per Regjeringen.no).",
     pdfSlug: "norway",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "710": {
     id: "710",
@@ -429,13 +429,13 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     name: "Nigeria",
     slug: "nigeria",
     region: "Africa",
-    framework: "National AI strategy (draft)",
+    framework: "National AI Strategy (launched) + National Digital Economy and E-Governance Bill (pending)",
     authority: "National Information Technology Development Agency (NITDA)",
     status: "Proposed / draft legislation",
     summary:
-      "Nigeria has circulated a draft National AI Strategy; NITDA has issued non-binding guidance. No enacted AI-specific statute identified.",
+      "Nigeria's National AI Strategy (NAIS) moved from draft to publicly launched policy in April 2025, per NITDA's own site. No AI-specific statute has been enacted: an earlier standalone AI bill (HB 942, 2023) was folded into the omnibus National Digital Economy and E-Governance Bill, which remains before the National Assembly. NITDA continues to issue non-binding guidance, including an October 2026 advisory on sharing data with public AI tools.",
     pdfSlug: "nigeria",
-    verifiedAt: "2026-09-01",
+    verifiedAt: "2026-10-05",
   },
   "646": {
     id: "646",
@@ -481,26 +481,26 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     name: "Israel",
     slug: "israel",
     region: "Middle East",
-    framework: "Draft AI policy / regulation principles",
+    framework: "National AI policy / regulation principles (non-binding)",
     authority: "Ministry of Innovation, Science and Technology",
-    status: "Proposed / draft legislation",
+    status: "Guidance only",
     summary:
-      "Israel has published a policy document proposing a principles-based, sector-led approach to AI regulation, drawing on existing regulators rather than a single new AI law.",
+      "Israel has published a non-binding policy document (finalised Dec 2023, Ministry of Innovation, Science and Technology with the Ministry of Justice) proposing a principles-based, sector-led approach to AI regulation, drawing on existing regulators rather than a single new AI law. No AI-regulation bill is pending before the Knesset; a separate, narrower bill to designate AI data-centre server farms as national infrastructure passed its first reading in 2026 but is not an AI-governance statute.",
     pdfSlug: "israel",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "156": {
     id: "156",
     name: "China",
     slug: "china",
     region: "Asia-Pacific",
-    framework: "Interim Measures for Generative AI + algorithm regulations",
+    framework: "Cybersecurity Law (AI provision) + CAC-administered AI rules",
     authority: "Cyberspace Administration of China (CAC)",
     status: "In force",
     summary:
-      "China regulates AI through a series of targeted rules rather than one omnibus law: the Generative AI Interim Measures, the Algorithm Recommendation regulations, and Deep Synthesis rules, all administered by the CAC.",
+      "China regulates AI through a series of targeted CAC-administered rules rather than one omnibus law: the Generative AI Interim Measures, the Algorithm Recommendation regulations, Deep Synthesis rules, and new Interim Measures for AI Anthropomorphic Interactive Services (effective 15 Jul 2026). AI governance now also has a basis directly in national law: the Cybersecurity Law was amended, effective 1 Jan 2026, to add a provision on the safe development of AI. No single comprehensive AI law has been enacted yet, though AI legislation is now an officially listed NPC Standing Committee preparatory item.",
     pdfSlug: "china",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "392": {
     id: "392",
@@ -513,7 +513,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Japan enacted the AI Promotion Act in 2025 (effective June 2025) — a binding but non-punitive framework law setting government AI-strategy duties and a business best-efforts obligation, enforced only through public disclosure rather than fines. The non-binding AI Guidelines for Business continue to apply alongside it.",
     pdfSlug: "japan",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "410": {
     id: "410",
@@ -526,7 +526,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "South Korea's Basic Act on AI Development and Trust took effect on 22 January 2026, confirmed via Korea's National Law Information Center (law.go.kr) — one of the first comprehensive binding AI statutes outside the EU.",
     pdfSlug: "south-korea",
-    verifiedAt: "2026-09-07",
+    verifiedAt: "2026-10-05",
   },
   "702": {
     id: "702",
