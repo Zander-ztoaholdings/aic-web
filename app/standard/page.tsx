@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ClipboardCheck, EyeOff, ArrowRight } from "lucide-react";
 import StandardClient from "./StandardClient";
 import {
   requirements,
@@ -21,103 +20,84 @@ export const metadata: Metadata = {
 };
 
 export default function StandardPage() {
+  const flagships = requirements.filter((r) => r.flagship).length;
+  const facts: [string, string][] = [
+    [String(requirements.length), "requirements"],
+    ["5", "rights"],
+    ["5", "Divisions"],
+    [String(flagships), "hard to fake"],
+  ];
+
   return (
-    <div className="min-h-screen bg-[#f0f4f8] pb-24">
-      <section className="bg-gradient-to-br from-[#0a1628] via-[#0f1f3d] to-[#162640] pt-24 pb-20 relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: "radial-gradient(#fff 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aic-copper to-transparent" />
-        <div className="max-w-4xl mx-auto px-5 md:px-4 relative">
-          <div className="flex items-center gap-2 mb-4">
-            <ClipboardCheck className="w-5 h-5 text-aic-copper" />
-            <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
-              The Standard · {STANDARD_VERSION}
-            </span>
+    <div className="min-h-screen bg-[#f5f7f9] text-[#0e1b2c]">
+      <section className="bg-aic-navy text-white">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-14 md:py-20 grid lg:grid-cols-[minmax(0,1fr)_auto] gap-10 items-end">
+          <div className="max-w-2xl">
+            <p className="text-sm text-white/60 mb-4">
+              The AIC standard, {STANDARD_VERSION}, issued {STANDARD_ISSUED}
+            </p>
+            <h1
+              className="text-[2.2rem] md:text-[3.25rem] font-bold leading-[1.05] tracking-[-0.03em]"
+              style={{ fontFamily: "'Merriweather', serif" }}
+            >
+              What we actually test
+            </h1>
+            <p className="text-lg text-white/75 leading-[1.7] mt-5">
+              Every organisation asks the same first question: what exactly will you assess us
+              against? This is the answer, in full: every requirement, what it demands, and the
+              evidence it takes. A certification scheme nobody can read is a scheme nobody should
+              trust.
+            </p>
           </div>
-          <h1
-            className="text-4xl md:text-5xl text-aic-paper font-bold leading-tight mb-6"
-            style={{ fontFamily: "'Merriweather', serif" }}
-          >
-            What we actually test
-          </h1>
-          <p className="text-lg text-aic-paper/70 leading-relaxed max-w-3xl">
-            Every organisation asks the same first question: what specifically
-            will you assess us against? This is the answer, in full — all{" "}
-            {requirements.length} requirements, what each one demands, and what
-            evidence it takes to satisfy it. We publish it because a
-            certification scheme nobody can read is a scheme nobody should
-            trust.
-          </p>
+          <dl className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-x-8 gap-y-6">
+            {facts.map(([n, label]) => (
+              <div key={label}>
+                <dt className="sr-only">{label}</dt>
+                <dd>
+                  <span className="block text-3xl md:text-4xl font-bold tabular-nums" style={{ fontFamily: "'Merriweather', serif" }}>{n}</span>
+                  <span className="block text-sm text-white/60 mt-1">{label}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-5 md:px-4 -mt-8 relative z-10">
-        {/* What is withheld, and why. Stating this up front is the point: a
-            reader should not have to discover an omission. */}
-        <div className="bg-white border border-[#e5e7eb] rounded-xl p-6 mb-8">
-          <div className="flex items-start gap-2.5">
-            <EyeOff className="w-4 h-4 text-aic-copper shrink-0 mt-0.5" />
-            <div>
-              <h2 className="text-sm font-semibold text-[#0f1f3d] mb-2">
-                Two things are deliberately not on this page
-              </h2>
-              <p className="text-sm text-[#6b7280] leading-relaxed mb-2">
-                <strong className="text-[#0f1f3d]">The verification method.</strong>{" "}
-                How an auditor tests each requirement stays with AIC. What we
-                test and what evidence it takes is public; the procedure for
-                testing it is not.
-              </p>
-              <p className="text-sm text-[#6b7280] leading-relaxed">
-                <strong className="text-[#0f1f3d]">
-                  The ISO/IEC 42001 clause mapping.
-                </strong>{" "}
-                It is drafted, but indicative until we have verified it against
-                the purchased standard text. Publishing an unverified mapping to
-                an international standard would be exactly the kind of unbacked
-                claim this organisation exists to catch, so it stays off the page
-                until it is checked.
-              </p>
-            </div>
+      <StandardClient />
+
+      {/* What the page is not. Stated plainly, but after the standard rather
+          than as two boxes a reader has to get through first. */}
+      <section className="bg-white border-t border-[#dde2e8]">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-12 md:py-14 grid md:grid-cols-3 gap-8 md:gap-12 text-sm leading-[1.65]">
+          <div>
+            <h2 className="text-[15px] font-semibold mb-2">How each requirement is tested stays with AIC</h2>
+            <p className="text-[#5e6b7b]">
+              What we test and what evidence it takes is public. The procedure an auditor follows to
+              test it is not, the same way any standard tells you what to demonstrate without
+              telling you how an individual auditor will judge it.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[15px] font-semibold mb-2">The ISO/IEC 42001 mapping is not here yet</h2>
+            <p className="text-[#5e6b7b]">
+              It is drafted, but indicative until we have checked it against the purchased standard
+              text. Publishing an unverified mapping to an international standard is exactly the kind
+              of unbacked claim AIC exists to catch.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[15px] font-semibold mb-2">Thresholds are provisional</h2>
+            <p className="text-[#5e6b7b]">
+              The empathy floor, the disparate impact ratio and correction response times will be
+              confirmed before the first certificate is issued, and any change is recorded with its
+              reason. No organisation has been certified yet; the{" "}
+              <Link href="/registry" className="text-[#a8772a] underline-offset-2 hover:underline">public register</Link>{" "}
+              is empty and says so.{" "}
+              <Link href="/certification" className="text-[#a8772a] underline-offset-2 hover:underline">How the Divisions and the assessment work</Link>
+            </p>
           </div>
         </div>
-
-        {/* Version honesty */}
-        <div className="bg-aic-navy/5 border border-aic-copper/20 rounded-xl p-6 mb-8">
-          <h2 className="text-sm font-semibold text-[#0f1f3d] mb-2">
-            This is version 1, issued {STANDARD_ISSUED}
-          </h2>
-          <p className="text-sm text-[#6b7280] leading-relaxed">
-            The requirement set is settled enough to be assessed against and
-            open enough to be argued with. Specific numeric thresholds — the
-            empathy floor, the disparate impact ratio, correction response times
-            — are provisional and will be confirmed before the first certificate
-            is issued. Where a threshold moves, the revision record will say so
-            and why. No organisation has been certified against this standard
-            yet; the{" "}
-            <Link href="/registry" className="text-aic-copper hover:underline">
-              public register
-            </Link>{" "}
-            is empty and will stay that way until one has been.
-          </p>
-        </div>
-
-        <StandardClient />
-
-        <div className="mt-8 text-center">
-          <Link
-            href="/certification"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-aic-copper hover:gap-3 transition-all"
-          >
-            How the Divisions and the assessment work{" "}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

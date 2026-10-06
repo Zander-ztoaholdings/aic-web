@@ -73,7 +73,7 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Where We Operate",
+    label: "Where we operate",
     items: [
       { href: "/regulatory-map", label: "Regulatory Map", icon: Globe2, description: "AI regulation by jurisdiction, with draft compliance summaries" },
       { href: "/frameworks", label: "Frameworks", icon: Layers, description: "AI mapped against established industry safety frameworks" },
@@ -171,8 +171,8 @@ export default function Navbar() {
       {/* Top utility bar — solid dark, no transparency.
           relative z-50 keeps it above the backdrop: the header chrome stays
           sharp while the page behind it blurs. */}
-      <div className="relative z-50 bg-[#0a1628] text-white/70 text-[10px] uppercase tracking-wider py-2">
-        <div className="max-w-7xl mx-auto px-5 md:px-4 flex justify-between items-center">
+      <div className="relative z-50 bg-[#0a1628] text-white/70 text-[12px] py-2">
+        <div className="max-w-[1520px] mx-auto px-5 md:px-6 lg:px-10 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href="/disclosures#accreditation"
@@ -180,7 +180,7 @@ export default function Navbar() {
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
               <Globe className="w-3 h-3" />
-              METHODOLOGY ASSESSED
+              Methodology assessed
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -198,19 +198,24 @@ export default function Navbar() {
             : "bg-white shadow-sm"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        {/* Wider on desktop (Oct 2026): at max-w-7xl the four menus, two links
+            and the call to action were packed into the middle of a wide screen.
+            The logo, the menus and the account actions now each get their own
+            zone, and the menus sit centred between them. */}
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between h-20 xl:h-[5.5rem]">
 
             {/* Logo */}
             <Link href="/" className="flex items-center group shrink-0">
               <div>
-                <div className="font-bold text-lg leading-tight tracking-tight text-[#0f1f3d]">AIC</div>
-                <div className="text-[10px] leading-tight tracking-widest uppercase text-[#6b7280]">AI Integrity Certification</div>
+                <div className="font-bold text-lg xl:text-xl leading-tight tracking-tight text-[#0f1f3d]">AIC</div>
+                <div className="text-[12px] leading-tight text-[#5e6b7b]">AI Integrity Certification</div>
               </div>
             </Link>
 
             {/* Desktop nav links */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex flex-1 items-center justify-between ml-6 xl:ml-14">
+              <div className="flex flex-1 items-center justify-center gap-0.5 xl:gap-3">
               {navGroups.map((group) => {
                 const isOpen = openGroup === group.label;
                 return (
@@ -219,7 +224,7 @@ export default function Navbar() {
                       type="button"
                       onClick={() => setOpenGroup(isOpen ? null : group.label)}
                       aria-expanded={isOpen}
-                      className={`flex items-center gap-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
+                      className={`flex items-center gap-1 whitespace-nowrap px-2.5 xl:px-4 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
                         isOpen
                           ? "text-[#0f1f3d] bg-[#f0f4f8]"
                           : "text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8]"
@@ -270,7 +275,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 whitespace-nowrap px-2.5 xl:px-4 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
                       isActive
                         ? "text-[#0f1f3d] bg-[#f0f4f8]"
                         : "text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8]"
@@ -282,6 +287,8 @@ export default function Navbar() {
                 );
               })}
 
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
               {/* Log in — removed 4 Sep 2026 while app.aiccertified.cloud
                   served an ungated dashboard populated with a fictional
                   certified client. Restored 7 Sep 2026: the platform now
@@ -292,7 +299,7 @@ export default function Navbar() {
                   into the nav. */}
               <Link
                 href="/login"
-                className="px-4 py-2 rounded text-sm font-medium text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8] transition-colors"
+                className="whitespace-nowrap px-3 xl:px-4 py-2 rounded-lg text-sm xl:text-[15px] font-medium text-[#5e6b7b] hover:text-[#0f1f3d] hover:bg-[#f0f4f8] transition-colors"
               >
                 Log in
               </Link>
@@ -300,10 +307,11 @@ export default function Navbar() {
               {/* Copper CTA */}
               <Link
                 href="/contact"
-                className="ml-2 bg-[#c9920a] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-[#b07d08] transition-all shadow-md active:scale-95"
+                className="whitespace-nowrap bg-[#c9920a] text-white px-5 xl:px-6 py-2.5 rounded-lg text-sm xl:text-[15px] font-semibold hover:bg-[#b07d08] transition-colors"
               >
                 Contact us
               </Link>
+              </div>
             </div>
 
             {/* Mobile menu button */}
