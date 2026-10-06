@@ -1,19 +1,10 @@
 'use client';
 
+import Link from "next/link";
 import React, { Suspense, useState, ChangeEvent, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  Shield,
-  CheckCircle,
-  Clock,
-  Globe,
-  Users,
-  MapPin,
-  Mail,
-  ArrowRight,
-  Briefcase,
-} from "lucide-react";
+import { CheckCircle, Globe } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
@@ -26,11 +17,12 @@ import { Textarea } from "@/app/components/ui/textarea";
 // the form. Descriptions now say only what AIC can stand behind. The final
 // taxonomy is a commercial decision, not a technical one.
 const enquiryTypes = [
-  { value: "Corporate Certification", label: "Corporate Certification", description: "Certification for your organisation against the AIC framework" },
-  { value: "Workshops & Training", label: "Workshops & Training", description: "Industry workshops mapped to the framework you already use" },
-  { value: "Regulatory Coverage", label: "Regulatory Coverage", description: "Ask us to prioritise a jurisdiction on the regulatory map" },
-  { value: "Partnership / Media", label: "Partnership / Media", description: "Strategic partnership, press, or research enquiry" },
-  { value: "General Enquiry", label: "General Enquiry", description: "Other questions or feedback" },
+  { value: "Corporate Certification", label: "Certification", description: "Having your organisation assessed against the AIC standard" },
+  { value: "Platform", label: "The platform", description: "A walk-through, or a question about the workspace" },
+  { value: "Workshops & Training", label: "Workshops", description: "Industry workshops mapped to the framework you already use" },
+  { value: "Regulatory Coverage", label: "Regulatory map", description: "Ask us to prioritise or correct a jurisdiction" },
+  { value: "Partnership / Media", label: "Partnership or press", description: "Insurers, industry bodies, researchers, vendors and journalists" },
+  { value: "General Enquiry", label: "Something else", description: "Any other question or feedback" },
 ];
 
 // useSearchParams requires a Suspense boundary in the App Router; without one
@@ -51,7 +43,7 @@ function ContactForm() {
   // the homepage, or the "challenge a requirement" call on /standard. Preseeds
   // the enquiry so someone who arrives mid-thought does not restart from a
   // blank form, which is where warm intent goes to die.
-  const enquiry = params.get("enquiry") ?? "";
+  const enquiry = params.get("enquiry") ?? params.get("topic") ?? "";
 
   const PRESETS: Record<string, { type: string; message: string }> = {
     empathy: {
@@ -63,6 +55,12 @@ function ContactForm() {
       type: "General Enquiry",
       message: "I have a challenge to one of the published requirements: ",
     },
+    partnership: { type: "Partnership / Media", message: "" },
+    insurer: {
+      type: "Partnership / Media",
+      message: "I work for an insurer and would like to talk about testing whether AIC's record carries underwriting signal.",
+    },
+    platform: { type: "Platform", message: "" },
   };
   const preset = PRESETS[enquiry];
 
@@ -139,36 +137,16 @@ function ContactForm() {
               <CheckCircle className="w-10 h-10 text-[#c9920a]" />
             </div>
             <h2 className="text-3xl font-bold text-[#0f1f3d] mb-4" style={{ fontFamily: "'Merriweather', serif" }}>
-              Message Received
+              Message received
             </h2>
             <p className="text-[#6b7280] text-lg mb-6 leading-relaxed">
-              Thank you, <strong>{formData.firstName}</strong>. We&apos;ve received your enquiry and will be in touch shortly.
+              Thank you, <strong>{formData.firstName}</strong>. A person at AIC reads every enquiry and will reply by email.
             </p>
-            <div className="bg-[#f0f4f8] border border-[#e5e7eb] rounded-lg p-6 mb-8 text-left">
-              <h3 className="font-semibold text-[#0f1f3d] mb-3 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[#c9920a]" />
-                What Happens Next?
-              </h3>
-              <ul className="space-y-2 text-sm text-[#0f1f3d]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#c9920a] font-bold">1.</span>
-                  <span>Our team reviews your enquiry — usually within one business day</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#c9920a] font-bold">2.</span>
-                  <span>You&apos;ll receive a tailored response with next steps for your certification path</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#c9920a] font-bold">3.</span>
-                  <span>If applicable, we&apos;ll schedule a scoping call to discuss your requirements</span>
-                </li>
-              </ul>
-            </div>
             <Button
               onClick={() => { setSubmitted(false); setFormData({ firstName: "", lastName: "", email: "", company: "", jobTitle: "", country: "", enquiryType: "", message: "" }); }}
               className="bg-[#c9920a] hover:bg-[#b07d08] text-white px-8"
             >
-              Back to Contact
+              Send another enquiry
             </Button>
           </Card>
         </motion.div>
@@ -177,96 +155,27 @@ function ContactForm() {
   }
 
   return (
-    <div className="min-h-screen bg-aic-paper">
-      {/* Header */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[#0a1628]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/95 to-[#0a1628]/80" />
-        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
-          <motion.div
-            initial={{ opacity: 1, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Mail className="w-4 h-4 text-[#c9920a]" />
-              <span className="text-[#c9920a] text-sm uppercase tracking-widest font-medium">
-                Contact AIC
-              </span>
-            </div>
-            <h1 className="text-5xl md:text-6xl text-white mb-6" style={{ fontFamily: "'Merriweather', serif", fontWeight: 700 }}>
-              Get in Touch<br />
-              <span className="text-[#c9920a]">With Our Team</span>
-            </h1>
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed max-w-2xl">
-              Whether you&apos;re exploring corporate certification, pursuing professional credentials, or looking to partner with AIC — we&apos;d like to hear from you.
-            </p>
-          </motion.div>
+    <div className="min-h-screen bg-[#f5f7f9] text-[#0f1f3d]">
+      <section className="bg-aic-navy text-white">
+        <div className="max-w-6xl mx-auto px-5 md:px-6 py-14 md:py-16">
+          <h1 className="text-[2rem] md:text-5xl leading-[1.08] tracking-[-0.03em] font-bold" style={{ fontFamily: "'Merriweather', serif" }}>
+            Talk to AIC
+          </h1>
+          <p className="text-lg text-white/75 leading-[1.7] max-w-2xl mt-4">
+            About certification, the platform, a workshop, the regulatory map, or working
+            together. Every enquiry is read by a person, and you will hear back by email.
+          </p>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Left Column: Info */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-2xl font-bold text-[#0f1f3d] mb-6" style={{ fontFamily: "'Merriweather', serif" }}>
-                  Contact Information
-                </h2>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#f0f4f8] rounded-lg flex items-center justify-center shrink-0">
-                      <Mail className="w-5 h-5 text-[#c9920a]" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0f1f3d] uppercase tracking-wider font-bold opacity-70">General Enquiries</div>
-                      <div className="text-[#0f1f3d] font-medium">albert@ztoaholdings.com</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#f0f4f8] rounded-lg flex items-center justify-center shrink-0">
-                      <Shield className="w-5 h-5 text-[#c9920a]" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0f1f3d] uppercase tracking-wider font-bold opacity-70">Strategic Partnerships</div>
-                      <div className="text-[#0f1f3d] font-medium">zander@ztoaholdings.com</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#f0f4f8] rounded-lg flex items-center justify-center shrink-0">
-                      <MapPin className="w-5 h-5 text-[#c9920a]" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#0f1f3d] uppercase tracking-wider font-bold opacity-70">Headquarters</div>
-                      <div className="text-[#0f1f3d] font-medium">Johannesburg, South Africa<br />15 Smit Street, Johannesburg,<br />Gauteng, 2000</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 bg-[#f0f4f8] rounded-xl border border-[#e5e7eb]">
-                <h3 className="font-semibold text-[#0f1f3d] mb-4">Enterprise Solutions</h3>
-                <p className="text-sm text-[#0f1f3d] opacity-80 mb-4 font-medium">
-                  Certifying your entire organisation? We offer enterprise-wide conformity assessment and bulk certification packages.
-                </p>
-                <a href="mailto:zander@ztoaholdings.com" className="text-[#c9920a] text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all">
-                  Contact Enterprise Sales <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-
-            {/* Right Column: Form */}
-            <div className="lg:col-span-2">
-              <Card className="p-8 md:p-10 shadow-xl border-[#e5e7eb] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#f0f4f8] rounded-bl-full -mr-10 -mt-10 opacity-50" />
-
+      <section className="py-12 md:py-16">
+        <div className="max-w-6xl mx-auto px-5 md:px-6 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-10 lg:gap-14 items-start">
+            <div className="order-1">
+              <Card className="p-6 md:p-8 border-[#dde2e8] shadow-none rounded-2xl">
                 <form onSubmit={handleSubmit} className="space-y-6 relative">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="firstName" className="text-sm font-medium text-[#0f1f3d]">First Name</label>
+                      <label htmlFor="firstName" className="text-sm font-medium text-[#0f1f3d]">First name</label>
                       <Input
                         id="firstName"
                         name="firstName"
@@ -274,11 +183,11 @@ function ContactForm() {
                         value={formData.firstName}
                         onChange={handleChange}
                         required
-                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="lastName" className="text-sm font-medium text-[#0f1f3d]">Last Name</label>
+                      <label htmlFor="lastName" className="text-sm font-medium text-[#0f1f3d]">Last name</label>
                       <Input
                         id="lastName"
                         name="lastName"
@@ -286,13 +195,13 @@ function ContactForm() {
                         value={formData.lastName}
                         onChange={handleChange}
                         required
-                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-[#0f1f3d]">Professional Email</label>
+                    <label htmlFor="email" className="text-sm font-medium text-[#0f1f3d]">Work email</label>
                     <Input
                       id="email"
                       name="email"
@@ -301,25 +210,25 @@ function ContactForm() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                      className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="company" className="text-sm font-medium text-[#0f1f3d]">Company / Organisation</label>
+                      <label htmlFor="company" className="text-sm font-medium text-[#0f1f3d]">Organisation</label>
                       <Input
                         id="company"
                         name="company"
-                        placeholder="Organisation Name"
+                        placeholder="Organisation name"
                         value={formData.company}
                         onChange={handleChange}
                         required
-                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="jobTitle" className="text-sm font-medium text-[#0f1f3d]">Job Title</label>
+                      <label htmlFor="jobTitle" className="text-sm font-medium text-[#0f1f3d]">Job title</label>
                       <Input
                         id="jobTitle"
                         name="jobTitle"
@@ -327,7 +236,7 @@ function ContactForm() {
                         value={formData.jobTitle}
                         onChange={handleChange}
                         required
-                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                        className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                       />
                     </div>
                   </div>
@@ -343,15 +252,14 @@ function ContactForm() {
                         value={formData.country}
                         onChange={handleChange}
                         required
-                        className="pl-10 bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a]"
+                        className="pl-10 bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a]"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-4 pt-2">
                     <label className="text-sm font-medium text-[#0f1f3d] flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-[#c9920a]" />
-                      What are you looking for?
+                                            What are you looking for?
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {enquiryTypes.map((type) => (
@@ -359,8 +267,8 @@ function ContactForm() {
                           key={type.value}
                           className={`flex items-start gap-3 p-4 border rounded-xl cursor-pointer transition-all ${
                             formData.enquiryType === type.value
-                              ? "border-[#c9920a] bg-[#c9920a]/5 ring-1 ring-[#c9920a]"
-                              : "border-[#e5e7eb] hover:border-[#c9920a]/30 hover:bg-[#f0f4f8]"
+                              ? "border-[#a8772a] bg-[#a8772a]/5 ring-1 ring-[#a8772a]"
+                              : "border-[#dde2e8] hover:border-[#a8772a]/40 hover:bg-[#f5f7f9]"
                           }`}
                         >
                           <input
@@ -382,14 +290,14 @@ function ContactForm() {
                   </div>
 
                   <div className="space-y-2 pt-2">
-                    <label htmlFor="message" className="text-sm font-medium text-[#0f1f3d]">Message <span className="text-[#6b7280] font-normal">(Optional)</span></label>
+                    <label htmlFor="message" className="text-sm font-medium text-[#0f1f3d]">Message <span className="text-[#5e6b7b] font-normal">(optional)</span></label>
                     <Textarea
                       id="message"
                       name="message"
                       placeholder="Tell us about your organisation, your AI systems, or your specific requirements..."
                       value={formData.message}
                       onChange={handleChange}
-                      className="bg-aic-paper border-[#e5e7eb] focus:ring-[#c9920a]/20 focus:border-[#c9920a] min-h-[120px]"
+                      className="bg-aic-paper border-[#e5e7eb] focus:ring-[#a8772a]/20 focus:border-[#a8772a] min-h-[120px]"
                     />
                   </div>
 
@@ -403,37 +311,69 @@ function ContactForm() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-[#c9920a] hover:bg-[#b07d08] text-white py-6 text-lg font-bold shadow-lg shadow-[#c9920a]/20 transition-all disabled:opacity-60"
+                      className="w-full bg-[#0f1f3d] hover:bg-[#1a3160] text-white py-6 text-base font-semibold transition-colors disabled:opacity-60"
                     >
-                      {loading ? "Sending..." : "Send Enquiry"}
+                      {loading ? "Sending…" : "Send enquiry"}
                     </Button>
-                    <p className="text-center text-xs text-[#6b7280]/60 mt-4">
-                      By submitting this form, you agree to our privacy policy and terms of service. We will only contact you regarding your enquiry.
+                    <p className="text-center text-xs text-[#5e6b7b] mt-4">
+                      We use your details only to answer this enquiry. See the <Link href="/privacy" className="underline underline-offset-2">privacy notice</Link> for how they are kept.
                     </p>
                   </div>
                 </form>
               </Card>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Trust Section */}
-      <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4 text-center">
-          <motion.div
-            initial={{ opacity: 1, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Users className="w-12 h-12 text-[#c9920a] mx-auto mb-6" />
-            <h2 className="text-3xl text-[#0f1f3d] mb-4" style={{ fontFamily: "'Merriweather', serif" }}>
-              Join Leading AI Governance Professionals
-            </h2>
-            <p className="text-[#6b7280] text-lg leading-relaxed max-w-2xl mx-auto">
-              Professionals from financial institutions, government agencies, and leading enterprises are already working with AIC. Position your organisation at the forefront of AI accountability.
-            </p>
-          </motion.div>
+            <aside className="order-2 space-y-8 lg:sticky lg:top-28">
+              <div>
+                <h2 className="font-semibold mb-3">Write to us directly</h2>
+                <dl className="space-y-3 text-[15px]">
+                  <div>
+                    <dt className="text-[13px] text-[#5e6b7b]">General enquiries</dt>
+                    <dd><a href="mailto:albert@ztoaholdings.com" className="hover:text-[#a8772a]">albert@ztoaholdings.com</a></dd>
+                  </div>
+                  <div>
+                    <dt className="text-[13px] text-[#5e6b7b]">Partnerships</dt>
+                    <dd><a href="mailto:zander@ztoaholdings.com" className="hover:text-[#a8772a]">zander@ztoaholdings.com</a></dd>
+                  </div>
+                  <div>
+                    <dt className="text-[13px] text-[#5e6b7b]">Office</dt>
+                    <dd className="leading-[1.55]">15 Smit Street, Johannesburg, Gauteng, 2000, South Africa</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div id="partners" className="scroll-mt-28 border-t border-[#dde2e8] pt-8">
+                <h2 className="font-semibold mb-2">Working with AIC</h2>
+                <p className="text-sm text-[#5e6b7b] leading-[1.65] mb-4">
+                  AIC has no partner programme to sell you. These are the conversations we are open to,
+                  and every one of them stays on the right side of the impartiality line: no partner
+                  can influence whether anyone is certified.
+                </p>
+                <ul className="space-y-3 text-sm leading-[1.6]">
+                  <li>
+                    <span className="font-semibold">Insurers and brokers.</span>{" "}
+                    <span className="text-[#5e6b7b]">Whether verified accountability for AI decisions carries underwriting signal.</span>{" "}
+                    <Link href="/insurers" className="text-[#a8772a] underline-offset-2 hover:underline">What we offer insurers</Link>
+                  </li>
+                  <li>
+                    <span className="font-semibold">Industry bodies.</span>{" "}
+                    <span className="text-[#5e6b7b]">Mapping AI onto the frameworks your members already use, as the <Link href="/frameworks" className="text-[#a8772a] underline-offset-2 hover:underline">industry frameworks</Link> do.</span>
+                  </li>
+                  <li>
+                    <span className="font-semibold">Researchers and journalists.</span>{" "}
+                    <span className="text-[#5e6b7b]">The standard, the regulatory map and the evidence behind them.</span>
+                  </li>
+                  <li>
+                    <span className="font-semibold">Technology vendors.</span>{" "}
+                    <span className="text-[#5e6b7b]">Connecting your product to the <Link href="/platform#compliance" className="text-[#a8772a] underline-offset-2 hover:underline">platform</Link> as a source of evidence.</span>
+                  </li>
+                </ul>
+                <p className="text-sm text-[#5e6b7b] leading-[1.65] mt-4">
+                  How AIC keeps those relationships at arm&apos;s length is set out in the{" "}
+                  <Link href="/impartiality" className="text-[#a8772a] underline-offset-2 hover:underline">impartiality statement</Link>.
+                </p>
+              </div>
+            </aside>
         </div>
       </section>
     </div>

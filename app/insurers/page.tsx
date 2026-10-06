@@ -30,6 +30,12 @@ import { BadgeCheck, CircleSlash, Search } from "lucide-react";
  * AIC cannot hand over is the same failure in a different costume. The
  * invitation stays open-ended until the protocol is real.
  *
+ * October 2026: restyled to the AIC design language (no tracked-caps
+ * monospace labels, one dark moment instead of four) and a section added on
+ * the platform's underwriting extract, which exists now and which the page
+ * had never mentioned: between certifications, the insured can let an
+ * insurer read observations from its live record.
+ *
  * No "use client": every animation here was decorative, and one of them
  * animated opacity from 1 to 1. Removing them makes this a server component
  * that ships no JavaScript at all.
@@ -73,7 +79,7 @@ const record: [string, string][] = [
   ["Scope", "Retail credit origination and collections decisioning"],
   ["Accountable Person", "Named on the certificate record"],
   ["Issued", "14 February 2027"],
-  ["Expires", "14 August 2028 · 18-month cycle for D3"],
+  ["Expires", "14 August 2028, on the 18-month cycle for D3"],
   ["Continuous monitoring", "Live — telemetry coherent with declared Division"],
   ["Status history", "No suspensions, no revocations"],
 ];
@@ -96,10 +102,10 @@ const steps = [
   },
 ];
 
-const Kicker = ({ children }: { children: React.ReactNode }) => (
-  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-    {children}
-  </span>
+// A quiet line above a heading, in sentence case. It names the reader's
+// question; it is not decoration, so it stays where a section changes subject.
+const Kicker = ({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) => (
+  <p className={`text-sm ${dark ? "text-white/60" : "text-[#5e6b7b]"}`}>{children}</p>
 );
 
 const H2 = ({ children }: { children: React.ReactNode }) => (
@@ -118,7 +124,7 @@ export default function InsurersPage() {
           actually stands, then gets out of the way. */}
       <section className="bg-aic-navy text-white py-14 md:py-16">
         <div className="max-w-5xl mx-auto px-5 md:px-4">
-          <Kicker>For insurers &amp; underwriters</Kicker>
+          <Kicker dark>For insurers and underwriters</Kicker>
           <h1
             className="text-3xl md:text-5xl mt-3 mb-5 leading-[1.05] tracking-[-0.03em] font-bold max-w-3xl text-balance"
             style={{ fontFamily: "'Merriweather', serif" }}
@@ -153,24 +159,24 @@ export default function InsurersPage() {
       {/* The comparison. The value of the signal is only legible next to what
           an underwriter already has, so this is the first thing after the
           opening rather than a supporting detail further down. */}
-      <section className="py-14 md:py-16 border-b border-[#e5e7eb]">
+      <section className="py-14 md:py-16 border-b border-[#dde2e8]">
         <div className="max-w-5xl mx-auto px-5 md:px-4">
           <Kicker>The signal</Kicker>
           <H2>What you have today, and what this adds</H2>
-          <p className="text-[#6b7280] text-[17px] leading-[1.65] max-w-[68ch] mb-8">
+          <p className="text-[#5e6b7b] text-[17px] leading-[1.65] max-w-[68ch] mb-8">
             AI governance reaches you the way most non-financial risk does: as
             the insured&apos;s own account of itself. The gap is not that
             organisations lie on proposal forms. It is that nothing on the form
             can be checked.
           </p>
 
-          <div className="bg-white border border-[#e5e7eb] rounded-xl overflow-hidden">
-            <div className="hidden md:grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)_minmax(0,1fr)] gap-5 px-6 py-3 bg-[#f8f9fb] border-b border-[#e5e7eb]">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]">
-                Proposal form today
+          <div className="bg-white border border-[#dde2e8] rounded-xl overflow-hidden">
+            <div className="hidden md:grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)_minmax(0,1fr)] gap-5 px-6 py-3 bg-[#f8f9fb] border-b border-[#dde2e8]">
+              <span />
+              <span className="text-[13px] font-medium text-[#5e6b7b]">
+                A proposal form today
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-aic-copper">
+              <span className="text-[13px] font-semibold text-[#0f1f3d]">
                 A verified AIC record
               </span>
             </div>
@@ -180,17 +186,17 @@ export default function InsurersPage() {
                   key={row.dimension}
                   className="grid md:grid-cols-[minmax(0,7rem)_minmax(0,1fr)_minmax(0,1fr)] gap-1.5 md:gap-5 px-6 py-4"
                 >
-                  <dt className="font-mono text-[11px] uppercase tracking-wide text-[#9ca3af] pt-0.5">
+                  <dt className="text-sm font-semibold text-[#0f1f3d]">
                     {row.dimension}
                   </dt>
-                  <dd className="text-sm text-[#6b7280] leading-[1.6]">
-                    <span className="md:hidden font-mono text-[10px] uppercase tracking-wide text-[#9ca3af] block mb-0.5">
+                  <dd className="text-sm text-[#5e6b7b] leading-[1.6]">
+                    <span className="md:hidden text-[12px] text-[#5e6b7b] block mb-0.5">
                       Today
                     </span>
                     {row.proposal}
                   </dd>
                   <dd className="text-sm text-[#0f1f3d] leading-[1.6]">
-                    <span className="md:hidden font-mono text-[10px] uppercase tracking-wide text-aic-copper block mb-0.5">
+                    <span className="md:hidden text-[12px] font-semibold text-[#0f1f3d] block mb-0.5">
                       With AIC
                     </span>
                     {row.aic}
@@ -208,7 +214,7 @@ export default function InsurersPage() {
         <div className="max-w-5xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-12 items-start">
             <div className="lg:sticky lg:top-32">
-              <Kicker>What you would get back</Kicker>
+              <Kicker dark>What you would get back</Kicker>
               <h2
                 className="text-2xl md:text-[2rem] leading-[1.15] tracking-[-0.02em] text-white font-bold mt-3 mb-4 text-balance"
                 style={{ fontFamily: "'Merriweather', serif" }}
@@ -229,20 +235,20 @@ export default function InsurersPage() {
             </div>
 
             <div className="bg-white rounded-xl overflow-hidden border border-white/10">
-              <div className="px-5 py-3 bg-[#f8f9fb] border-b border-[#e5e7eb] flex items-center justify-between gap-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]">
+              <div className="px-5 py-3 bg-[#f8f9fb] border-b border-[#dde2e8] flex items-center justify-between gap-4">
+                <span className="text-[12px] text-[#5e6b7b]">
                   aiccertified.cloud/verify
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#9ca3af]">
+                <span className="text-[12px] font-medium text-[#b45309]">
                   Illustrative record
                 </span>
               </div>
               <div className="p-6 sm:p-8">
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded bg-[#10b981]/10 text-[#0a7a54] border border-[#10b981]/20">
-                    <BadgeCheck className="w-3.5 h-3.5" /> Certified — Active
+                  <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-2.5 py-1 rounded-full bg-[#2e7a57]/10 text-[#2e7a57]">
+                    <BadgeCheck className="w-3.5 h-3.5" /> Certified, active
                   </span>
-                  <span className="font-mono text-xs text-[#9ca3af]">
+                  <span className="text-[13px] text-[#5e6b7b] tabular-nums">
                     AIC-D3-2027-0041
                   </span>
                 </div>
@@ -252,7 +258,7 @@ export default function InsurersPage() {
                       key={k}
                       className="grid sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-1 sm:gap-5 py-3"
                     >
-                      <dt className="font-mono text-[11px] uppercase tracking-wide text-[#9ca3af] pt-0.5">
+                      <dt className="text-sm text-[#5e6b7b]">
                         {k}
                       </dt>
                       <dd className="text-sm text-[#0f1f3d] leading-relaxed">{v}</dd>
@@ -261,7 +267,7 @@ export default function InsurersPage() {
                 </dl>
                 <p className="text-xs text-[#9ca3af] leading-relaxed mt-5">
                   Illustrative. AIC has issued no certificates — the{" "}
-                  <Link href="/registry" className="text-aic-copper hover:underline">
+                  <Link href="/registry" className="text-[#a8772a] underline-offset-2 hover:underline">
                     public register
                   </Link>{" "}
                   is empty and says so. This is the shape of the record, not a
@@ -275,20 +281,20 @@ export default function InsurersPage() {
 
       {/* Verification + what the mark actually covers, side by side. These were
           two full-height sections; they are one screen of reading. */}
-      <section className="py-14 md:py-16 bg-white border-b border-[#e5e7eb]">
+      <section className="py-14 md:py-16 bg-white border-b border-[#dde2e8]">
         <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-2 gap-10 lg:gap-16">
           <div>
             <Kicker>How verification works</Kicker>
             <H2>Confirm a status directly from AIC — never from the insured</H2>
             <div className="space-y-5">
               {steps.map((step, i) => (
-                <div key={step.title} className="flex gap-4 border-t border-[#e5e7eb] pt-4">
-                  <div className="text-aic-copper font-mono text-xs shrink-0 w-6 pt-1">
-                    0{i + 1}
+                <div key={step.title} className="flex gap-4 border-t border-[#dde2e8] pt-4">
+                  <div className="text-[#a8772a] text-sm font-semibold shrink-0 w-5 tabular-nums">
+                    {i + 1}
                   </div>
                   <div>
                     <h3 className="text-[#0f1f3d] font-semibold mb-1">{step.title}</h3>
-                    <p className="text-sm text-[#6b7280] leading-[1.65]">{step.detail}</p>
+                    <p className="text-sm text-[#5e6b7b] leading-[1.65]">{step.detail}</p>
                   </div>
                 </div>
               ))}
@@ -305,7 +311,7 @@ export default function InsurersPage() {
           <div>
             <Kicker>What the mark verifies</Kicker>
             <H2>An evidence-based audit, not a self-declaration</H2>
-            <p className="text-[#6b7280] leading-[1.65] mb-4">
+            <p className="text-[#5e6b7b] leading-[1.65] mb-4">
               AIC certification is an evidence-based audit against published
               requirements, mapped to the regulatory frameworks that apply to
               the certified organisation. It confirms that a named individual is
@@ -313,16 +319,16 @@ export default function InsurersPage() {
               an override process exists, and that the certification is
               checkable — not just claimed.
             </p>
-            <p className="text-[#6b7280] leading-[1.65] mb-4">
+            <p className="text-[#5e6b7b] leading-[1.65] mb-4">
               A certification that can quietly lapse without anyone noticing
               isn&apos;t worth much. Certified organisations can carry the{" "}
               <strong className="text-[#0f1f3d]">Continuously Monitored</strong>{" "}
               overlay when Pulse telemetry is live and coherent — a mark that
               stays accountable after the audit, not only on the day of it.
             </p>
-            <p className="text-[#6b7280] leading-[1.65]">
+            <p className="text-[#5e6b7b] leading-[1.65]">
               AIC also runs a free, self-declared tool called{" "}
-              <Link href="/aware" className="text-aic-copper font-medium hover:underline">
+              <Link href="/aware" className="text-[#a8772a] font-medium underline-offset-2 hover:underline">
                 AIC Aware
               </Link>
               . It carries no independent verification, never appears on the
@@ -333,23 +339,62 @@ export default function InsurersPage() {
         </div>
       </section>
 
+      {/* Between certifications. The platform's underwriting extract exists
+          today, and it is the part of AIC an insurer can use before a single
+          certificate has been issued. */}
+      <section className="py-14 md:py-16 border-b border-[#dde2e8]">
+        <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-8 lg:gap-14 items-start">
+          <div>
+            <Kicker>Between certifications</Kicker>
+            <H2>The record itself, if the insured lets you read it</H2>
+            <p className="text-[#5e6b7b] leading-[1.65] mb-4">
+              A certificate is a point-in-time judgement. The record behind it is kept every day,
+              in the{" "}
+              <Link href="/platform" className="text-[#a8772a] font-medium underline-offset-2 hover:underline">
+                AIC platform
+              </Link>
+              : the insured&apos;s AI systems and who answers for each, the decisions they make and
+              how often a person overrides them, and evidence AIC reads nightly from the systems the
+              insured has connected.
+            </p>
+            <p className="text-[#5e6b7b] leading-[1.65]">
+              An insured can issue you a key from their workspace. With it you read an extract of
+              that record directly from AIC, whether or not they are certified yet.
+            </p>
+          </div>
+          <dl className="bg-white border border-[#dde2e8] rounded-xl divide-y divide-[#dde2e8]">
+            {[
+              ["What it contains", "Observations only: counts, coverage, rates and dates, each traceable to something on the record."],
+              ["What it leaves out", "Any rating, grade or recommendation. Pricing and acceptance are yours, not AIC’s."],
+              ["Who controls it", "The insured. They issue the key, and they can withdraw it."],
+              ["Why it can be trusted", "It is built from the same source as the insured’s own overview, so you never see a different picture from the one they manage."],
+            ].map(([k, v]) => (
+              <div key={k} className="px-5 py-4 sm:grid sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] sm:gap-5">
+                <dt className="text-sm font-semibold text-[#0f1f3d] mb-1 sm:mb-0">{k}</dt>
+                <dd className="text-sm text-[#5e6b7b] leading-[1.6]">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
       {/* Recognition and the boundary. Previously two sections; they are one
           argument, and the boundary is the more important half. */}
-      <section className="py-14 md:py-16 border-b border-[#e5e7eb]">
+      <section className="py-14 md:py-16 border-b border-[#dde2e8]">
         <div className="max-w-5xl mx-auto px-5 md:px-4">
           <Kicker>Recognition</Kicker>
           <H2>Naming who recognises the mark — not what AIC does for you</H2>
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <div>
-              <p className="text-[#6b7280] leading-[1.65] mb-5">
+              <p className="text-[#5e6b7b] leading-[1.65] mb-5">
                 Where an insurer has agreed to treat AIC certification as a
                 factor in underwriting, the certificate&apos;s verify page names
                 that directly:
               </p>
-              <div className="flex items-start gap-3 bg-white border border-[#e5e7eb] rounded-lg p-5 mb-5">
-                <BadgeCheck className="w-5 h-5 text-aic-copper shrink-0 mt-0.5" />
-                <p className="text-[#0f1f3d] font-mono text-sm leading-relaxed">
-                  AIC Certified · Recognised by [Insurer Name] as an
+              <div className="flex items-start gap-3 bg-white border border-[#dde2e8] rounded-lg p-5 mb-5">
+                <BadgeCheck className="w-5 h-5 text-[#a8772a] shrink-0 mt-0.5" />
+                <p className="text-[#0f1f3d] text-sm font-medium leading-relaxed">
+                  AIC certified, recognised by [insurer name] as an
                   underwriting consideration
                 </p>
               </div>
@@ -357,7 +402,7 @@ export default function InsurersPage() {
                   pricing effect, and there is no data to produce one until
                   certifications and claims experience accumulate. Saying so is
                   cheaper than retracting it later. */}
-              <p className="text-sm text-[#6b7280] leading-[1.65]">
+              <p className="text-sm text-[#5e6b7b] leading-[1.65]">
                 Deliberately not &ldquo;for premium benefit&rdquo;. Whether
                 verified AI accountability correlates with insurable risk is an
                 open question, and the evidence to answer it does not exist yet.
@@ -366,20 +411,20 @@ export default function InsurersPage() {
               </p>
             </div>
 
-            <div className="flex items-start gap-3 border border-[#e5e7eb] rounded-xl p-6 bg-white">
-              <CircleSlash className="w-5 h-5 text-[#6b7280] shrink-0 mt-1" />
+            <div className="flex items-start gap-3 border border-[#dde2e8] rounded-xl p-6 bg-white">
+              <CircleSlash className="w-5 h-5 text-[#5e6b7b] shrink-0 mt-1" />
               <div>
                 <h3 className="text-[#0f1f3d] font-semibold mb-2">
                   What AIC does not do
                 </h3>
-                <p className="text-[#6b7280] text-sm leading-[1.65] mb-3">
+                <p className="text-[#5e6b7b] text-sm leading-[1.65] mb-3">
                   AIC certifies governance, not products, and does not conduct
                   assessments on behalf of an insurer or for insurance purposes.
                   AIC does not price risk, underwrite, or advise on coverage. An
                   AIC certification is one input an insurer may choose to use —
                   the decision, and the terms, remain the insurer&apos;s alone.
                 </p>
-                <p className="text-[#6b7280] text-sm leading-[1.65]">
+                <p className="text-[#5e6b7b] text-sm leading-[1.65]">
                   The direction matters: insurers recognise AIC certification —
                   AIC does not certify <em>for</em> insurance. That line is what
                   keeps the certification body impartial, and it is not open to
@@ -392,32 +437,32 @@ export default function InsurersPage() {
       </section>
 
       {/* Close. An invitation to test the signal, not a request to bless it. */}
-      <section className="py-14 md:py-16 bg-aic-navy text-white">
+      <section className="py-14 md:py-16 bg-white">
         <div className="max-w-5xl mx-auto px-5 md:px-4">
           <div className="max-w-3xl">
             <Kicker>Testing the signal</Kicker>
             <h2
-              className="text-2xl md:text-[2rem] mt-3 mb-5 leading-[1.15] tracking-[-0.02em] font-bold text-balance"
+              className="text-2xl md:text-[2rem] mt-3 mb-5 leading-[1.15] tracking-[-0.02em] font-bold text-balance text-[#0f1f3d]"
               style={{ fontFamily: "'Merriweather', serif" }}
             >
               The useful question is whether this predicts anything
             </h2>
-            <p className="text-white/70 leading-[1.7] mb-4">
+            <p className="text-[#5e6b7b] leading-[1.7] mb-4">
               AIC is not asking any insurer to endorse a certification. It is
               building an independent, evidence-based measure of AI
               accountability, and the open question — whether it carries real
               underwriting signal — can only be answered with insurers rather
               than at them.
             </p>
-            <p className="text-white/60 leading-[1.7] mb-8">
+            <p className="text-[#5e6b7b] leading-[1.7] mb-8">
               If that is a question your team finds interesting, we would like
               to talk about how it could be tested: what would need measuring,
               what AIC would provide, and what would count as an answer either
               way.
             </p>
             <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-3 bg-aic-copper text-white px-8 py-4 rounded-lg font-bold text-sm hover:bg-[#b07d08] transition-colors"
+              href="/contact?topic=insurer"
+              className="inline-flex items-center justify-center gap-3 bg-[#0f1f3d] text-white px-7 py-3.5 rounded-lg font-semibold text-sm hover:bg-[#1a3160] transition-colors"
             >
               Start that conversation
             </Link>

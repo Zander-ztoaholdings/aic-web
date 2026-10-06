@@ -24,6 +24,7 @@ import {
   Layers,
   GraduationCap,
   Gauge,
+  LayoutGrid,
 } from "lucide-react";
 
 export interface NavLink {
@@ -68,7 +69,7 @@ export const navGroups: NavGroup[] = [
     label: "Partnerships",
     items: [
       { href: "/insurers", label: "Insurers", icon: Building2, description: "How underwriters recognise and verify AIC certification" },
-      { href: "/contact", label: "Become a Partner", icon: Handshake, description: "Discuss another kind of partnership with us" },
+      { href: "/contact?topic=partnership", label: "Become a partner", icon: Handshake, description: "Research, distribution, training or another kind of partnership" },
     ],
   },
   {
@@ -89,6 +90,7 @@ export const navGroups: NavGroup[] = [
 
 // Standalone links, rendered next to the dropdown groups rather than inside one.
 export const topLevelLinks: TopLevelLink[] = [
+  { href: "/platform", label: "Platform", icon: LayoutGrid },
   { href: "/workshops", label: "Workshops", icon: GraduationCap },
 ];
 

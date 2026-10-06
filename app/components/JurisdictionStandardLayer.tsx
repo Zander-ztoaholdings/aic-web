@@ -58,10 +58,14 @@ export default function JurisdictionStandardLayer({
 
   return (
     <div>
-      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-        What AIC would ask of you here
-      </span>
-      <p className="text-[#6b7280] leading-[1.65] mt-3 mb-5">
+      <h2
+        id="aic-standard"
+        className="scroll-mt-28 text-xl md:text-[1.6rem] text-[#0f1f3d] font-bold leading-[1.2] tracking-[-0.01em]"
+        style={{ fontFamily: "'Merriweather', serif" }}
+      >
+        What AIC certification would ask of you here
+      </h2>
+      <p className="text-[#5e6b7b] leading-[1.65] mt-2 mb-5 max-w-[62ch]">
         {j.framework} is what the law says. This is what the AIC standard says —
         a separate question, and one that does not change at the border. What
         changes is which Division your organisation is in, and that depends on
@@ -87,12 +91,12 @@ export default function JurisdictionStandardLayer({
               onClick={() => setDivision(d.division)}
               className={`text-left px-3.5 py-2 rounded-lg border text-sm transition-colors ${
                 active
-                  ? "border-aic-copper bg-aic-copper/10 text-aic-copper font-semibold"
-                  : "border-[#e5e7eb] bg-white text-[#0f1f3d] hover:border-aic-copper/40"
+                  ? "border-[#a8772a] bg-[#a8772a]/10 text-[#7a5518] font-semibold"
+                  : "border-[#e5e7eb] bg-white text-[#0f1f3d] hover:border-[#a8772a]/50"
               }`}
             >
-              <span className="font-mono text-[10px] uppercase tracking-wide opacity-60 block">
-                D{d.division}
+              <span className="text-[11px] opacity-70 block">
+                Division {d.division}
               </span>
               {d.name}
             </button>
@@ -108,14 +112,14 @@ export default function JurisdictionStandardLayer({
           >
             &ldquo;{profile.tagline}&rdquo;
           </p>
-          <p className="text-sm text-[#6b7280] leading-[1.65]">{profile.who}</p>
+          <p className="text-sm text-[#5e6b7b] leading-[1.65]">{profile.who}</p>
         </div>
 
         {profile.examples && (
           <div className="p-6 border-b border-[#f1f1f0] bg-[#f0f4f8]/60">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#9ca3af] block mb-2">
+            <h3 className="text-[13px] font-medium text-[#5e6b7b] mb-2">
               Where this shows up
-            </span>
+            </h3>
             <p className="text-sm text-[#0f1f3d] leading-[1.7]">
               {profile.examples}
             </p>
@@ -127,7 +131,7 @@ export default function JurisdictionStandardLayer({
             <span className="text-3xl font-bold text-[#0f1f3d] tabular-nums">
               {applicable.length}
             </span>
-            <span className="text-sm text-[#6b7280]">
+            <span className="text-sm text-[#5e6b7b]">
               of 44 requirements apply to a Division {division} organisation
             </span>
           </div>
@@ -137,10 +141,7 @@ export default function JurisdictionStandardLayer({
               const pct = (n / applicable.length) * 100;
               return (
                 <div key={code} className="flex items-center gap-3">
-                  <span className="font-mono text-[10px] uppercase tracking-wide text-[#9ca3af] w-4 shrink-0">
-                    {code}
-                  </span>
-                  <span className="text-sm text-[#0f1f3d] w-28 shrink-0">
+                  <span className="text-sm text-[#0f1f3d] w-32 shrink-0">
                     {RIGHTS[code].name}
                   </span>
                   <span
@@ -148,7 +149,7 @@ export default function JurisdictionStandardLayer({
                     style={{ width: `${Math.max(pct, 2)}%` }}
                     aria-hidden="true"
                   />
-                  <span className="text-sm text-[#6b7280] tabular-nums">{n}</span>
+                  <span className="text-sm text-[#5e6b7b] tabular-nums">{n}</span>
                 </div>
               );
             })}
@@ -157,15 +158,15 @@ export default function JurisdictionStandardLayer({
 
         {flagships.length > 0 && (
           <div className="p-6 border-b border-[#f1f1f0]">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#9ca3af] block mb-3">
+            <h3 className="text-[13px] font-medium text-[#5e6b7b] mb-3">
               The ones that are hard to fake
-            </span>
+            </h3>
             <ul className="space-y-3">
               {flagships.map((r) => (
                 <li key={r.code} className="flex gap-3">
                   <Star className="w-3.5 h-3.5 text-aic-copper shrink-0 mt-1" />
                   <span className="text-sm text-[#0f1f3d] leading-[1.6]">
-                    <span className="font-mono text-[11px] text-[#9ca3af] mr-2">
+                    <span className="text-[12.5px] font-medium text-[#5e6b7b] mr-2">
                       {r.code}
                     </span>
                     {r.text}
@@ -176,14 +177,14 @@ export default function JurisdictionStandardLayer({
           </div>
         )}
 
-        <div className="p-6 text-sm text-[#6b7280] leading-[1.65]">
+        <div className="p-6 text-sm text-[#5e6b7b] leading-[1.65]">
           <p className="mb-3">
             <strong className="text-[#0f1f3d]">Measured by:</strong> {profile.kpi}
           </p>
           {profile.note && <p className="mb-3">{profile.note}</p>}
           <p>
             Standard {STANDARD_VERSION}, issued {STANDARD_ISSUED}.{" "}
-            <Link href="/standard" className="text-aic-copper hover:underline">
+            <Link href="/standard" className="text-[#a8772a] underline-offset-2 hover:underline">
               Read all 44 requirements
             </Link>
             .
@@ -193,11 +194,11 @@ export default function JurisdictionStandardLayer({
 
       {/* Said plainly, next to the law rather than in a footer, because this is
           exactly the confusion the map is most likely to create. */}
-      <p className="text-xs text-[#9ca3af] leading-[1.7] mt-4">
+      <p className="text-xs text-[#5e6b7b] leading-[1.7] mt-4">
         AIC certification is not {j.name} compliance and does not establish it.
         A certified organisation has been assessed against the standard above;
-        whether it satisfies {j.framework} is a separate question for {j.authority}
-        , and neither answer substitutes for the other.
+        whether it satisfies {j.framework} is a separate question for{" "}
+        {j.authority}, and neither answer substitutes for the other.
       </p>
     </div>
   );

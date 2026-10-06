@@ -107,6 +107,20 @@ export interface JurisdictionDetail {
   enforcement: string;
   /** The instrument itself, so a reader can check us rather than trust us. */
   sources: { label: string; url: string }[];
+  /**
+   * AIC's reading of where each obligation meets the AIC standard, index for
+   * index with `obligations`. null where there is nothing to map. This is
+   * AIC's own analysis, labelled as such wherever it is shown, and never a
+   * statement of what the law requires.
+   */
+  coverage?: (ObligationCoverage | null)[];
+}
+
+export interface ObligationCoverage {
+  /** Requirement codes in the AIC standard (see requirements-data.ts). */
+  codes: string[];
+  /** One or two sentences, in plain words. */
+  note: string;
 }
 
 // One object shared by every EU member state on the map. The obligations are
@@ -118,6 +132,12 @@ const EU_AI_ACT_DETAIL: JurisdictionDetail = {
     "Article 50 transparency applies: people must be told when they are interacting with an AI system, and synthetic audio, image, video and text must be marked in a machine-readable way.",
     "General-purpose AI model obligations under Articles 51–56 apply to providers, including technical documentation and copyright policy.",
     "High-risk obligations — risk management, data governance, logging, human oversight, conformity assessment — are deferred, not cancelled. Systems being built now will be in scope on the new dates.",
+  ],
+  coverage: [
+    { codes: ["HU-3"], note: "The standard does not test for the prohibited practices themselves. A complete, current inventory of your AI systems is how you would know whether any of them falls into one." },
+    { codes: ["TR-2", "TR-3", "TR-4"], note: "Telling people an AI is involved, specifically and before it affects them, is the Truth right. Machine-readable marking of synthetic content is not something the standard tests." },
+    { codes: ["EX-7"], note: "These duties fall on model providers. Where you run someone else’s model, the standard asks you to keep the equivalent record of it: purpose, data, limitations and version." },
+    { codes: ["HU-4", "HU-5", "HU-8", "EX-3", "CO-5", "EM-6", "EM-10"], note: "Human oversight, logging and data governance are most of what the standard tests: an override that works in production, explanations and corrections kept on record, and bias and proxy testing. Risk management systems sit with ISO/IEC 42001." },
   ],
   keyDates: [
     { date: "2 Feb 2025", event: "Article 5 prohibitions took effect." },
@@ -149,6 +169,12 @@ const SOUTH_AFRICA_DETAIL: JurisdictionDetail = {
     "Where an automated decision is permitted, the data subject must be given an opportunity to make representations about it.",
     "The responsible party must supply sufficient information about the underlying logic of the processing for that response to be meaningful — which is, in practice, an explainability duty.",
   ],
+  coverage: [
+    { codes: ["HU-4", "HU-5", "HU-7", "HU-8"], note: "This is the core of the standard. A person must be able to intervene, the override has to work in production, and the record has to show it being used at the level you declared." },
+    { codes: ["CO-1", "CO-3", "HU-1"], note: "The safeguards that lift the prohibition are ones the standard tests: a correction route that exists and has a stated service level, and a named person accountable for the system." },
+    { codes: ["CO-1", "CO-2", "CO-9", "EM-4"], note: "A route the affected person can actually find, a named human who answers it, and a reachable contact point in the decision letter itself." },
+    { codes: ["EX-1", "EX-2", "EX-4", "EX-5"], note: "Plain-language explanations, available on request, and the hardest test in the standard: the reason given has to match what actually drove the decision." },
+  ],
   keyDates: [
     { date: "1 Jul 2021", event: "POPIA compliance deadline passed; the Act applies in full." },
     { date: "10 Apr 2026", event: "Draft National AI Policy gazetted." },
@@ -170,6 +196,11 @@ const UK_DETAIL: JurisdictionDetail = {
     "Five non-statutory principles guide regulators — safety and robustness, transparency and explainability, fairness, accountability and governance, and contestability and redress.",
     "Obligations arrive through your sector regulator rather than through an AI law, so the compliance question is which regulator you already answer to.",
   ],
+  coverage: [
+    { codes: ["HU-3"], note: "With no AI statute, the first question is which of your systems existing law reaches. That starts with a complete inventory." },
+    { codes: ["TR-1", "EX-2", "EM-7", "HU-1", "CO-1", "CO-8"], note: "Four of the five principles meet AIC’s rights directly: transparency the Truth and Explanation rights, fairness the disparate-impact test, accountability Human Agency, contestability Correction. Safety and robustness sit with the industry frameworks." },
+    null,
+  ],
   keyDates: [
     { date: "2023", event: "AI White Paper set out the five cross-sectoral principles, on a non-statutory basis." },
     { date: "4 Jun 2026", event: "An AI Regulation Bill was debated in the House of Lords; the Government's own proposals for the most capable models have not yet been introduced." },
@@ -190,6 +221,12 @@ const US_DETAIL: JurisdictionDetail = {
     "The NIST AI Risk Management Framework is voluntary. It is the de facto national reference and is what most US procurement language points at, but nothing makes it mandatory.",
     "Binding obligations come from states, and the state picture is actively unsettled rather than merely fragmented — the leading example was repealed and rewritten in 2026.",
     "Sector regulators (FTC, EEOC, financial and health regulators) apply existing law to AI, which is where most live enforcement risk actually sits.",
+  ],
+  coverage: [
+    null,
+    { codes: ["HU-1", "HU-3", "EX-7"], note: "The RMF’s Govern and Map functions ask for what these requirements test: a named accountable person, a known inventory and a record of each system." },
+    { codes: ["TR-2", "TR-3", "EM-3", "EX-3", "CO-5"], note: "Colorado’s replacement law asks for notice before a consequential automated decision, disclosure of adverse outcomes, and records kept. The standard tests the same three things." },
+    { codes: ["EM-6", "EM-7"], note: "Disparate-impact testing at the four-fifths threshold is the test employment and lending regulators already apply." },
   ],
   keyDates: [
     { date: "14 May 2026", event: "Colorado repealed its original AI Act (SB 24-205) and replaced it with SB 26-189, dropping mandatory risk-management programmes, impact assessments and the standalone anti-discrimination duty." },

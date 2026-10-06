@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import EmpathyScorer from "@/app/components/EmpathyScorer";
@@ -461,6 +462,51 @@ export default function MarketingPage() {
         </div>
       </section>
 
+      {/* ── THE PLATFORM ─────────────────────────────────────────────
+          October 2026. The workspace had grown into most of what AIC offers
+          and the home page did not mention it. Its own four menus are the
+          structure, so the page and the product describe the same thing. */}
+      <section className="bg-white py-20 md:py-24 border-b border-[#e5e7eb]">
+        <div className="max-w-7xl mx-auto px-5 md:px-4">
+          <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-16">
+            <div>
+              <p className="text-sm text-[#5e6b7b]">The platform</p>
+              <h2
+                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-3 mb-5 text-balance"
+                style={{ fontFamily: "'Merriweather', serif" }}
+              >
+                Between audits, the record keeps itself
+              </h2>
+              <p className="text-[#3d4a58] leading-relaxed">
+                Every AI system you run and who answers for it, the decisions it makes, the
+                frameworks you are held to, and evidence AIC reads every night from the systems
+                you already use. Nothing in it raises or lowers your chance of certification; it
+                is where the record lives that an audit then tests.
+              </p>
+              <Link
+                href="/platform"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#a8772a] underline-offset-2 hover:underline mt-6"
+              >
+                See what the platform does
+              </Link>
+            </div>
+            <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
+              {PLATFORM_AREAS.map((a) => (
+                <li key={a.id} className="border-t border-[#dde2e8] pt-4">
+                  <Link href={`/platform#${a.id}`} className="font-semibold text-[#0f1f3d] hover:text-[#a8772a] transition-colors">
+                    {a.name}
+                  </Link>
+                  <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-1">{a.summary}</p>
+                  <p className="text-[13px] text-[#5e6b7b] leading-[1.6] mt-2">
+                    {a.features.map((f) => f.name).join(", ")}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* ── AIC AWARE ────────────────────────────────────────────────
           The free, self-declared entry point. Deliberately placed after the
           proof section (real figures, real registry) rather than the hero,
@@ -470,9 +516,9 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="bg-white border border-[#e5e7eb] rounded-2xl p-8 md:p-12 grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-10 items-center shadow-sm">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                Free · Self-Declared
-              </span>
+              <p className="text-sm text-[#5e6b7b]">
+                Free and self-declared
+              </p>
               <h2
                 className="text-3xl md:text-4xl text-[#0f1f3d] mt-3 mb-4 font-bold leading-[1.1]"
                 style={{ fontFamily: "'Merriweather', serif" }}
@@ -505,9 +551,9 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-4">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-12 lg:gap-16 items-center">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+              <p className="text-sm text-[#5e6b7b]">
                 Built with reference to
-              </span>
+              </p>
               <h2
                 className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-5 text-balance"
                 style={{ fontFamily: "'Merriweather', serif" }}

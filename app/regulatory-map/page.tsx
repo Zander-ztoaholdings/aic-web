@@ -1,4 +1,3 @@
-import { Globe2 } from "lucide-react";
 import Link from "next/link";
 import RegulatoryMap, { type MapUpdate } from "@/app/components/RegulatoryMap";
 import { getPolicyUpdates } from "@/lib/notion";
@@ -37,12 +36,6 @@ export default async function RegulatoryMapPage() {
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <Globe2 className="w-6 h-6 text-aic-copper" />
-            <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
-              Regulatory Map
-            </span>
-          </div>
           <h1
             className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold"
             style={{ fontFamily: "'Merriweather', serif" }}
@@ -50,9 +43,10 @@ export default async function RegulatoryMapPage() {
             Where AI regulation stands, by country
           </h1>
           <p className="text-xl text-white/70 max-w-3xl leading-relaxed">
-            Click a country to see its AI-relevant regulatory framework, who administers it, and how
-            it maps to AIC&apos;s certification methodology. Jurisdictions we haven&apos;t verified
-            yet stay grey, on purpose — we&apos;d rather leave a gap visible than guess.
+            Click a country to zoom in on its AI-relevant law, who administers it, and how every
+            framework AIC offers meets it: the ones you can track in the platform, the industry
+            frameworks, and the AIC standard. Jurisdictions we haven&apos;t verified stay grey, on
+            purpose. We would rather leave a gap visible than guess.
           </p>
         </div>
       </section>
@@ -74,15 +68,8 @@ export default async function RegulatoryMapPage() {
           {/* Draft-one notice. First public version; the map's own honesty
               posture only works if the version it is at is stated up front,
               not discovered. */}
-          <div className="mb-8 border border-aic-copper/30 bg-aic-copper/[0.06] rounded-xl p-5 md:p-6">
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper font-semibold">
-                Draft one
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
-                First published version
-              </span>
-            </div>
+          <div className="mb-8 border border-[#dde2e8] bg-white rounded-xl p-5 md:p-6">
+            <h2 className="text-[15px] font-semibold text-[#0f1f3d] mb-1.5">Draft one, the first published version</h2>
             <p className="text-sm text-[#0f1f3d] leading-[1.7] max-w-3xl">
               This is the first public release of the regulatory map, and it
               will change. Coverage is partial on purpose — 28 jurisdictions,
@@ -90,7 +77,7 @@ export default async function RegulatoryMapPage() {
               mapped to obligation level, which each page says plainly rather
               than papering over. Treat it as orientation, not legal advice, and
               read the primary sources before relying on any of it.{" "}
-              <Link href="/contact" className="text-aic-copper hover:underline font-semibold">
+              <Link href="/contact" className="text-[#a8772a] underline-offset-2 hover:underline font-semibold">
                 Tell us what is wrong or missing
               </Link>{" "}
               and it goes into the next draft.

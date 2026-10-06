@@ -16,6 +16,7 @@ import JurisdictionRecord, {
   type RecordUpdate,
 } from "@/app/components/JurisdictionRecord";
 import { COUNTRY_FRAMES } from "@/app/data/country-frames";
+import { trackedFor } from "@/app/data/jurisdiction-frameworks";
 import {
   regulatoryData,
   oldestVerification,
@@ -611,7 +612,7 @@ export default function RegulatoryMap({
                           uncovered country is not a dead end the user discovers
                           only after clicking. */}
                       <span
-                        className={`text-[10px] uppercase tracking-wide font-semibold shrink-0 ${
+                        className={`text-[11px] font-semibold shrink-0 ${
                           m.mapped ? "text-aic-copper" : "text-[#9ca3af]"
                         }`}
                       >
@@ -781,14 +782,9 @@ export default function RegulatoryMap({
                   <ArrowLeft className="w-4 h-4 text-aic-copper" />
                   Back to the world map
                 </button>
-                <div className="flex flex-wrap items-center gap-3 mb-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                    {expanded.region}
-                  </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
-                    Verified {expanded.verifiedAt}
-                  </span>
-                </div>
+                <p className="text-[13px] text-[#5e6b7b] mb-3">
+                  {expanded.region}, checked {expanded.verifiedAt}
+                </p>
                 <h2
                   className="text-3xl md:text-4xl font-bold text-[#0f1f3d] leading-[1.05] tracking-[-0.03em] mb-4 text-balance"
                   style={{ fontFamily: "'Merriweather', serif" }}
@@ -805,9 +801,10 @@ export default function RegulatoryMap({
                 <p className="text-[#0f1f3d] font-semibold leading-snug">
                   {expanded.framework}
                 </p>
-                <p className="text-xs text-[#9ca3af] uppercase tracking-wide mt-1">
+                <p className="text-sm text-[#5e6b7b] mt-1">
                   {expanded.authority}
                 </p>
+                <FrameworkSummary j={expanded} />
               </div>
             </div>
           )}
@@ -848,7 +845,7 @@ export default function RegulatoryMap({
                 if (inRegion.length === 0) return null;
                 return (
                   <div key={region}>
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-[#9ca3af] mb-2">
+                    <h3 className="text-[13px] font-medium text-[#5e6b7b] mb-2">
                       {region}
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -894,7 +891,7 @@ export default function RegulatoryMap({
               }
               className="group inline-flex flex-col items-center gap-1.5 text-[#9ca3af] hover:text-aic-copper transition-colors"
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em]">
+              <span className="text-[13px] font-medium">
                 Scroll for the full record
               </span>
               <ChevronDown className="w-5 h-5 animate-bounce motion-reduce:animate-none" />
@@ -956,7 +953,7 @@ export default function RegulatoryMap({
               {selected.status}
             </span>
             <h4 className="text-[#0f1f3d] font-semibold mt-4 mb-1">{selected.framework}</h4>
-            <p className="text-xs text-[#9ca3af] uppercase tracking-wide mb-4">
+            <p className="text-[13px] text-[#5e6b7b] mb-4">
               {selected.authority}
             </p>
             <p className="text-[#6b7280] text-sm leading-relaxed mb-6">{selected.summary}</p>
@@ -1022,7 +1019,7 @@ export default function RegulatoryMap({
                 same regulation at different granularities and never meet. */}
             {(updatesByCountry[selected.id]?.length ?? 0) > 0 && (
               <div className="mb-8">
-                <h5 className="text-xs font-semibold uppercase tracking-wide text-[#0f1f3d] mb-3">
+                <h5 className="text-sm font-semibold text-[#0f1f3d] mb-3">
                   What has changed here
                 </h5>
                 <ul className="space-y-2">
@@ -1032,7 +1029,7 @@ export default function RegulatoryMap({
                         href={`/policy/${u.slug}`}
                         className="group block border border-[#e5e7eb] rounded-lg p-3 hover:border-aic-copper/40 hover:bg-[#f0f4f8] transition-all"
                       >
-                        <span className="block text-[11px] font-mono text-[#9ca3af] mb-1">
+                        <span className="block text-[12px] text-[#5e6b7b] mb-1">
                           {u.date} · {u.tag}
                         </span>
                         <span className="block text-sm text-[#0f1f3d] leading-snug group-hover:text-aic-copper transition-colors">
@@ -1121,6 +1118,37 @@ export default function RegulatoryMap({
           />
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * The zoomed-in view's answer to "what does AIC have for this country":
+ * counted, not described, with the full pairing in the record below.
+ */
+function FrameworkSummary({ j }: { j: CountryRegulation }) {
+  const t = trackedFor(j.id);
+  const names = [...t.home, ...t.international].map((f) => f.name);
+  const mapped = j.detail?.coverage?.filter(Boolean).length ?? 0;
+  return (
+    <div className="mt-6 border-t border-[#dde2e8] pt-4">
+      <p className="text-[13px] font-medium text-[#5e6b7b] mb-2">What AIC offers here</p>
+      <ul className="space-y-1.5 text-sm text-[#0f1f3d] leading-snug">
+        <li>
+          <span className="font-semibold">{names.length} frameworks to track</span>{" "}
+          <span className="text-[#5e6b7b]">in the platform: {names.join(", ")}</span>
+        </li>
+        <li>
+          <span className="font-semibold">3 industry frameworks</span>{" "}
+          <span className="text-[#5e6b7b]">for process safety, financial services and medical devices</span>
+        </li>
+        <li>
+          <span className="font-semibold">The AIC standard</span>{" "}
+          <span className="text-[#5e6b7b]">
+            {mapped ? (mapped === j.detail!.obligations.length ? `paired with all ${mapped} duties recorded here` : `paired with ${mapped} of the ${j.detail!.obligations.length} duties recorded here`) : "the same in every jurisdiction"}
+          </span>
+        </li>
+      </ul>
     </div>
   );
 }

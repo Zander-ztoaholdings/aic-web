@@ -133,19 +133,12 @@ export default async function JurisdictionPage({
               find the country again by hand. */}
           <Link
             href={`/regulatory-map?j=${j.slug}`}
-            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/50 hover:text-aic-copper transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors mb-6"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> See {j.name} on the map
           </Link>
 
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-              {j.region}
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
-              Verified {j.verifiedAt}
-            </span>
-          </div>
+          <p className="text-sm text-white/60 mb-3">{j.region}, checked {j.verifiedAt}</p>
 
           <h1
             className="text-3xl md:text-5xl mb-5 leading-[1.05] tracking-[-0.03em] font-bold text-balance"
@@ -155,7 +148,7 @@ export default async function JurisdictionPage({
           </h1>
 
           <div className="flex flex-wrap items-center gap-3 mb-5">
-            <span className="inline-flex items-center text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded border bg-white/10 border-white/20 text-white">
+            <span className="inline-flex items-center text-[13px] font-semibold px-3 py-1 rounded-full border bg-white/10 border-white/20 text-white">
               {j.status}
             </span>
             <span className="text-sm text-white/60 max-w-xl leading-[1.6]">
@@ -171,20 +164,13 @@ export default async function JurisdictionPage({
           link opens, so most readers will never see the map's copy of it. */}
       <section className="pt-10 md:pt-12">
         <div className="max-w-5xl mx-auto px-5 md:px-4">
-          <div className="border border-aic-copper/30 bg-aic-copper/[0.06] rounded-xl p-5">
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper font-semibold">
-                Draft one
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
-                First published version
-              </span>
-            </div>
+          <div className="border border-[#dde2e8] bg-white rounded-xl p-5">
+            <h2 className="text-[15px] font-semibold text-[#0f1f3d] mb-1.5">Draft one, the first published version</h2>
             <p className="text-sm text-[#0f1f3d] leading-[1.7]">
               This is the first public release of AIC&apos;s regulatory map and it
-              will change. Orientation, not legal advice — read the primary
+              will change. Orientation, not legal advice: read the primary
               sources before relying on it.{" "}
-              <Link href="/contact" className="text-aic-copper hover:underline font-semibold">
+              <Link href="/contact" className="text-[#a8772a] underline-offset-2 hover:underline font-semibold">
                 Tell us what is wrong or missing
               </Link>{" "}
               and it goes into the next draft.
@@ -204,7 +190,7 @@ export default async function JurisdictionPage({
             {j.name}&apos;s requirements. AIC certifies governance against its own published
             standard; that is a different question from legal compliance, and neither
             substitutes for the other.{" "}
-            <Link href="/regulatory-map" className="text-aic-copper hover:underline">
+            <Link href="/regulatory-map" className="text-[#a8772a] underline-offset-2 hover:underline">
               Back to the map
             </Link>
             .
