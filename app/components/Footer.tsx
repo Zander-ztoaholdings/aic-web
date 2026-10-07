@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Shield, ChevronRight } from "lucide-react";
+import { Shield } from "lucide-react";
 import { navGroups, topLevelLinks } from "./Navbar";
 import { CONTACT_EMAIL, GENERAL_EMAIL } from "@/lib/contact";
 
@@ -54,29 +54,6 @@ export default function Footer() {
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,_var(--tw-gradient-stops))] from-[#c9920a] via-transparent to-transparent" />
-      </div>
-
-      {/* Manifesto band */}
-      <div className="relative z-10 border-b border-white/10">
-        <div className="max-w-[1520px] mx-auto px-5 sm:px-8 lg:px-10 py-16 sm:py-20">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-            <div className="max-w-3xl">
-              <div className="text-white/50 text-sm mb-4">
-                Our mission
-              </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl text-white font-serif italic leading-relaxed">
-                Certifying that a named human remains accountable for every decision that matters.
-              </h2>
-            </div>
-            <Link
-              href="/intake"
-              className="shrink-0 inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#dcae4c] text-[#0e1b2c] px-7 py-4 rounded transition-all text-sm font-semibold font-sans self-start lg:self-auto"
-            >
-              Join the November intake
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
       </div>
 
       {/* Main footer grid */}

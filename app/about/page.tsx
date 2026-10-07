@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -22,15 +23,18 @@ export const metadata: Metadata = pageMetadata({
 const PEOPLE = [
   {
     name: "Zander Wilken",
-    role: "Co-founder and Chief Executive",
-    photo: "/team/zander-wilken.jpg",
-    bio: "Zander leads AIC and builds it: the standard, the certification workflow and the platform clients use. He works across engineering, strategy and sales, and is also Chief Operating Officer of Seventh Star Tuition in Centurion.",
+    role: "Co-founder and Chief Executive Officer",
+    photo: "/team/zander-wilken.jpg" as string | null,
+    linkedin: "https://www.linkedin.com/in/zander-wilken-b81349323/",
+    bio: "Driven, principled and commercially minded, Zander founded AIC on the conviction that when systems make decisions about people, people must remain accountable. He leads the company's strategy, client relationships and the development of the AIC Pulse platform, turning South Africa's POPIA requirements into a practical, verifiable standard for organisations that rely on algorithmic decision systems.",
   },
   {
     name: "Albert von Ronge",
     role: "Co-founder, Chief Financial and Operating Officer",
-    photo: null,
-    bio: "Albert is AIC's co-founder and its seed investor, responsible for its finances and operations.",
+    // Shown once public/team/albert-von-ronge.jpg is added; initials until then.
+    photo: existsSync(join(process.cwd(), "public/team/albert-von-ronge.jpg")) ? "/team/albert-von-ronge.jpg" : (null as string | null),
+    linkedin: "https://www.linkedin.com/in/albert-von-r%C3%B6nge-15754528b",
+    bio: "Structured in his approach and with a sharp eye for detail, Albert oversees AIC's finance, operations and commercial agreements. As the founder of Ronge Dental Management, a practice management company built on HPCSA-compliant service agreements, he brings first-hand experience of working within a tightly regulated professional environment. Albert joined AIC as a seed investor in 2026 and is responsible for the financial model, contracting and day-to-day running of the business.",
   },
 ];
 
@@ -40,7 +44,7 @@ export default function AboutPage() {
     "@type": "AboutPage",
     url: `${SITE_URL}/about`,
     about: { "@id": `${SITE_URL}/#organization` },
-    mainEntity: PEOPLE.map((p) => ({ "@type": "Person", name: p.name, jobTitle: p.role, worksFor: { "@id": `${SITE_URL}/#organization` } })),
+    mainEntity: PEOPLE.map((p) => ({ "@type": "Person", name: p.name, jobTitle: p.role, sameAs: [p.linkedin], worksFor: { "@id": `${SITE_URL}/#organization` } })),
   };
 
   return (
@@ -98,6 +102,9 @@ export default function AboutPage() {
                   <h3 className="text-xl font-semibold">{p.name}</h3>
                   <p className="text-[#5e6b7b] text-[15px] mt-0.5">{p.role}</p>
                   <p className="text-[#2b3a4d] text-[15px] leading-[1.7] mt-3">{p.bio}</p>
+                  <a href={p.linkedin} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-[14px] font-semibold text-[#8a6114] underline-offset-2 hover:underline">
+                    {p.name.split(" ")[0]} on LinkedIn
+                  </a>
                 </div>
               </article>
             ))}
@@ -105,27 +112,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="max-w-[1280px] mx-auto px-5 md:px-8 py-12 md:py-16 grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 lg:gap-14">
-        <h2 className="text-2xl md:text-[1.9rem] font-bold leading-[1.15]" style={{ fontFamily: "'Merriweather', serif" }}>Where we stand</h2>
-        <div className="text-[#2b3a4d] text-[17px] leading-[1.75] max-w-[66ch] space-y-4">
-          <p>
-            AIC is young, and we would rather you heard it from us. No accreditation body has
-            assessed AIC yet: accreditation needs witnessed audits of real clients, and those begin
-            with the founding cohort in November. No organisation has been certified, so the public
-            register is empty and says so.
-          </p>
-          <p>
-            What is in place is published: the standard in full, our impartiality arrangements, and
-            the line we keep between the tools we offer and the audit we perform.
-          </p>
-          <p className="flex flex-wrap gap-x-6 gap-y-2 text-[15px] font-semibold">
-            <Link href="/standard" className="text-[#8a6114] underline-offset-2 hover:underline">The standard</Link>
-            <Link href="/impartiality" className="text-[#8a6114] underline-offset-2 hover:underline">Impartiality statement</Link>
-            <Link href="/disclosures#accreditation" className="text-[#8a6114] underline-offset-2 hover:underline">Accreditation status</Link>
-            <Link href="/intake" className="text-[#8a6114] underline-offset-2 hover:underline">The November intake</Link>
-          </p>
-        </div>
-      </section>
 
       <section className="bg-white border-t border-[#dde2e8]">
         <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-10 text-sm text-[#5e6b7b] leading-[1.7]">
