@@ -45,7 +45,7 @@ export default function JurisdictionFrameworks({ j }: { j: CountryRegulation }) 
             <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-4">
               A mapping says this evidence usually supports this requirement. It is not an
               auditor&apos;s conclusion, and tracking a framework has no bearing on AIC certification.{" "}
-              <Link href="/platform#compliance" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+              <Link href="/platform#compliance" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                 See everything the platform tracks
               </Link>
             </p>
@@ -61,7 +61,7 @@ export default function JurisdictionFrameworks({ j }: { j: CountryRegulation }) 
           <ul className="space-y-5">
             {frameworks.map((f) => (
               <li key={f.slug}>
-                <Link href={`/frameworks/${f.slug}`} className="font-semibold text-[#0f1f3d] hover:text-[#a8772a] transition-colors">
+                <Link href={`/frameworks/${f.slug}`} className="font-semibold text-[#0f1f3d] hover:text-[#8a6114] transition-colors">
                   {f.industry}
                 </Link>
                 <span className="text-sm text-[#5e6b7b]">, against {f.standardName}</span>
@@ -84,7 +84,7 @@ export default function JurisdictionFrameworks({ j }: { j: CountryRegulation }) 
               The standard is the same in {j.name} as everywhere else. What changes is how much of
               it applies, which depends on how much human judgement sits between your AI and its
               decisions.{" "}
-              <a href="#aic-standard" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+              <a href="#aic-standard" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                 See what it would ask of you
               </a>
             </p>

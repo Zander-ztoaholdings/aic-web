@@ -341,3 +341,16 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* Gold as text. #c9920a reads at 2.8:1 on white, below what small text needs
+   (4.5:1), so on light backgrounds gold text is drawn in a deeper shade of
+   the same hue (5.5:1). On the navy surfaces it stays gold, where it reads at
+   6.6:1. Outside a cascade layer on purpose, so it wins over the utility. */
+.text-aic-copper,
+.text-\[\#c9920a\] {
+  color: #8a6114;
+}
+:is(.bg-aic-navy, .bg-\[\#0a1628\], .bg-\[\#0f1f3d\], .bg-\[\#0a1728\], .bg-\[\#0e1b2c\], footer) .text-aic-copper,
+:is(.bg-aic-navy, .bg-\[\#0a1628\], .bg-\[\#0f1f3d\], .bg-\[\#0a1728\], .bg-\[\#0e1b2c\], footer) .text-\[\#c9920a\] {
+  color: #c9920a;
+}

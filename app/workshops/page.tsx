@@ -1,223 +1,131 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
-import {
-  GraduationCap,
-  ArrowRight,
-  CircleSlash,
-  BookOpen,
-} from "lucide-react";
 import { workshopIndustries } from "@/app/data/workshops-data";
 import WorkshopIntake from "./WorkshopIntake";
-import { DURATION, EASE_OUT } from "@/lib/motion";
+
+/**
+ * /workshops, redone October 2026.
+ *
+ * Reads as a prospectus rather than a landing page: pick your industry, see
+ * the whole syllabus at once, see how a session runs, and see the line AIC
+ * keeps between teaching and assessing. The auto-rotating topic carousel is
+ * gone; motion nobody asked for was dimming four-fifths of the syllabus at any
+ * moment. The page also sat on a 1,600px container with a 16px gutter, which
+ * is what put text against the edge of the screen on laptops.
+ */
+
+const HOW = [
+  { title: "Scoped to the room", text: "Sessions are built for one industry and one team, on site or remote, and sized to the number of people attending." },
+  { title: "Ends where you are", text: "Every session closes on South African regulation, with POPIA section 71 and what it asks of automated decisions." },
+  { title: "Teaching, not advice", text: "We teach how the framework works. We do not look at your systems, score your organisation or tell you what to change." },
+];
 
 export default function WorkshopsPage() {
   const [activeSlug, setActiveSlug] = useState(workshopIndustries[0].slug);
-  const [topicIndex, setTopicIndex] = useState(0);
-
-  const active =
-    workshopIndustries.find((w) => w.slug === activeSlug) ?? workshopIndustries[0];
-
-  // Reset the teaser cycle whenever the selected industry changes.
-  useEffect(() => {
-    setTopicIndex(0);
-  }, [activeSlug]);
-
-  // Auto-cycle the teaser topic every 4 seconds.
-  useEffect(() => {
-    const id = setInterval(() => {
-      setTopicIndex((i) => (i + 1) % active.topics.length);
-    }, 4000);
-    return () => clearInterval(id);
-  }, [active.topics.length]);
+  const active = workshopIndustries.find((w) => w.slug === activeSlug) ?? workshopIndustries[0];
 
   return (
-    <div className="bg-aic-paper min-h-screen font-sans">
-      {/* Hero */}
-      <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <GraduationCap className="w-6 h-6 text-aic-copper" />
-            <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
-              Workshops
-            </span>
+    <div className="bg-[#f5f7f9] min-h-screen text-[#0e1b2c]">
+      <section className="bg-aic-navy text-white">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-14 md:py-20">
+          <div className="max-w-3xl">
+            <p className="text-sm text-white/60 mb-4">Workshops</p>
+            <h1 className="text-[2.2rem] md:text-[3.25rem] font-bold leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: "'Merriweather', serif" }}>
+              We teach the framework. We do not consult on it.
+            </h1>
+            <p className="text-lg text-white/75 leading-[1.7] mt-5">
+              Sessions for leadership, risk and engineering teams on how AI decisioning maps onto the
+              safety and governance frameworks your industry already runs on.
+            </p>
+            <a href="#enquire" className="mt-8 inline-flex items-center justify-center rounded-lg bg-[#c9920a] px-6 py-3 text-[15px] font-semibold text-[#0e1b2c] hover:bg-[#dcae4c] transition-colors">
+              Ask about a session for your team
+            </a>
           </div>
-          <h1
-            className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold"
-            style={{ fontFamily: "'Merriweather', serif" }}
-          >
-            We teach the framework. We don&apos;t consult on it.
-          </h1>
-          <p className="text-xl text-white/70 max-w-3xl leading-relaxed">
-            Industry-specific sessions on how AI-assisted decisioning maps against the safety and
-            governance frameworks your industry already runs on. Pick an industry below to see what a
-            session covers.
+        </div>
+      </section>
+
+      {/* The syllabus */}
+      <section className="max-w-[1280px] mx-auto px-5 md:px-8 py-12 md:py-16">
+        <h2 className="text-2xl md:text-[1.9rem] font-bold leading-[1.15]" style={{ fontFamily: "'Merriweather', serif" }}>
+          Choose your industry
+        </h2>
+        <div role="tablist" aria-label="Industry" className="mt-5 flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+          {workshopIndustries.map((w) => {
+            const on = w.slug === activeSlug;
+            return (
+              <button
+                key={w.slug}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                onClick={() => setActiveSlug(w.slug)}
+                className={`shrink-0 rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${on ? "bg-[#0e1b2c] text-white" : "bg-white border border-[#dde2e8] text-[#0e1b2c] hover:border-[#a8772a]"}`}
+              >
+                {w.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div role="tabpanel" className="mt-8 grid lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-8 lg:gap-14 items-start">
+          <div>
+            <p className="text-lg leading-[1.6]" style={{ fontFamily: "'Merriweather', serif" }}>{active.summary}</p>
+            <Link href={`/frameworks/${active.frameworkSlug}`} className="mt-4 inline-block text-[15px] font-semibold text-[#8a6114] underline-offset-2 hover:underline">
+              Read the framework mapping this session teaches
+            </Link>
+          </div>
+          <div className="bg-white border border-[#dde2e8] rounded-xl">
+            <p className="px-5 md:px-6 pt-5 text-sm text-[#5e6b7b]">What the session covers</p>
+            <ol className="divide-y divide-[#dde2e8]">
+              {active.topics.map((t, i) => (
+                <li key={t} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 px-5 md:px-6 py-4">
+                  <span className="text-[#8a6114] font-semibold tabular-nums">{i + 1}</span>
+                  <span className="text-[16px] leading-[1.6]">{t}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* How a session runs */}
+      <section className="bg-white border-y border-[#dde2e8]">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-12 md:py-16">
+          <h2 className="text-2xl md:text-[1.9rem] font-bold leading-[1.15]" style={{ fontFamily: "'Merriweather', serif" }}>How a session runs</h2>
+          <div className="mt-8 grid md:grid-cols-3 gap-8">
+            {HOW.map((h) => (
+              <div key={h.title} className="border-t-2 border-[#a8772a] pt-4">
+                <h3 className="font-semibold">{h.title}</h3>
+                <p className="text-[15px] text-[#5e6b7b] leading-[1.65] mt-2">{h.text}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-10 max-w-[70ch] text-[15px] text-[#5e6b7b] leading-[1.7]">
+            Attending a workshop is not a step towards certification and has no bearing on the outcome
+            of one. AIC never certifies an organisation it has advised, and keeping workshops to
+            teaching is what lets it certify yours later.{" "}
+            <Link href="/impartiality" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">The impartiality statement</Link>
           </p>
         </div>
       </section>
 
-      {/* Industry selector + rotating teaser */}
-      <section className="py-20 md:py-24">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-3 mb-12">
-            {workshopIndustries.map((w) => {
-              const isActive = w.slug === activeSlug;
-              return (
-                <button
-                  key={w.slug}
-                  type="button"
-                  onClick={() => setActiveSlug(w.slug)}
-                  aria-pressed={isActive}
-                  className={`px-6 py-3 rounded-full text-sm font-semibold transition-all ${
-                    isActive
-                      ? "bg-aic-navy text-white shadow-md"
-                      : "bg-white text-[#6b7280] border border-[#e5e7eb] hover:border-aic-copper/40 hover:text-[#0f1f3d]"
-                  }`}
-                >
-                  {w.shortLabel}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="grid lg:grid-cols-[1fr_1.3fr] gap-12 items-start">
-            {/* Summary */}
-            <div>
-              <span className="text-aic-copper text-[0.7rem] uppercase tracking-[0.3em] font-bold">
-                {active.label}
-              </span>
-              <h2 className="text-2xl md:text-3xl text-[#0f1f3d] mt-4 mb-6 font-bold tracking-[-0.02em] leading-[1.15]">
-                {active.summary}
-              </h2>
-              <Link
-                href={`/frameworks/${active.frameworkSlug}`}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-aic-copper hover:gap-3 transition-all"
-              >
-                <BookOpen className="w-4 h-4" />
-                See the underlying framework mapping
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* The syllabus, in full.
-                This rotated one topic at a time through a card, which meant a
-                visitor deciding whether to book saw a fifth of what a session
-                covers and had to wait out a carousel for the rest. The whole
-                list is now visible; the rotation only moves the emphasis, so
-                the movement still draws the eye without withholding anything. */}
-            <div className="bg-white border border-[#e5e7eb] rounded-xl p-8 md:p-10">
-              <div className="flex items-baseline justify-between gap-4 mb-6">
-                <span className="text-[#9ca3af] text-[0.65rem] uppercase tracking-[0.25em] font-mono font-bold">
-                  In this session
-                </span>
-                <span className="font-mono text-[11px] text-[#9ca3af] tabular-nums">
-                  {active.topics.length} topics
-                </span>
-              </div>
-              <ul className="space-y-1">
-                {active.topics.map((topic, i) => {
-                  const isCurrent = i === topicIndex;
-                  return (
-                    <li key={topic}>
-                      <motion.button
-                        type="button"
-                        onClick={() => setTopicIndex(i)}
-                        animate={{ opacity: isCurrent ? 1 : 0.55 }}
-                        transition={{ duration: DURATION.base, ease: EASE_OUT }}
-                        className="w-full text-left flex gap-4 py-3 border-b border-[#f1f1f0] last:border-b-0"
-                      >
-                        <span
-                          className={`font-mono text-[11px] tabular-nums pt-1 shrink-0 transition-colors ${
-                            isCurrent ? "text-aic-copper" : "text-[#9ca3af]"
-                          }`}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className={`leading-snug transition-all ${
-                            isCurrent
-                              ? "text-[#0f1f3d] text-lg md:text-xl font-medium"
-                              : "text-[#6b7280] text-[15px]"
-                          }`}
-                          style={
-                            isCurrent
-                              ? { fontFamily: "'Merriweather', serif" }
-                              : undefined
-                          }
-                        >
-                          {topic}
-                        </span>
-                      </motion.button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </div>
+      {/* Enquiry */}
+      <section id="enquire" className="scroll-mt-24 max-w-[1280px] mx-auto px-5 md:px-8 py-12 md:py-16 grid lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] gap-8 lg:gap-14 items-start">
+        <div className="lg:sticky lg:top-32">
+          <h2 className="text-2xl md:text-[1.9rem] font-bold leading-[1.15]" style={{ fontFamily: "'Merriweather', serif" }}>
+            Bring a session to your team
+          </h2>
+          <p className="text-[#5e6b7b] leading-[1.7] mt-3">
+            Tell us the industry and how many people, and you get a straight answer on format, length
+            and cost rather than a discovery call.
+          </p>
+          <p className="text-sm text-[#5e6b7b] leading-[1.7] mt-3">
+            We ask nothing about your AI governance here, on purpose: workshops teach and do not assess.
+          </p>
         </div>
-      </section>
-
-      {/* Boundary statement — the Andersen firewall, stated plainly */}
-      <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-5 md:px-4">
-          <div className="flex items-start gap-4 border border-[#e5e7eb] rounded-xl p-8">
-            <CircleSlash className="w-6 h-6 text-[#6b7280] shrink-0 mt-1" />
-            <div>
-              <h3 className="text-[#0f1f3d] font-semibold text-lg mb-3">
-                What an AIC workshop does not do
-              </h3>
-              <p className="text-[#6b7280] leading-relaxed mb-4">
-                AIC workshops teach the framework. They do not constitute an assessment, and completing
-                one has no bearing on certification outcomes for your organisation — attending a session
-                is not a step toward, or a substitute for, an independent AIC audit.
-              </p>
-              <p className="text-[#6b7280] leading-relaxed">
-                We don&apos;t review your specific systems, score your organisation, or advise on your
-                compliance posture in a workshop setting. That firewall exists because AIC never
-                certifies an organisation it has consulted for — the same independence principle that
-                governs every certification we issue.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Intake.
-          This said "tell us your industry and team size" above a button to the
-          general contact form, which asks for neither — so the two facts needed
-          to answer a workshop enquiry were exactly the two we did not collect,
-          and every reply began by asking for them. */}
-      <section id="enquire" className="py-20 md:py-24 bg-[#f0f4f8] border-t border-[#e5e7eb]">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
-          <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-10 lg:gap-16 items-start">
-            <div className="lg:sticky lg:top-32">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-                Bring a session to your team
-              </span>
-              <h2
-                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 mb-5 text-balance"
-                style={{ fontFamily: "'Merriweather', serif" }}
-              >
-                Four questions, and we can tell you what a session looks like
-              </h2>
-              <p className="text-[#3d4a58] leading-relaxed mb-6">
-                Sessions are scoped to the industry and the room. Tell us which
-                one and how many people, and you get a straight answer on
-                format, length and cost rather than a discovery call.
-              </p>
-              <p className="text-sm text-[#6b7280] leading-relaxed">
-                We ask nothing about your AI governance here, on purpose.
-                Workshops teach and do not assess, and profiling a prospect&apos;s
-                compliance posture at the enquiry stage is the first crack in
-                the firewall that lets AIC certify you later.
-              </p>
-            </div>
-            <WorkshopIntake industrySlug={active.slug} />
-          </div>
-        </div>
+        <WorkshopIntake industrySlug={active.slug} />
       </section>
     </div>
   );

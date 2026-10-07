@@ -19,7 +19,7 @@ export default function AIGovernanceIndexPage() {
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-24">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -42,7 +42,7 @@ export default function AIGovernanceIndexPage() {
       </section>
 
       <section className="py-20 border-b border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-5 md:px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-8">
           <span className="text-aic-copper text-[0.7rem] uppercase tracking-[0.3em] font-bold">
             Why it is separate
           </span>
@@ -64,7 +64,7 @@ export default function AIGovernanceIndexPage() {
       </section>
 
       <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-5 md:px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-8">
           <h2 className="text-lg font-semibold text-[#0f1f3d] mb-4">
             Looking to check a certification?
           </h2>

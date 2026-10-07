@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   Search,
   ShieldCheck,
-  Building2,
   ArrowRight,
   Info,
   AlertTriangle,
@@ -56,7 +55,7 @@ export default function RegistryClient({
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <ShieldCheck className="w-6 h-6 text-aic-copper" />
@@ -80,7 +79,7 @@ export default function RegistryClient({
 
       {/* Search */}
       <section className="py-16 border-b border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6b7280]" />
             <label htmlFor="registry-search" className="sr-only">
@@ -112,7 +111,7 @@ export default function RegistryClient({
 
       {/* Results / empty state / unavailable */}
       <section className="py-16">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           {entries === null ? (
             /* Outage — never render this as "no organisation is certified",
                which would be a false statement rather than an empty one. */
@@ -131,22 +130,36 @@ export default function RegistryClient({
               </p>
             </div>
           ) : entries.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-[#e5e7eb] rounded-xl bg-white">
-              <Building2 className="w-8 h-8 text-[#9ca3af] mx-auto mb-4" />
-              <p className="text-lg text-[#0f1f3d] font-medium mb-2">
-                The register opens with our founding cohort, currently forming.
-              </p>
-              <p className="text-[#6b7280] max-w-md mx-auto">
-                No organisation currently holds AIC certification. This page will list each certified
-                organisation, its certificate ID, status, scope and validity as soon as the first
-                certification is issued.
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 mt-8 text-aic-copper font-semibold hover:underline"
-              >
-                Enquire about the founding cohort <ArrowRight className="w-4 h-4" />
-              </Link>
+            /* Empty, and shown as the shape of what will be here: the columns
+               every entry will carry, with an honest line where the rows go. */
+            <div>
+              <div className="overflow-x-auto rounded-xl border border-[#dde2e8] bg-white">
+                <table className="w-full min-w-[640px] text-left text-sm">
+                  <thead className="bg-[#f5f7f9] text-[13px] text-[#5e6b7b]">
+                    <tr>
+                      {["Organisation", "Certificate", "Division", "Status", "Scope", "Valid until"].map((h) => (
+                        <th key={h} scope="col" className="px-4 py-3 font-medium">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan={6} className="px-4 py-10 text-center text-[#2b3a4d]">
+                        <span className="block font-semibold text-[#0e1b2c]">No organisation holds AIC certification yet.</span>
+                        <span className="block mt-1 text-[#5e6b7b]">The register opens with the founding cohort, which starts in November.</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                <Link href="/intake" className="inline-flex items-center justify-center rounded-lg bg-[#0e1b2c] px-5 py-3 text-[15px] font-semibold text-white hover:bg-[#1a3160] transition-colors">
+                  Join the November intake
+                </Link>
+                <Link href="/disclosures#accreditation" className="text-[15px] font-semibold text-[#8a6114] underline-offset-2 hover:underline">
+                  Read AIC&apos;s accreditation status
+                </Link>
+              </div>
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-16">
@@ -215,7 +228,7 @@ export default function RegistryClient({
 
       {/* Status bands explainer */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <h2
             className="text-2xl md:text-3xl text-[#0f1f3d] mb-10 font-bold"
             style={{ fontFamily: "'Merriweather', serif" }}

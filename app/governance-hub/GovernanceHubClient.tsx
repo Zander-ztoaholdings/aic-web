@@ -157,7 +157,7 @@ export default function GovernanceHubClient({
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/90 to-[#0a1628]/80" />
-        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="w-4 h-4 text-[#c9920a]" />
             <span className="text-[#c9920a] text-sm uppercase tracking-widest">Governance Hub</span>
@@ -190,7 +190,7 @@ export default function GovernanceHubClient({
 
       {/* Declaration of Algorithmic Rights */}
       <section id="declaration" className="py-20 bg-aic-paper">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             <div className="lg:w-1/3 lg:sticky lg:top-24">
               <span className="text-[#c9920a] text-sm uppercase tracking-widest">Universal Standard</span>
@@ -276,7 +276,7 @@ export default function GovernanceHubClient({
 
       {/* Global Standards Map */}
       <section id="standards-map" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="mb-10">
             <span className="text-[#c9920a] text-sm uppercase tracking-widest">Global Overview</span>
             <h2 className="text-3xl text-[#0f1f3d] mt-2 mb-2" style={{ fontFamily: "'Merriweather', serif" }}>
@@ -312,7 +312,7 @@ export default function GovernanceHubClient({
 
       {/* Policy Updates */}
       <section id="policy-updates" className="py-20 bg-aic-paper">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex items-center justify-between mb-10">
             <div>
               <span className="text-[#c9920a] text-sm uppercase tracking-widest">Intelligence</span>

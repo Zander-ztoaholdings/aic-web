@@ -17,7 +17,7 @@ export default function FrameworksPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <p className="text-sm text-white/60 mb-4">Frameworks</p>
           <h1
             className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold"
@@ -38,7 +38,7 @@ export default function FrameworksPage() {
 
       {/* Framework cards */}
       <section className="py-20 md:py-24">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8">
           <div className="grid md:grid-cols-3 gap-8">
             {frameworks.map((fw) => (
               <Link
@@ -57,7 +57,7 @@ export default function FrameworksPage() {
                 </p>
                 <div className="flex items-center justify-between text-sm text-[#5e6b7b] pt-4 border-t border-[#dde2e8]">
                   <span>Rated on {fw.ratingScale}</span>
-                  <span className="font-semibold text-[#a8772a] group-hover:underline underline-offset-2">Read the mapping</span>
+                  <span className="font-semibold text-[#8a6114] group-hover:underline underline-offset-2">Read the mapping</span>
                 </div>
               </Link>
             ))}
@@ -76,7 +76,7 @@ export default function FrameworksPage() {
           "frameworks" on the website means everything AIC offers, while the
           difference between the two kinds stays explicit. */}
       <section className="py-16 md:py-20 bg-white border-t border-[#dde2e8]">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] gap-8 lg:gap-16">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] gap-8 lg:gap-16">
           <div>
             <h2 className="text-2xl md:text-[1.75rem] text-[#0f1f3d] font-bold leading-[1.2]" style={{ fontFamily: "'Merriweather', serif" }}>
               {TRACKED_FRAMEWORKS.length} frameworks you can track in the platform
@@ -84,12 +84,12 @@ export default function FrameworksPage() {
             <p className="text-[#5e6b7b] leading-[1.65] mt-3">
               The mappings above are AIC&apos;s position on how AI fits an industry&apos;s safety
               discipline. These are different: published laws and standards whose requirements the{" "}
-              <Link href="/platform#compliance" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">platform</Link>{" "}
+              <Link href="/platform#compliance" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">platform</Link>{" "}
               tracks, with evidence from your connected systems mapped to each one. A mapping says
               the evidence usually supports a requirement; it is not an auditor&apos;s conclusion.
             </p>
             <p className="text-[#5e6b7b] leading-[1.65] mt-3">
-              The <Link href="/regulatory-map" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">regulatory map</Link>{" "}
+              The <Link href="/regulatory-map" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">regulatory map</Link>{" "}
               shows which of them apply in each country.
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function FrameworksPage() {
 
       {/* Boundary note */}
       <section className="py-20 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-5 md:px-4">
+        <div className="max-w-3xl mx-auto px-5 md:px-8">
           <h2 className="text-lg font-semibold text-[#0f1f3d] mb-3">
             What these pages are, and aren&apos;t
           </h2>

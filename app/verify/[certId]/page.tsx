@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL } from "@/lib/contact";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -41,7 +42,7 @@ function Shell({
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-20">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -53,7 +54,7 @@ function Shell({
       </section>
 
       <section className="py-20">
-        <div className="max-w-2xl mx-auto px-5 md:px-4">
+        <div className="max-w-2xl mx-auto px-5 md:px-8">
           {children}
           <p className="text-sm text-[#6b7280] mt-8 text-center">
             Looking for the full list of certified organisations?{" "}
@@ -114,7 +115,7 @@ function ReportBlock({ certId }: { certId: string }) {
         confirmed. Please report it — this is how the register polices itself.
       </p>
       <a
-        href={`mailto:zander@ztoaholdings.com?subject=${encodeURIComponent(
+        href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
           `Unverifiable AIC certificate ID: ${certId}`
         )}`}
         className="inline-flex items-center gap-2 bg-aic-navy text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-[#0f1f3d] transition-all"

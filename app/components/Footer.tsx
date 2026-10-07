@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Shield, Mail, MapPin, ChevronRight } from "lucide-react";
+import { Shield, ChevronRight } from "lucide-react";
 import { navGroups, topLevelLinks } from "./Navbar";
+import { CONTACT_EMAIL, GENERAL_EMAIL } from "@/lib/contact";
 
 // Footer intentionally does NOT reuse the top nav's dropdown interaction —
 // footers are conventionally a flat, always-visible sitemap rather than a
@@ -10,12 +11,21 @@ import { navGroups, topLevelLinks } from "./Navbar";
 // social — never a footer dropdown). So this renders the same navGroups data
 // as static sub-headed lists instead of mirroring the nav's dropdown behaviour.
 
+// Published standards and laws AIC's own standard is built with reference to.
 const standards = [
-  { label: "ISO/IEC 42001 (AIMS)",      url: "https://www.iso.org/standard/81230.html" },
-  { label: "POPIA Section 71",          url: "https://popia.co.za/section-71-automated-decision-making/" },
-  { label: "NIST AI RMF",               url: "https://airc.nist.gov/RMF" },
-  { label: "EU AI Act Alignment",       url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-  { label: "IEEE 7000 Series",          url: "https://standards.ieee.org/ieee/IEEE-7000/6781/" },
+  { label: "ISO/IEC 42001", url: "https://www.iso.org/standard/81230.html" },
+  { label: "POPIA section 71", url: "https://popia.co.za/section-71-automated-decision-making/" },
+  { label: "NIST AI RMF", url: "https://www.nist.gov/itl/ai-risk-management-framework" },
+  { label: "EU AI Act", url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj" },
+  { label: "IEEE 7000 series", url: "https://standards.ieee.org/ieee/7000/6781/" },
+];
+
+// AIC's industry frameworks, which live on this site.
+const industryFrameworks = [
+  { label: "Process industry", href: "/frameworks/process-industry" },
+  { label: "Financial services", href: "/frameworks/financial-services" },
+  { label: "Medical devices", href: "/frameworks/medical-devices" },
+  { label: "20 frameworks the platform tracks", href: "/frameworks" },
 ];
 
 // Brand-accurate marks, not lucide's generic icons — lucide's plain X icon
@@ -48,7 +58,7 @@ export default function Footer() {
 
       {/* Manifesto band */}
       <div className="relative z-10 border-b border-white/10">
-        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 py-16 sm:py-20">
+        <div className="max-w-[1520px] mx-auto px-5 sm:px-8 lg:px-10 py-16 sm:py-20">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div className="max-w-3xl">
               <div className="text-white/50 text-sm mb-4">
@@ -59,10 +69,10 @@ export default function Footer() {
               </h2>
             </div>
             <Link
-              href="/contact"
-              className="shrink-0 inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-7 py-4 rounded transition-all text-sm font-semibold font-sans self-start lg:self-auto"
+              href="/intake"
+              className="shrink-0 inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#dcae4c] text-[#0e1b2c] px-7 py-4 rounded transition-all text-sm font-semibold font-sans self-start lg:self-auto"
             >
-              Contact us
+              Join the November intake
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -70,11 +80,15 @@ export default function Footer() {
       </div>
 
       {/* Main footer grid */}
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-8 py-16 sm:py-20 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
+      <div className="max-w-[1520px] mx-auto px-5 sm:px-8 lg:px-10 py-16 sm:py-20 relative z-10">
+        {/* Six columns on a wide screen: the brand, then the site in the order
+            of the menus, then what AIC builds on, then how to reach us. The
+            standalone links (Workshops) sit with Company rather than in a
+            group of their own, which stood out as an orphan. */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-10">
 
           {/* Brand */}
-          <div className="space-y-6 sm:col-span-2 lg:col-span-1">
+          <div className="space-y-6 sm:col-span-2 lg:col-span-1 lg:row-span-2">
             <Link href="/" className="inline-block group">
               <Image
                 src="/AIC-Logo-White.svg"
@@ -112,11 +126,11 @@ export default function Footer() {
                 site rather than explained after someone challenges it. */}
             <Link
               href="/disclosures#accreditation"
-              title="What this mark means, and AIC's accreditation status"
+              title="AIC's accreditation status, stated plainly"
               className="pt-2 flex items-center gap-2 text-[13px] text-[#dcae4c] hover:text-white transition-colors"
             >
               <Shield className="w-3.5 h-3.5 shrink-0" />
-              <span>Methodology assessed</span>
+              <span>Accreditation status</span>
             </Link>
             <Link
               href="/verify"
@@ -126,98 +140,37 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Explore — flat sitemap, grouped with sub-headers to match the nav's categories */}
-          <div className="sm:col-span-2 lg:col-span-2">
-            <h4 className="text-sm font-semibold text-white/80 mb-5">
-              Explore
-            </h4>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-8">
-              {[...navGroups, { label: "Products", items: topLevelLinks.map((l) => ({ ...l, description: "" })) }].map((group) => (
-                <div key={group.label}>
-                  <h5 className="text-[13px] text-white/50 mb-3">
-                    {group.label}
-                  </h5>
-                  <ul className="space-y-3">
-                    {group.items.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className="text-white/70 hover:text-white text-sm transition-colors"
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+          {[navGroups[0], navGroups[1], { ...navGroups[4], items: [...navGroups[4].items, ...topLevelLinks.map((l) => ({ ...l, description: "" }))] }].map((group) => (
+            <FooterColumn key={group.label} title={group.label} links={group.items.map((i) => ({ label: i.label, href: i.href }))} />
+          ))}
+
+          <div className="space-y-8">
+            <FooterColumn title={navGroups[2].label} links={navGroups[2].items.map((i) => ({ label: i.label, href: i.href }))} />
+            <FooterColumn title={navGroups[3].label} links={navGroups[3].items.map((i) => ({ label: i.label, href: i.href }))} />
+          </div>
+
+          <div className="space-y-8">
+            <div>
+              <h4 className="text-sm font-semibold text-white/80 mb-4">Standards we build on</h4>
+              <ul className="space-y-2.5 text-sm">
+                {standards.map((std) => (
+                  <li key={std.label}>
+                    <a href={std.url} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
+                      {std.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
+            <FooterColumn title="Industry frameworks" links={industryFrameworks} />
           </div>
 
-          {/* Standards */}
-          <div>
-            <h4 className="text-sm font-semibold text-white/80 mb-5">
-              Standards
-            </h4>
-            <ul className="space-y-3 text-sm text-white/70">
-              {standards.map((std) => (
-                <li key={std.label}>
-                  <a
-                    href={std.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-white transition-colors group"
-                  >
-                                        {std.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="text-sm font-semibold text-white/80 mb-5">
-              Contact
-            </h4>
-            <ul className="space-y-5 text-sm text-white/60">
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 text-[#c9920a]" />
-                </div>
-                <div className="leading-relaxed">
-                  <div>Johannesburg, South Africa</div>
-                  <div className="text-white/40 text-xs mt-1">
-                    15 Smit Street, Johannesburg,<br />
-                    Gauteng, 2000
-                  </div>
-                </div>
-              </li>
-              <li className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 group">
-                  <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4 text-[#c9920a]" />
-                  </div>
-                  <a
-                    href="mailto:zander@ztoaholdings.com"
-                    className="hover:text-white transition-colors break-all"
-                  >
-                    zander@ztoaholdings.com
-                  </a>
-                </div>
-                <div className="flex items-center gap-3 group">
-                  <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4 text-[#c9920a]" />
-                  </div>
-                  <a
-                    href="mailto:albert@ztoaholdings.com"
-                    className="hover:text-white transition-colors break-all"
-                  >
-                    albert@ztoaholdings.com
-                  </a>
-                </div>
-              </li>
-            </ul>
+          <div className="col-span-2 sm:col-span-3 lg:col-span-5 lg:col-start-2 border-t border-white/10 pt-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-10 text-sm text-white/60">
+            <span>15 Smit Street, Johannesburg, Gauteng, 2000, South Africa</span>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white transition-colors">{CONTACT_EMAIL}</a>
+            {GENERAL_EMAIL !== CONTACT_EMAIL && (
+              <a href={`mailto:${GENERAL_EMAIL}`} className="hover:text-white transition-colors">{GENERAL_EMAIL}</a>
+            )}
           </div>
         </div>
 
@@ -262,5 +215,22 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+  return (
+    <div>
+      <h4 className="text-sm font-semibold text-white/80 mb-4">{title}</h4>
+      <ul className="space-y-2.5">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link href={l.href} className="text-white/70 hover:text-white text-sm transition-colors">
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

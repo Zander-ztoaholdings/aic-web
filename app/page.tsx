@@ -136,7 +136,7 @@ export default function MarketingPage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-5 md:px-4 pt-20 pb-32 w-full">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 pt-20 pb-32 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <motion.div
               initial="hidden"
@@ -247,7 +247,7 @@ export default function MarketingPage() {
           things are of identical importance" — they are not. The argument
           leads; the letter is the evidence that makes it land. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-12 lg:gap-16 items-start">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -326,7 +326,7 @@ export default function MarketingPage() {
           The only place on the site where a visitor is asked to make a
           judgement rather than receive one. Everything above sets it up. */}
       <section className="bg-[#f0f4f8] py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="max-w-3xl mb-10">
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
               Try the standard
@@ -355,7 +355,7 @@ export default function MarketingPage() {
           published standard — which connects the philosophy to the thing that
           makes it testable. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl">
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -414,7 +414,7 @@ export default function MarketingPage() {
           proof sat unlinked in the navigation. Every number here is real, and
           the zero is deliberately included. */}
       <section className="bg-[#0a1628] py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
             <div>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
@@ -467,7 +467,7 @@ export default function MarketingPage() {
           and the home page did not mention it. Its own four menus are the
           structure, so the page and the product describe the same thing. */}
       <section className="bg-white py-20 md:py-24 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-16">
             <div>
               <p className="text-sm text-[#5e6b7b]">The platform</p>
@@ -485,7 +485,7 @@ export default function MarketingPage() {
               </p>
               <Link
                 href="/platform"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#a8772a] underline-offset-2 hover:underline mt-6"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#8a6114] underline-offset-2 hover:underline mt-6"
               >
                 See what the platform does
               </Link>
@@ -493,7 +493,7 @@ export default function MarketingPage() {
             <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
               {PLATFORM_AREAS.map((a) => (
                 <li key={a.id} className="border-t border-[#dde2e8] pt-4">
-                  <Link href={`/platform#${a.id}`} className="font-semibold text-[#0f1f3d] hover:text-[#a8772a] transition-colors">
+                  <Link href={`/platform#${a.id}`} className="font-semibold text-[#0f1f3d] hover:text-[#8a6114] transition-colors">
                     {a.name}
                   </Link>
                   <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-1">{a.summary}</p>
@@ -513,7 +513,7 @@ export default function MarketingPage() {
           so the free tool reads as a companion to the evidence above it, not
           as the headline claim — that is still AIC Certified. */}
       <section className="bg-aic-paper py-20 md:py-24 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="bg-white border border-[#e5e7eb] rounded-2xl p-8 md:p-12 grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-10 items-center shadow-sm">
             <div>
               <p className="text-sm text-[#5e6b7b]">
@@ -548,7 +548,7 @@ export default function MarketingPage() {
           Merged from two near-identical sections that both said "we align to
           frameworks", one immediately after the other. */}
       <section className="bg-white py-20 md:py-28 border-b border-[#e5e7eb]">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-12 lg:gap-16 items-center">
             <div>
               <p className="text-sm text-[#5e6b7b]">
@@ -596,10 +596,10 @@ export default function MarketingPage() {
 
       {/* ── CLOSE ────────────────────────────────────────────────── */}
       <section className="bg-[#0a1628] py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
-            Founding cohort
-          </span>
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
+          <p className="text-sm text-white/60">
+            Founding cohort, November intake
+          </p>
           <h2
             className="text-3xl md:text-5xl text-white mt-4 mb-6 leading-[1.08] tracking-[-0.02em] font-bold text-balance"
             style={{ fontFamily: "'Merriweather', serif" }}
@@ -616,10 +616,10 @@ export default function MarketingPage() {
           </p>
           <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
             <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2.5 bg-aic-copper text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#b07d08] transition-all"
+              href="/intake"
+              className="inline-flex items-center justify-center gap-2.5 bg-aic-copper text-[#0e1b2c] px-8 py-4 rounded-lg font-semibold hover:bg-[#dcae4c] transition-colors"
             >
-              Talk to us about the founding cohort{" "}
+              Join the November intake{" "}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link

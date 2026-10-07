@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL } from "@/lib/contact";
 import { jsPDF } from 'jspdf';
 import { AssessmentResult } from '@/lib/scoring';
 import type { AwareAnalysis } from '@/lib/aware-analysis';
@@ -275,7 +276,7 @@ export async function generatePDFReport(
         doc.line(MARGIN, 275, RIGHT_EDGE, 275);
         doc.text('AIC AWARE SELF-DECLARATION — NOT AN AUDIT FINDING', MARGIN, 280);
         doc.text(`${p} / ${pages}`, RIGHT_EDGE, 280, { align: 'right' });
-        doc.text('zander@ztoaholdings.com | aiccertified.cloud | 15 Smit Street, Johannesburg, Gauteng, 2000', MARGIN, 284);
+        doc.text(CONTACT_EMAIL + ' | aiccertified.cloud | 15 Smit Street, Johannesburg, Gauteng, 2000', MARGIN, 284);
     }
 
     doc.save(`AIC-Aware-Snapshot-${organizationName.replace(/\s+/g, '-')}.pdf`);

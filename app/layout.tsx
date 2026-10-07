@@ -1,6 +1,7 @@
+import { CONTACT_EMAIL } from "@/lib/contact";
 import "./globals.css";
 import type { Metadata } from "next";
-import { ogImageUrl } from "@/lib/seo";
+import { ogImageUrl, PUBLISHED_AT } from "@/lib/seo";
 import CookieConsent from "@/app/components/CookieConsent";
 import { ClientLayout } from "./components/ClientLayout";
 
@@ -79,6 +80,7 @@ export const metadata: Metadata = {
   // app/icon.svg is a vector. The artwork was never the difference; the format
   // was. This now matches the platform exactly.
   category: "technology",
+  other: { publish_date: PUBLISHED_AT },
 };
 
 const organizationLd = {
@@ -108,7 +110,7 @@ const organizationLd = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    email: "zander@ztoaholdings.com",
+    email: CONTACT_EMAIL,
     contactType: "General Enquiries",
     areaServed: "ZA",
     availableLanguage: "English",

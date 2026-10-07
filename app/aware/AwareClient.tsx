@@ -6,11 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   ArrowLeft,
-  Gauge,
   ShieldAlert,
   ChevronDown,
   Pencil,
-  Clock,
 } from "lucide-react";
 import {
   questions,
@@ -22,7 +20,6 @@ import { calculateAssessmentResult, type AssessmentResult } from "@/lib/scoring"
 import { analyseAware, type AwareAnalysis } from "@/lib/aware-analysis";
 import { requirements, RIGHTS } from "@/app/data/requirements-data";
 import AwareResults from "./AwareResults";
-import AwareWelcome from "./AwareWelcome";
 import { trackAwareStarted, trackAwareQuestionsDone, trackAwareCompleted, trackAwareReport } from "@/lib/analytics";
 
 type Stage = "welcome" | "intro" | "section" | "quiz" | "review" | "gate" | "results";
@@ -116,7 +113,10 @@ function RequirementAnchor({ question }: { question: Question }) {
 }
 
 export default function AwareClient() {
-  const [stage, setStage] = useState<Stage>("welcome");
+  // Starts on the intro. The animated three-beat welcome that used to sit in
+  // front of it (with a story-style progress bar across the top) added a
+  // screen of motion between the visitor and the thing they came for.
+  const [stage, setStage] = useState<Stage>("intro");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [returnToReview, setReturnToReview] = useState(false);
@@ -233,46 +233,72 @@ export default function AwareClient() {
 
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
-      {stage === "welcome" ? (
-        <AwareWelcome onComplete={() => setStage("intro")} />
-      ) : (
       <>
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="bg-aic-navy text-white py-20 md:py-24 relative overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.15]"
-          style={{ background: "radial-gradient(circle at 15% 20%, #c9920a 0%, transparent 45%)" }}
-        />
-        <div className="max-w-5xl mx-auto px-5 md:px-4 relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <Gauge className="w-6 h-6 text-aic-copper" />
-            <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
-              Free · Self-Declared · Not an Audit
-            </span>
+      {/* ── Hero ─────────────────────────────────────────────────────
+          Leads with what you get back, because that is the reason to spend
+          ten minutes here. Shown only before the questions start, so it never
+          pushes the quiz down the page. */}
+      {stage === "intro" && (
+      <section className="bg-aic-navy text-white">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-14 md:py-20 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] gap-10 lg:gap-14 items-center">
+          <div>
+            <p className="text-sm text-white/60 mb-4">AIC Aware, free and self-declared</p>
+            <h1 className="text-[2.2rem] md:text-[3.25rem] font-bold leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: "'Merriweather', serif" }}>
+              How accountable is your AI? Find out in ten minutes.
+            </h1>
+            <p className="text-lg text-white/75 leading-[1.7] mt-5 max-w-2xl">
+              {questions.length} questions against the same published standard AIC audits to. You get back
+              the Division you would be assessed in, and the requirements your own answers put at risk,
+              with the evidence an assessor would ask for.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center">
+              <button
+                type="button"
+                onClick={() => { trackAwareStarted(); setStage("section"); }}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#c9920a] px-6 py-3 text-[15px] font-semibold text-[#0e1b2c] hover:bg-[#dcae4c] transition-colors"
+              >
+                Start the assessment <ArrowRight className="w-4 h-4" />
+              </button>
+              <span className="text-sm text-white/60">No account needed. Nothing is published without your say-so.</span>
+            </div>
           </div>
-          <h1
-            className="text-4xl md:text-6xl mb-6 leading-[1.08] tracking-[-0.02em] font-bold"
-            style={{ fontFamily: "'Merriweather', serif" }}
-          >
-            AIC Aware
-          </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-3xl leading-relaxed">
-            {questions.length} questions against the same published standard AIC audits to. You get
-            back the Division you would be assessed in, and the specific requirements your own
-            answers put at risk — by code, with the evidence an assessor would ask for.
-          </p>
+          <div className="rounded-2xl bg-white text-[#0e1b2c] p-6 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.6)]">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-sm font-semibold">What you get back</p>
+              <p className="text-[12px] text-[#b45309] font-medium">Example</p>
+            </div>
+            <dl className="mt-4 space-y-4 text-sm">
+              <div>
+                <dt className="text-[13px] text-[#5e6b7b]">Your Division</dt>
+                <dd className="mt-0.5 font-semibold">3, Reviewed: AI decides, people review patterns and cases</dd>
+              </div>
+              <div>
+                <dt className="text-[13px] text-[#5e6b7b]">Requirements your answers put at risk</dt>
+                <dd className="mt-1.5 space-y-1.5">
+                  {["HU-7", "EX-5", "CO-1"].map((code) => {
+                    const r = requirements.find((x) => x.code === code);
+                    return r ? (
+                      <p key={code} className="leading-snug"><span className="font-semibold mr-1.5">{code}</span><span className="text-[#5e6b7b]">{r.text.split(". ")[0].replace(/\.$/, "")}.</span></p>
+                    ) : null;
+                  })}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[13px] text-[#5e6b7b]">And</dt>
+                <dd className="mt-0.5">The evidence an assessor would ask for, a report to download, and a badge once your organisation takes it from a platform account.</dd>
+              </div>
+            </dl>
+          </div>
         </div>
       </section>
+      )}
 
-      <div className="max-w-3xl mx-auto px-5 md:px-4 py-14 md:py-20">
+      <div className="max-w-3xl mx-auto px-5 md:px-8 py-14 md:py-20">
         <AnimatePresence mode="wait">
           {/* ── Intro ──────────────────────────────────────────────── */}
           {stage === "intro" && (
             <motion.div key="intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <div className="flex items-center gap-2 text-sm text-[#6b7280] mb-6">
-                <Clock className="w-4 h-4 text-aic-copper" />
-                About ten minutes · no account · nothing published without your say-so
-              </div>
+              
               <h2
                 className="text-2xl md:text-3xl text-[#0f1f3d] font-bold mb-5 leading-tight"
                 style={{ fontFamily: "'Merriweather', serif" }}
@@ -293,8 +319,8 @@ export default function AwareClient() {
                       <h3 className="text-base font-bold text-[#0f1f3d]">
                         {CATEGORY_LABEL[cat.key]}
                       </h3>
-                      <span className="font-mono text-xs text-[#6b7280] tabular-nums shrink-0">
-                        {countIn(cat.key)} questions · {Math.round(cat.weight * 100)}%
+                      <span className="text-[13px] text-[#5e6b7b] tabular-nums shrink-0">
+                        {countIn(cat.key)} questions, {Math.round(cat.weight * 100)}% of the result
                       </span>
                     </div>
                     <p className="text-sm text-[#6b7280] leading-relaxed">{cat.purpose}</p>
@@ -581,7 +607,6 @@ export default function AwareClient() {
         </AnimatePresence>
       </div>
       </>
-      )}
     </div>
   );
 }

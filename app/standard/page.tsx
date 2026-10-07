@@ -88,9 +88,9 @@ export default function StandardPage() {
               The empathy floor, the disparate impact ratio and correction response times will be
               confirmed before the first certificate is issued, and any change is recorded with its
               reason. No organisation has been certified yet; the{" "}
-              <Link href="/registry" className="text-[#a8772a] underline-offset-2 hover:underline">public register</Link>{" "}
+              <Link href="/registry" className="text-[#8a6114] underline-offset-2 hover:underline">public register</Link>{" "}
               is empty and says so.{" "}
-              <Link href="/certification" className="text-[#a8772a] underline-offset-2 hover:underline">How the Divisions and the assessment work</Link>
+              <Link href="/certification" className="text-[#8a6114] underline-offset-2 hover:underline">How the Divisions and the assessment work</Link>
             </p>
           </div>
         </div>

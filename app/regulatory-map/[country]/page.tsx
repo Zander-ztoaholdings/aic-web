@@ -79,6 +79,7 @@ export async function generateMetadata({
     cardTitle: `AI regulation in ${j.name}`,
     cardKicker: `${j.status}, checked ${j.verifiedAt}`,
     type: "article",
+    publishedAt: new Date(j.verifiedAt).toISOString(),
   });
 }
 
@@ -131,7 +132,7 @@ export default async function JurisdictionPage({
 
       {/* WHERE — and immediately, how current this is. */}
       <section className="bg-aic-navy text-white py-12 md:py-14">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           {/* Back to the map AND to this country on it. A shared link lands
               here, and this page has no map on it, so without the query the
               only route back into the thing people actually came to use is to
@@ -168,14 +169,14 @@ export default async function JurisdictionPage({
       {/* The same draft-one notice as the map. This page is what a shared
           link opens, so most readers will never see the map's copy of it. */}
       <section className="pt-10 md:pt-12">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <div className="border border-[#dde2e8] bg-white rounded-xl p-5">
             <h2 className="text-[15px] font-semibold text-[#0f1f3d] mb-1.5">Draft one, the first published version</h2>
             <p className="text-sm text-[#0f1f3d] leading-[1.7]">
               This is the first public release of AIC&apos;s regulatory map and it
               will change. Orientation, not legal advice: read the primary
               sources before relying on it.{" "}
-              <Link href="/contact" className="text-[#a8772a] underline-offset-2 hover:underline font-semibold">
+              <Link href="/contact" className="text-[#8a6114] underline-offset-2 hover:underline font-semibold">
                 Tell us what is wrong or missing
               </Link>{" "}
               and it goes into the next draft.
@@ -188,14 +189,14 @@ export default async function JurisdictionPage({
 
       {/* Scope limit, stated at the bottom of every jurisdiction page. */}
       <section className="py-10 border-t border-[#e5e7eb] bg-white">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <p className="text-sm text-[#6b7280] leading-[1.7] max-w-3xl">
             This page is a general orientation guide built from public sources, not legal
             advice, and it does not establish that any organisation complies with{" "}
             {j.name}&apos;s requirements. AIC certifies governance against its own published
             standard; that is a different question from legal compliance, and neither
             substitutes for the other.{" "}
-            <Link href="/regulatory-map" className="text-[#a8772a] underline-offset-2 hover:underline">
+            <Link href="/regulatory-map" className="text-[#8a6114] underline-offset-2 hover:underline">
               Back to the map
             </Link>
             .

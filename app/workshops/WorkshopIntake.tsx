@@ -1,4 +1,5 @@
 "use client";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
@@ -98,7 +99,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
       if (!res.ok || data?.success === false) {
         throw new Error(
           data?.error ??
-            "We couldn't record that. Please email zander@ztoaholdings.com directly."
+            `We couldn't record that. Please email ${CONTACT_EMAIL} directly.`
         );
       }
       setState("sent");
@@ -107,7 +108,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong. Please email zander@ztoaholdings.com."
+          : `Something went wrong. Please email ${CONTACT_EMAIL}.`
       );
     }
   }
@@ -118,7 +119,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: DURATION.base, ease: EASE_OUT }}
-        className="bg-white border border-[#e5e7eb] rounded-xl p-8 md:p-10 text-center"
+        className="bg-white border border-[#dde2e8] rounded-xl p-8 md:p-10 text-center"
       >
         <div className="w-12 h-12 rounded-full bg-[#10b981]/10 flex items-center justify-center mx-auto mb-5">
           <Check className="w-6 h-6 text-[#0a7a54]" />
@@ -129,7 +130,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
         >
           We have it
         </h3>
-        <p className="text-[#6b7280] leading-relaxed max-w-md mx-auto">
+        <p className="text-[#5e6b7b] leading-relaxed max-w-md mx-auto">
           Your enquiry is recorded and a person has been notified — not a queue.
           You will hear from Zander directly, usually within two working days.
         </p>
@@ -138,7 +139,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
   }
 
   const fieldClass =
-    "w-full px-4 py-3 rounded-lg border border-[#e5e7eb] bg-white text-[15px] text-[#0f1f3d] placeholder:text-[#9ca3af] focus:outline-none focus:border-aic-copper focus:ring-2 focus:ring-aic-copper/20 transition-all";
+    "w-full px-4 py-3 rounded-lg border border-[#dde2e8] bg-white text-[15px] text-[#0f1f3d] placeholder:text-[#5e6b7b] focus:outline-none focus:border-aic-copper focus:ring-2 focus:ring-aic-copper/20 transition-all";
   const labelClass = "block text-sm font-medium text-[#0f1f3d] mb-1.5";
 
   function Choice({
@@ -163,7 +164,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
             className={`px-3.5 py-2 rounded-lg border text-sm transition-colors ${
               value === o
                 ? "border-aic-copper bg-aic-copper/10 text-[#8a6607] font-medium"
-                : "border-[#e5e7eb] bg-white text-[#6b7280] hover:border-aic-copper/40 hover:text-[#0f1f3d]"
+                : "border-[#dde2e8] bg-white text-[#5e6b7b] hover:border-aic-copper/40 hover:text-[#0f1f3d]"
             }`}
           >
             {o}
@@ -176,7 +177,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-white border border-[#e5e7eb] rounded-xl p-6 md:p-8 space-y-6"
+      className="bg-white border border-[#dde2e8] rounded-xl p-6 md:p-8 space-y-6"
     >
       <div>
         <label className={labelClass} htmlFor="wi-industry">
@@ -201,7 +202,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
 
       <div>
         <span className={labelClass}>
-          How many people <span className="text-[#9ca3af] font-normal">· required</span>
+          How many people <span className="text-[#5e6b7b] font-normal">(required)</span>
         </span>
         <Choice
           name="Team size"
@@ -257,7 +258,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
 
       <div>
         <label className={labelClass} htmlFor="wi-role">
-          Your role <span className="text-[#9ca3af] font-normal">· optional</span>
+          Your role <span className="text-[#5e6b7b] font-normal">(optional)</span>
         </label>
         <input id="wi-role" value={form.role}
           onChange={(e) => set("role", e.target.value)} className={fieldClass} />
@@ -266,7 +267,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
       <div>
         <label className={labelClass} htmlFor="wi-msg">
           Anything specific you want covered{" "}
-          <span className="text-[#9ca3af] font-normal">· optional</span>
+          <span className="text-[#5e6b7b] font-normal">(optional)</span>
         </label>
         <textarea id="wi-msg" rows={3} value={form.message}
           onChange={(e) => set("message", e.target.value)}
@@ -289,8 +290,8 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
           {state === "sending" && <Loader2 className="w-4 h-4 animate-spin" />}
           {state === "sending" ? "Sending" : "Send enquiry"}
         </button>
-        <p className="text-xs text-[#9ca3af] leading-relaxed max-w-xs">
-          Goes straight to Zander. We do not add you to a mailing list.
+        <p className="text-xs text-[#5e6b7b] leading-relaxed max-w-xs">
+          We use your details only to reply. You will not be added to a mailing list.
         </p>
       </div>
     </form>

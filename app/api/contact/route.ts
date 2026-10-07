@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL } from "@/lib/contact";
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { Client } from "@notionhq/client";
@@ -255,7 +256,7 @@ export async function POST(req: NextRequest) {
       {
         success: false,
         error:
-          "We could not record your message. Please email us directly at zander@ztoaholdings.com so it isn't lost.",
+          `We could not record your message. Please email us directly at ${CONTACT_EMAIL} so it isn't lost.`,
       },
       { status: 503 }
     );

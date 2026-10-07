@@ -35,7 +35,7 @@ export default async function RegulatoryMapPage() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-white py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <h1
             className="text-4xl md:text-6xl mb-6 leading-[1.05] tracking-[-0.03em] font-bold"
             style={{ fontFamily: "'Merriweather', serif" }}
@@ -64,7 +64,7 @@ export default async function RegulatoryMapPage() {
       />
 
       <section className="py-16 md:py-20">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8">
           {/* Draft-one notice. First public version; the map's own honesty
               posture only works if the version it is at is stated up front,
               not discovered. */}
@@ -77,7 +77,7 @@ export default async function RegulatoryMapPage() {
               mapped to obligation level, which each page says plainly rather
               than papering over. Treat it as orientation, not legal advice, and
               read the primary sources before relying on any of it.{" "}
-              <Link href="/contact" className="text-[#a8772a] underline-offset-2 hover:underline font-semibold">
+              <Link href="/contact" className="text-[#8a6114] underline-offset-2 hover:underline font-semibold">
                 Tell us what is wrong or missing
               </Link>{" "}
               and it goes into the next draft.
@@ -89,7 +89,7 @@ export default async function RegulatoryMapPage() {
 
       {/* Disclaimer strip */}
       <section className="py-16 bg-white border-t border-[#e5e7eb]">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <h2 className="text-lg font-semibold text-[#0f1f3d] mb-3">
             How to use this map
           </h2>

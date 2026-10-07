@@ -1,4 +1,5 @@
 "use client";
+import { CONTACT_EMAIL, GENERAL_EMAIL } from "@/lib/contact";
 
 import { motion } from "framer-motion";
 import { ANALYTICS_DEFAULT_ON } from "@/lib/analytics-mode";
@@ -9,7 +10,7 @@ export default function PrivacyPolicy() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-aic-paper py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-6 h-6 text-aic-copper" />
@@ -29,7 +30,7 @@ export default function PrivacyPolicy() {
 
       {/* Content */}
       <section className="py-24">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="prose prose-aic prose-lg max-w-none">
             <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: October 2026</p>
 
@@ -239,7 +240,7 @@ export default function PrivacyPolicy() {
                 your first page view, and you are not given the choice
                 beforehand. If you would rather not be measured, block the
                 script or use your browser&apos;s tracking protection —{" "}
-                <a href="mailto:albert@ztoaholdings.com" className="text-aic-copper underline">
+                <a href={`mailto:${GENERAL_EMAIL}`} className="text-aic-copper underline">
                   or tell us
                 </a>{" "}
                 and we will remove your data.
@@ -293,8 +294,8 @@ export default function PrivacyPolicy() {
                   <p className="text-[#6b7280] mb-1">Zander Wilken</p>
                   <p className="text-[#6b7280] mb-1">AI Integrity Certification (Pty) Ltd</p>
                   <p className="text-[#6b7280] mb-4">South Africa</p>
-                  <a href="mailto:zander@ztoaholdings.com" className="text-aic-copper underline font-bold text-lg">
-                    zander@ztoaholdings.com
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-aic-copper underline font-bold text-lg">
+                    {CONTACT_EMAIL}
                   </a>
                   <p className="text-[#6b7280]/80 text-sm mt-4 leading-relaxed">
                     All POPIA requests will be acknowledged within 5 business days and

@@ -1,4 +1,5 @@
 "use client";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -119,7 +120,7 @@ export default function ImpartialityStatement() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-aic-paper py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-6 h-6 text-aic-copper" />
@@ -139,7 +140,7 @@ export default function ImpartialityStatement() {
 
       {/* Where AIC actually stands */}
       <section className="py-12 border-b border-[#e5e7eb] bg-white">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-[#c9920a] shrink-0 mt-1" />
             <div>
@@ -165,7 +166,7 @@ export default function ImpartialityStatement() {
 
       {/* Content */}
       <section className="py-24">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="prose prose-aic prose-lg max-w-none">
             <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">
               Version 2.0 — 7 September 2026 · Next scheduled review: December 2026
@@ -376,7 +377,7 @@ export default function ImpartialityStatement() {
               <h3 className="font-bold text-aic-navy mb-4 font-serif text-xl">What we commit to</h3>
               <div className="space-y-4">
                 {[
-                  "Write to zander@ztoaholdings.com, marked “Impartiality Concern”.",
+                  `Write to ${CONTACT_EMAIL}, marked “Impartiality Concern”.`,
                   "AIC acknowledges receipt within 5 business days.",
                   "The concern is investigated by someone not involved in the matter under review. Where AIC's size makes that impossible, we will say so, and refer the matter to an external reviewer rather than mark our own work.",
                   "A written response setting out findings and any remedial action, within 30 days.",

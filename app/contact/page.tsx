@@ -1,4 +1,5 @@
 'use client';
+import { GENERAL_EMAIL, PARTNERS_EMAIL } from "@/lib/contact";
 
 import Link from "next/link";
 import React, { Suspense, useState, ChangeEvent, FormEvent } from "react";
@@ -78,6 +79,7 @@ function ContactForm() {
       message: "I work for an insurer and would like to talk about testing whether AIC's record carries underwriting signal.",
     },
     platform: { type: "Platform", message: "" },
+    intake: { type: "Corporate Certification", message: "We would like to join the November intake of the founding cohort." },
   };
   const preset = PRESETS[enquiry];
 
@@ -335,11 +337,11 @@ function ContactForm() {
                 <dl className="space-y-3 text-[15px]">
                   <div>
                     <dt className="text-[13px] text-[#5e6b7b]">General enquiries</dt>
-                    <dd><a href="mailto:albert@ztoaholdings.com" className="hover:text-[#a8772a]">albert@ztoaholdings.com</a></dd>
+                    <dd><a href={`mailto:${GENERAL_EMAIL}`} className="hover:text-[#8a6114]">{GENERAL_EMAIL}</a></dd>
                   </div>
                   <div>
                     <dt className="text-[13px] text-[#5e6b7b]">Partnerships</dt>
-                    <dd><a href="mailto:zander@ztoaholdings.com" className="hover:text-[#a8772a]">zander@ztoaholdings.com</a></dd>
+                    <dd><a href={`mailto:${PARTNERS_EMAIL}`} className="hover:text-[#8a6114]">{PARTNERS_EMAIL}</a></dd>
                   </div>
                   <div>
                     <dt className="text-[13px] text-[#5e6b7b]">Office</dt>
@@ -359,11 +361,11 @@ function ContactForm() {
                   <li>
                     <span className="font-semibold">Insurers and brokers.</span>{" "}
                     <span className="text-[#5e6b7b]">Whether verified accountability for AI decisions carries underwriting signal.</span>{" "}
-                    <Link href="/insurers" className="text-[#a8772a] underline-offset-2 hover:underline">What we offer insurers</Link>
+                    <Link href="/insurers" className="text-[#8a6114] underline-offset-2 hover:underline">What we offer insurers</Link>
                   </li>
                   <li>
                     <span className="font-semibold">Industry bodies.</span>{" "}
-                    <span className="text-[#5e6b7b]">Mapping AI onto the frameworks your members already use, as the <Link href="/frameworks" className="text-[#a8772a] underline-offset-2 hover:underline">industry frameworks</Link> do.</span>
+                    <span className="text-[#5e6b7b]">Mapping AI onto the frameworks your members already use, as the <Link href="/frameworks" className="text-[#8a6114] underline-offset-2 hover:underline">industry frameworks</Link> do.</span>
                   </li>
                   <li>
                     <span className="font-semibold">Researchers and journalists.</span>{" "}
@@ -371,12 +373,12 @@ function ContactForm() {
                   </li>
                   <li>
                     <span className="font-semibold">Technology vendors.</span>{" "}
-                    <span className="text-[#5e6b7b]">Connecting your product to the <Link href="/platform#compliance" className="text-[#a8772a] underline-offset-2 hover:underline">platform</Link> as a source of evidence.</span>
+                    <span className="text-[#5e6b7b]">Connecting your product to the <Link href="/platform#compliance" className="text-[#8a6114] underline-offset-2 hover:underline">platform</Link> as a source of evidence.</span>
                   </li>
                 </ul>
                 <p className="text-sm text-[#5e6b7b] leading-[1.65] mt-4">
                   How AIC keeps those relationships at arm&apos;s length is set out in the{" "}
-                  <Link href="/impartiality" className="text-[#a8772a] underline-offset-2 hover:underline">impartiality statement</Link>.
+                  <Link href="/impartiality" className="text-[#8a6114] underline-offset-2 hover:underline">impartiality statement</Link>.
                 </p>
               </div>
             </aside>

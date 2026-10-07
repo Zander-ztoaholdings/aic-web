@@ -101,7 +101,7 @@ export default function PlatformPage() {
             <p>
               That separation is what lets AIC offer tools at all while staying impartial. It is set
               out in full in the{" "}
-              <Link href="/impartiality" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+              <Link href="/impartiality" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                 impartiality statement
               </Link>
               .
@@ -161,7 +161,7 @@ export default function PlatformPage() {
                     </ul>
                     <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-4">
                       To see which apply where you operate, open a country on the{" "}
-                      <Link href="/regulatory-map" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+                      <Link href="/regulatory-map" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                         regulatory map
                       </Link>
                       .
@@ -173,7 +173,7 @@ export default function PlatformPage() {
                       Read-only, and you can remove AIC&apos;s access from your side at any time. A
                       connector AIC has not yet seen working against a real client account is marked
                       new in the platform until it has.{" "}
-                      <Link href="/security" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+                      <Link href="/security" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                         How AIC handles access
                       </Link>
                     </p>
@@ -234,7 +234,7 @@ export default function PlatformPage() {
             <p>
               The extract carries no rating and no recommendation. Pricing and acceptance are the
               insurer&apos;s decisions, not AIC&apos;s. You can withdraw the key whenever you choose.{" "}
-              <Link href="/insurers" className="font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+              <Link href="/insurers" className="font-semibold text-[#8a6114] underline-offset-2 hover:underline">
                 What AIC offers insurers
               </Link>
             </p>

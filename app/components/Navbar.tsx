@@ -25,6 +25,9 @@ import {
   GraduationCap,
   Gauge,
   LayoutGrid,
+  CalendarCheck,
+  Users,
+  Mail,
 } from "lucide-react";
 
 export interface NavLink {
@@ -56,41 +59,50 @@ export const navGroups: NavGroup[] = [
   {
     label: "Certification",
     items: [
-      { href: "/certification", label: "Certification Framework", icon: Shield, description: "The Five-Division accountability model" },
-      { href: "/aware", label: "AIC Aware", icon: Gauge, description: "Free self-assessment against the standard — self-declared, not certified" },
-      { href: "/standard", label: "The Standard", icon: ClipboardCheck, description: "All 44 requirements we assess against" },
-      { href: "/registry", label: "Public Registry", icon: ShieldCheck, description: "Search certified organisations" },
-      { href: "/verify", label: "Verify a Certificate", icon: Search, description: "Confirm a certificate ID in seconds" },
+      { href: "/certification", label: "How certification works", icon: Shield, description: "The five Divisions and what an assessment covers" },
+      { href: "/standard", label: "The standard", icon: ClipboardCheck, description: "All 44 requirements we assess against" },
+      { href: "/aware", label: "AIC Aware", icon: Gauge, description: "Free self-assessment against the standard, self-declared" },
+      { href: "/registry", label: "Public register", icon: ShieldCheck, description: "Organisations certified against the standard" },
+      { href: "/verify", label: "Verify a certificate", icon: Search, description: "Confirm a certificate in seconds" },
       { href: "/governance-hub#declaration", label: "Algorithmic Rights", icon: Scale, description: "The Declaration of Algorithmic Rights" },
-      { href: "/disclosures", label: "Governance & Disclosures", icon: FileText, description: "Impartiality, methodology, appeals" },
+      { href: "/disclosures", label: "Governance and disclosures", icon: FileText, description: "Impartiality, methodology, appeals" },
     ],
   },
   {
-    label: "Partnerships",
+    label: "Platform",
     items: [
-      { href: "/insurers", label: "Insurers", icon: Building2, description: "How underwriters recognise and verify AIC certification" },
-      { href: "/contact?topic=partnership", label: "Become a partner", icon: Handshake, description: "Research, distribution, training or another kind of partnership" },
+      { href: "/platform", label: "The platform", icon: LayoutGrid, description: "Your AI estate, kept on the record" },
+      { href: "/intake", label: "November intake", icon: CalendarCheck, description: "Join the founding cohort" },
     ],
   },
   {
     label: "Where we operate",
     items: [
-      { href: "/regulatory-map", label: "Regulatory Map", icon: Globe2, description: "AI regulation by jurisdiction, with draft compliance summaries" },
-      { href: "/frameworks", label: "Frameworks", icon: Layers, description: "AI mapped against established industry safety frameworks" },
+      { href: "/regulatory-map", label: "Regulatory map", icon: Globe2, description: "AI regulation by country, and how AIC's frameworks apply" },
+      { href: "/frameworks", label: "Frameworks", icon: Layers, description: "AI mapped onto the safety frameworks your industry uses" },
     ],
   },
   {
     label: "News",
     items: [
-      { href: "/articles", label: "Articles", icon: Newspaper, description: "Governance insights and updates" },
-      { href: "/policy", label: "Policy Updates", icon: Radio, description: "Regulatory developments, with their sources" },
+      { href: "/articles", label: "Articles", icon: Newspaper, description: "Analysis on AI accountability and regulation" },
+      { href: "/policy", label: "Policy updates", icon: Radio, description: "Regulatory developments, with their sources" },
+    ],
+  },
+  {
+    label: "Company",
+    items: [
+      { href: "/about", label: "About AIC", icon: Users, description: "Who we are and why AIC exists" },
+      { href: "/insurers", label: "For insurers", icon: Building2, description: "A verifiable signal of AI accountability" },
+      { href: "/contact?topic=partnership", label: "Become a partner", icon: Handshake, description: "Research, distribution, training or another partnership" },
+      { href: "/contact", label: "Contact", icon: Mail, description: "Talk to AIC" },
     ],
   },
 ];
 
 // Standalone links, rendered next to the dropdown groups rather than inside one.
+// Workshops keeps its own spot: a temporary, standalone product.
 export const topLevelLinks: TopLevelLink[] = [
-  { href: "/platform", label: "Platform", icon: LayoutGrid },
   { href: "/workshops", label: "Workshops", icon: GraduationCap },
 ];
 
@@ -174,13 +186,15 @@ export default function Navbar() {
       <div className="relative z-50 bg-[#0a1628] text-white/70 text-[12px] py-2">
         <div className="max-w-[1520px] mx-auto px-5 md:px-6 lg:px-10 flex justify-between items-center">
           <div className="flex items-center gap-4">
+            {/* Was "Methodology assessed". No accreditation body has assessed
+                AIC yet (see /disclosures#accreditation), so the line now says
+                something that is true and checkable. */}
             <Link
-              href="/disclosures#accreditation"
-              title="What this mark means, and AIC's accreditation status"
+              href="/standard"
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
               <Globe className="w-3 h-3" />
-              Methodology assessed
+              Our standard, published in full
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -306,10 +320,10 @@ export default function Navbar() {
 
               {/* Copper CTA */}
               <Link
-                href="/contact"
-                className="whitespace-nowrap bg-[#c9920a] text-white px-5 xl:px-6 py-2.5 rounded-lg text-sm xl:text-[15px] font-semibold hover:bg-[#b07d08] transition-colors"
+                href="/intake"
+                className="whitespace-nowrap bg-[#c9920a] text-[#0e1b2c] px-5 xl:px-6 py-2.5 rounded-lg text-sm xl:text-[15px] font-semibold hover:bg-[#dcae4c] transition-colors"
               >
-                Contact us
+                <span className="hidden min-[1400px]:inline">Join the </span>November intake
               </Link>
               </div>
             </div>
@@ -390,11 +404,11 @@ export default function Navbar() {
 
               <div className="pt-4 mt-2 flex flex-col gap-3">
                 <Link
-                  href="/contact"
-                  className="flex items-center justify-center text-base bg-[#c9920a] text-white px-4 py-4 rounded font-bold transition-all hover:bg-[#b07d08]"
+                  href="/intake"
+                  className="flex items-center justify-center text-base bg-[#c9920a] text-[#0e1b2c] px-4 py-4 rounded-lg font-semibold transition-colors hover:bg-[#dcae4c]"
                   onClick={() => setMenuOpen(false)}
                 >
-                  Contact us
+                  Join the November intake
                 </Link>
                 <Link
                   href="/login"

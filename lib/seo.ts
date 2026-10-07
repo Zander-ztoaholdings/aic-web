@@ -28,7 +28,17 @@ export interface PageSeo {
   cardKicker?: string;
   type?: "website" | "article";
   noindex?: boolean;
+  /** ISO date this page's content was published or last verified. */
+  publishedAt?: string;
 }
+
+/**
+ * When this version of the site was published: the build time. LinkedIn's
+ * Post Inspector reports a page with no publish date, and some unfurls show
+ * one, so every page carries this unless it has a truer date of its own
+ * (an article's, or a jurisdiction's verification date).
+ */
+export const PUBLISHED_AT = new Date().toISOString();
 
 export function ogImageUrl(title: string, kicker?: string): string {
   const q = new URLSearchParams({ title });
@@ -61,6 +71,7 @@ export function pageMetadata(p: PageSeo): Metadata {
       description: p.description,
       images: [image.url],
     },
+    other: { publish_date: p.publishedAt ?? PUBLISHED_AT },
     ...(p.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }

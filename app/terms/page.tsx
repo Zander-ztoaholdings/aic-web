@@ -1,4 +1,5 @@
 "use client";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 import { motion } from "framer-motion";
 import { Scale, AlertTriangle, Ban, Globe } from "lucide-react";
@@ -8,7 +9,7 @@ export default function TermsOfUse() {
     <div className="bg-aic-paper min-h-screen font-sans">
       {/* Hero */}
       <section className="bg-aic-navy text-aic-paper py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <Scale className="w-6 h-6 text-aic-copper" />
@@ -28,7 +29,7 @@ export default function TermsOfUse() {
 
       {/* Content */}
       <section className="py-24">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="prose prose-aic prose-lg max-w-none">
             <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: October 2026</p>
 
@@ -265,8 +266,8 @@ export default function TermsOfUse() {
                   <h3 className="font-bold text-aic-navy mb-2 font-serif text-xl">Legal Enquiries</h3>
                   <p className="text-[#6b7280] mb-1">AI Integrity Certification (Pty) Ltd</p>
                   <p className="text-[#6b7280] mb-4">South Africa</p>
-                  <a href="mailto:zander@ztoaholdings.com" className="text-aic-copper underline font-bold text-lg">
-                    zander@ztoaholdings.com
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-aic-copper underline font-bold text-lg">
+                    {CONTACT_EMAIL}
                   </a>
                   <p className="text-[#6b7280]/80 text-sm mt-4 leading-relaxed">
                     For general enquiries and platform support, use the contact form at

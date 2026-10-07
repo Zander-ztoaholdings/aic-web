@@ -33,7 +33,7 @@ export default async function PolicyIndexPage() {
           }}
         />
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aic-copper to-transparent" />
-        <div className="max-w-5xl mx-auto px-5 md:px-4 relative">
+        <div className="max-w-5xl mx-auto px-5 md:px-8 relative">
           <span className="text-aic-copper text-sm uppercase tracking-widest">
             Intelligence
           </span>
@@ -51,7 +51,7 @@ export default async function PolicyIndexPage() {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-5 md:px-4 -mt-8 relative z-10">
+      <div className="max-w-5xl mx-auto px-5 md:px-8 -mt-8 relative z-10">
         {updates.length === 0 ? (
           <div className="border border-[#e5e7eb] rounded-xl bg-white p-12 text-center">
             <Newspaper className="w-10 h-10 text-[#e5e7eb] mx-auto mb-4" />

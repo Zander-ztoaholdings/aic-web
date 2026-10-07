@@ -24,7 +24,7 @@ export async function generateMetadata({
   const update = await getPolicyUpdateBySlug(slug);
   if (!update) return { title: "Policy update not found" };
 
-  const base = pageMetadata({ path: `/policy/${slug}`, title: update.title, description: update.summary, cardKicker: "Policy update", type: "article" });
+  const base = pageMetadata({ path: `/policy/${slug}`, title: update.title, description: update.summary, cardKicker: "Policy update", type: "article", publishedAt: update.date });
   return { ...base, openGraph: { ...base.openGraph, type: "article", publishedTime: update.date } };
 }
 
@@ -76,7 +76,7 @@ export default async function PolicyUpdatePage({
           }}
         />
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aic-copper to-transparent" />
-        <div className="max-w-4xl mx-auto px-5 md:px-4 relative">
+        <div className="max-w-4xl mx-auto px-5 md:px-8 relative">
           <Link
             href="/policy"
             className="inline-flex items-center gap-2 text-aic-paper/70 hover:text-aic-copper mb-6 transition-colors text-sm font-medium"
@@ -101,7 +101,7 @@ export default async function PolicyUpdatePage({
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-5 md:px-4 -mt-10 relative z-10">
+      <div className="max-w-4xl mx-auto px-5 md:px-8 -mt-10 relative z-10">
         <Card className="p-8 md:p-12 shadow-2xl border-none">
           {update.summary && (
             <p className="text-lg text-[#0f1f3d] leading-relaxed mb-10 pb-8 border-b border-[#e5e7eb]">

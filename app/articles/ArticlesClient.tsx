@@ -120,7 +120,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-5 md:px-4">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -146,7 +146,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
 
       {/* Search & Filter Bar */}
       <section className="sticky top-0 z-30 bg-aic-paper border-b border-[#e5e7eb] shadow-sm">
-        <div className="max-w-7xl mx-auto px-5 md:px-4 py-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md w-full">
@@ -184,7 +184,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
       {/* Featured Articles */}
       {featuredArticles.length > 0 && selectedCategory === "All Articles" && searchQuery === "" && (
         <section className="py-16 bg-[#f0f4f8]">
-          <div className="max-w-7xl mx-auto px-5 md:px-4">
+          <div className="max-w-7xl mx-auto px-5 md:px-8">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-semibold text-[#0f1f3d]">Featured Articles</h2>
               <TrendingUp className="w-5 h-5 text-[#c9920a]" />
@@ -257,7 +257,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
 
       {/* Recent Articles Grid */}
       <section className="py-16 bg-aic-paper">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-semibold text-[#0f1f3d]">
               {selectedCategory === "All Articles" ? "All Articles" : selectedCategory}
@@ -361,7 +361,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
 
       {/* Newsletter Subscription */}
       <section className="py-16 bg-gradient-to-br from-[#0a1628] to-[#0f1f3d]">
-        <div className="max-w-4xl mx-auto px-5 md:px-4 text-center">
+        <div className="max-w-4xl mx-auto px-5 md:px-8 text-center">
           <motion.div
             initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -406,7 +406,7 @@ export default function ArticlesClient({ initialArticles, initialNextCursor, her
 
       {/* Resources CTA */}
       <section className="py-16 bg-aic-paper">
-        <div className="max-w-7xl mx-auto px-5 md:px-4">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {

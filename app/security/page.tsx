@@ -62,7 +62,7 @@ export default function SecurityPage() {
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-aic-paper py-24 relative overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-4 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 relative z-10">
           <motion.div initial={{ opacity: 1, y: 0 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 mb-4">
               <ShieldCheck className="w-6 h-6 text-aic-copper" />
@@ -77,7 +77,7 @@ export default function SecurityPage() {
       </section>
 
       <section className="py-24">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <p className="text-[#6b7280]/60 mb-12 italic font-mono text-sm uppercase tracking-widest">Last Updated: October 2026</p>
           {SECTIONS.map((s, i) => (
             <div key={s.title}>

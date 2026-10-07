@@ -123,7 +123,7 @@ export default function InsurersPage() {
       {/* Opening. Compact on purpose — it states the problem and where AIC
           actually stands, then gets out of the way. */}
       <section className="bg-aic-navy text-white py-14 md:py-16">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <Kicker dark>For insurers and underwriters</Kicker>
           <h1
             className="text-3xl md:text-5xl mt-3 mb-5 leading-[1.05] tracking-[-0.03em] font-bold max-w-3xl text-balance"
@@ -160,7 +160,7 @@ export default function InsurersPage() {
           an underwriter already has, so this is the first thing after the
           opening rather than a supporting detail further down. */}
       <section className="py-14 md:py-16 border-b border-[#dde2e8]">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <Kicker>The signal</Kicker>
           <H2>What you have today, and what this adds</H2>
           <p className="text-[#5e6b7b] text-[17px] leading-[1.65] max-w-[68ch] mb-8">
@@ -211,7 +211,7 @@ export default function InsurersPage() {
       {/* The artefact. An underwriter does not want to be told verification is
           fast — they want to see what comes back. */}
       <section className="py-14 md:py-16 bg-[#0a1628]">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-8 lg:gap-12 items-start">
             <div className="lg:sticky lg:top-32">
               <Kicker dark>What you would get back</Kicker>
@@ -267,7 +267,7 @@ export default function InsurersPage() {
                 </dl>
                 <p className="text-xs text-[#9ca3af] leading-relaxed mt-5">
                   Illustrative. AIC has issued no certificates — the{" "}
-                  <Link href="/registry" className="text-[#a8772a] underline-offset-2 hover:underline">
+                  <Link href="/registry" className="text-[#8a6114] underline-offset-2 hover:underline">
                     public register
                   </Link>{" "}
                   is empty and says so. This is the shape of the record, not a
@@ -282,14 +282,14 @@ export default function InsurersPage() {
       {/* Verification + what the mark actually covers, side by side. These were
           two full-height sections; they are one screen of reading. */}
       <section className="py-14 md:py-16 bg-white border-b border-[#dde2e8]">
-        <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-2 gap-10 lg:gap-16">
+        <div className="max-w-5xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-10 lg:gap-16">
           <div>
             <Kicker>How verification works</Kicker>
             <H2>Confirm a status directly from AIC — never from the insured</H2>
             <div className="space-y-5">
               {steps.map((step, i) => (
                 <div key={step.title} className="flex gap-4 border-t border-[#dde2e8] pt-4">
-                  <div className="text-[#a8772a] text-sm font-semibold shrink-0 w-5 tabular-nums">
+                  <div className="text-[#8a6114] text-sm font-semibold shrink-0 w-5 tabular-nums">
                     {i + 1}
                   </div>
                   <div>
@@ -328,7 +328,7 @@ export default function InsurersPage() {
             </p>
             <p className="text-[#5e6b7b] leading-[1.65]">
               AIC also runs a free, self-declared tool called{" "}
-              <Link href="/aware" className="text-[#a8772a] font-medium underline-offset-2 hover:underline">
+              <Link href="/aware" className="text-[#8a6114] font-medium underline-offset-2 hover:underline">
                 AIC Aware
               </Link>
               . It carries no independent verification, never appears on the
@@ -343,14 +343,14 @@ export default function InsurersPage() {
           today, and it is the part of AIC an insurer can use before a single
           certificate has been issued. */}
       <section className="py-14 md:py-16 border-b border-[#dde2e8]">
-        <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-8 lg:gap-14 items-start">
+        <div className="max-w-5xl mx-auto px-5 md:px-8 grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-8 lg:gap-14 items-start">
           <div>
             <Kicker>Between certifications</Kicker>
             <H2>The record itself, if the insured lets you read it</H2>
             <p className="text-[#5e6b7b] leading-[1.65] mb-4">
               A certificate is a point-in-time judgement. The record behind it is kept every day,
               in the{" "}
-              <Link href="/platform" className="text-[#a8772a] font-medium underline-offset-2 hover:underline">
+              <Link href="/platform" className="text-[#8a6114] font-medium underline-offset-2 hover:underline">
                 AIC platform
               </Link>
               : the insured&apos;s AI systems and who answers for each, the decisions they make and
@@ -381,7 +381,7 @@ export default function InsurersPage() {
       {/* Recognition and the boundary. Previously two sections; they are one
           argument, and the boundary is the more important half. */}
       <section className="py-14 md:py-16 border-b border-[#dde2e8]">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <Kicker>Recognition</Kicker>
           <H2>Naming who recognises the mark — not what AIC does for you</H2>
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
@@ -392,7 +392,7 @@ export default function InsurersPage() {
                 that directly:
               </p>
               <div className="flex items-start gap-3 bg-white border border-[#dde2e8] rounded-lg p-5 mb-5">
-                <BadgeCheck className="w-5 h-5 text-[#a8772a] shrink-0 mt-0.5" />
+                <BadgeCheck className="w-5 h-5 text-[#8a6114] shrink-0 mt-0.5" />
                 <p className="text-[#0f1f3d] text-sm font-medium leading-relaxed">
                   AIC certified, recognised by [insurer name] as an
                   underwriting consideration
@@ -438,7 +438,7 @@ export default function InsurersPage() {
 
       {/* Close. An invitation to test the signal, not a request to bless it. */}
       <section className="py-14 md:py-16 bg-white">
-        <div className="max-w-5xl mx-auto px-5 md:px-4">
+        <div className="max-w-5xl mx-auto px-5 md:px-8">
           <div className="max-w-3xl">
             <Kicker>Testing the signal</Kicker>
             <h2

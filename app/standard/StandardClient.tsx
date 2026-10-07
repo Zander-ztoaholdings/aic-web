@@ -131,7 +131,7 @@ export default function StandardClient() {
                         onClick={() => setOpenRight(right)}
                         className="block w-full text-left mb-3 group"
                       >
-                        <span className="block text-[12px] sm:text-[15px] font-semibold text-[#0e1b2c] leading-tight group-hover:text-[#a8772a] transition-colors">
+                        <span className="block text-[12px] sm:text-[15px] font-semibold text-[#0e1b2c] leading-tight group-hover:text-[#8a6114] transition-colors">
                           <span className="hidden sm:inline">{RIGHTS[right].name}</span>
                           <span className="sm:hidden">{SHORT[right]}</span>
                         </span>
@@ -277,7 +277,7 @@ export default function StandardClient() {
                         r.code === selected ? "bg-[#a8772a]/[0.05] -mx-3 px-3 rounded-lg" : ""
                       }`}
                     >
-                      <button type="button" onClick={() => setSelected(r.code)} className="text-left text-[15px] font-semibold text-[#0e1b2c] tabular-nums hover:text-[#a8772a]">
+                      <button type="button" onClick={() => setSelected(r.code)} className="text-left text-[15px] font-semibold text-[#0e1b2c] tabular-nums hover:text-[#8a6114]">
                         {r.code}
                       </button>
                       <div>

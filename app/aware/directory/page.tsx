@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
-import { Gauge, ArrowRight, AlertTriangle, Building2, BadgeCheck } from "lucide-react";
+import { Gauge, ArrowRight, AlertTriangle, BadgeCheck } from "lucide-react";
 import { listAwareDirectory } from "@/lib/aware-directory";
 import { listPlatformDirectory } from "@/lib/aware-platform";
 
@@ -30,7 +30,7 @@ export default async function AwareDirectoryPage() {
   return (
     <div className="bg-aic-paper min-h-screen font-sans">
       <section className="bg-aic-navy text-white py-20">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           <div className="flex items-center gap-2 mb-4">
             <Gauge className="w-6 h-6 text-aic-copper" />
             <span className="text-aic-copper text-xs uppercase tracking-widest font-mono font-bold">
@@ -58,7 +58,7 @@ export default async function AwareDirectoryPage() {
       </section>
 
       <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-5 md:px-4">
+        <div className="max-w-4xl mx-auto px-5 md:px-8">
           {entries === null ? (
             <div className="flex items-start gap-3 bg-[#fef3f2] border border-[#fecaca] rounded-xl p-6">
               <AlertTriangle className="w-5 h-5 text-[#c41e3a] mt-0.5 shrink-0" />
@@ -72,15 +72,20 @@ export default async function AwareDirectoryPage() {
               </div>
             </div>
           ) : entries.length === 0 ? (
-            <div className="flex items-start gap-3 bg-[#f0f4f8] border border-[#e5e7eb] rounded-xl p-6">
-              <Building2 className="w-5 h-5 text-[#6b7280] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-semibold text-[#0f1f3d] mb-1">
-                  No organisation has been listed yet.
-                </p>
-                <p className="text-sm text-[#6b7280]">
-                  Badges are issued from a free AIC account — take the self-check, then create one.
-                </p>
+            <div className="rounded-xl border border-[#dde2e8] bg-white p-6 md:p-8">
+              <p className="font-semibold text-[#0e1b2c]">No organisation has chosen to be listed yet.</p>
+              <p className="text-[15px] text-[#5e6b7b] leading-[1.65] mt-1.5 max-w-[60ch]">
+                A badge is issued to an organisation that takes AIC Aware from its platform account, and
+                listing here is its choice. It shows the organisation&apos;s name and the date of its badge,
+                nothing more.
+              </p>
+              <div className="mt-5 flex flex-col sm:flex-row gap-3 sm:items-center sm:gap-6">
+                <Link href="/aware" className="inline-flex items-center justify-center rounded-lg bg-[#0e1b2c] px-5 py-3 text-[15px] font-semibold text-white hover:bg-[#1a3160] transition-colors">
+                  Take AIC Aware
+                </Link>
+                <Link href="/aware/badge-rules" className="text-[15px] font-semibold text-[#8a6114] underline-offset-2 hover:underline">
+                  Read the badge rules
+                </Link>
               </div>
             </div>
           ) : (
@@ -91,7 +96,7 @@ export default async function AwareDirectoryPage() {
                     <BadgeCheck className="w-4 h-4 text-[#2c5f2d] shrink-0" /> {e.organisation}
                   </span>
                   <Link href={`/registry/aware/${e.code}`} className="text-sm text-[#6b7280] font-mono hover:text-[#0f1f3d]">
-                    {e.code} · {fmt(e.issuedAt)}
+                    {e.code}, {fmt(e.issuedAt)}
                   </Link>
                 </li>
               ))}

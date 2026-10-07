@@ -39,7 +39,7 @@ export default function JurisdictionRecord({
 }) {
   return (
     <section className="py-12 md:py-14">
-      <div className="max-w-5xl mx-auto px-5 md:px-4 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] gap-10 lg:gap-14 items-start">
+      <div className="max-w-5xl mx-auto px-5 md:px-8 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] gap-10 lg:gap-14 items-start">
         <div className="space-y-14">
           {/* The instrument and what it asks */}
           <div>
@@ -69,7 +69,7 @@ export default function JurisdictionRecord({
                                 <Link
                                   key={code}
                                   href={`/standard#req-${code}`}
-                                  className="rounded-full border border-[#dde2e8] bg-white px-2 py-0.5 text-[12.5px] font-medium text-[#0f1f3d] hover:border-[#a8772a] hover:text-[#a8772a] transition-colors"
+                                  className="rounded-full border border-[#dde2e8] bg-white px-2 py-0.5 text-[12.5px] font-medium text-[#0f1f3d] hover:border-[#a8772a] hover:text-[#8a6114] transition-colors"
                                 >
                                   {code}
                                 </Link>
@@ -117,7 +117,7 @@ export default function JurisdictionRecord({
                 </p>
                 <p className="text-[#5e6b7b] text-sm leading-[1.65]">
                   If {j.name} matters to your organisation,{" "}
-                  <Link href="/contact" className="text-[#a8772a] underline-offset-2 hover:underline">
+                  <Link href="/contact" className="text-[#8a6114] underline-offset-2 hover:underline">
                     tell us
                   </Link>{" "}
                   and it moves up the queue.
@@ -141,7 +141,7 @@ export default function JurisdictionRecord({
                         {u.date}
                         {u.tag ? `, ${u.tag}` : ""}
                       </span>
-                      <span className="text-[#0f1f3d] font-semibold leading-snug group-hover:text-[#a8772a] transition-colors">
+                      <span className="text-[#0f1f3d] font-semibold leading-snug group-hover:text-[#8a6114] transition-colors">
                         {u.title}
                       </span>
                     </Link>
@@ -171,7 +171,7 @@ export default function JurisdictionRecord({
                         href={s.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-start gap-2 text-sm text-[#0f1f3d] hover:text-[#a8772a] transition-colors leading-[1.5]"
+                        className="inline-flex items-start gap-2 text-sm text-[#0f1f3d] hover:text-[#8a6114] transition-colors leading-[1.5]"
                       >
                         <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#5e6b7b]" aria-hidden="true" />
                         {s.label}
@@ -185,7 +185,7 @@ export default function JurisdictionRecord({
 
           <a
             href={`/compliance-measures/${j.pdfSlug}.pdf`}
-            className="flex items-center justify-center gap-2 border border-[#dde2e8] rounded-xl bg-white px-5 py-3.5 text-sm font-semibold text-[#0f1f3d] hover:border-[#a8772a] hover:text-[#a8772a] transition-colors"
+            className="flex items-center justify-center gap-2 border border-[#dde2e8] rounded-xl bg-white px-5 py-3.5 text-sm font-semibold text-[#0f1f3d] hover:border-[#a8772a] hover:text-[#8a6114] transition-colors"
           >
             <Download className="w-4 h-4" aria-hidden="true" />
             Download the draft compliance measures
@@ -201,7 +201,7 @@ export default function JurisdictionRecord({
               of your own governance controls are missing, which is usually the first thing
               anyone needs to know.
             </p>
-            <Link href="/aware" className="text-sm font-semibold text-[#a8772a] underline-offset-2 hover:underline">
+            <Link href="/aware" className="text-sm font-semibold text-[#8a6114] underline-offset-2 hover:underline">
               Take the AIC Aware check
             </Link>
           </div>

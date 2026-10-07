@@ -184,7 +184,7 @@ export default function JurisdictionStandardLayer({
           {profile.note && <p className="mb-3">{profile.note}</p>}
           <p>
             Standard {STANDARD_VERSION}, issued {STANDARD_ISSUED}.{" "}
-            <Link href="/standard" className="text-[#a8772a] underline-offset-2 hover:underline">
+            <Link href="/standard" className="text-[#8a6114] underline-offset-2 hover:underline">
               Read all 44 requirements
             </Link>
             .
