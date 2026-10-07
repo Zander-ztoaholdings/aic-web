@@ -5,6 +5,7 @@ import React, { Suspense, useState, ChangeEvent, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle, Globe } from "lucide-react";
+import { trackLead } from "@/lib/analytics";
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
@@ -27,11 +28,27 @@ const enquiryTypes = [
 
 // useSearchParams requires a Suspense boundary in the App Router; without one
 // the whole route is forced dynamic and the build complains.
+// The heading and introduction render on the server, outside the Suspense
+// boundary: inside it, the whole page was client-only and search engines saw
+// a page with no heading at all.
 export default function ContactPage() {
   return (
-    <Suspense fallback={null}>
-      <ContactForm />
-    </Suspense>
+    <div className="min-h-screen bg-[#f5f7f9] text-[#0f1f3d]">
+      <section className="bg-aic-navy text-white">
+        <div className="max-w-6xl mx-auto px-5 md:px-6 py-14 md:py-16">
+          <h1 className="text-[2rem] md:text-5xl leading-[1.08] tracking-[-0.03em] font-bold" style={{ fontFamily: "'Merriweather', serif" }}>
+            Talk to AIC
+          </h1>
+          <p className="text-lg text-white/75 leading-[1.7] max-w-2xl mt-4">
+            About certification, the platform, a workshop, the regulatory map, or working
+            together. Every enquiry is read by a person, and you will hear back by email.
+          </p>
+        </div>
+      </section>
+      <Suspense fallback={<div className="min-h-[60vh]" />}>
+        <ContactForm />
+      </Suspense>
+    </div>
   );
 }
 
@@ -114,6 +131,7 @@ function ContactForm() {
         throw new Error(data.error || "Something went wrong");
       }
 
+      trackLead(formData.enquiryType);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
@@ -155,19 +173,7 @@ function ContactForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f7f9] text-[#0f1f3d]">
-      <section className="bg-aic-navy text-white">
-        <div className="max-w-6xl mx-auto px-5 md:px-6 py-14 md:py-16">
-          <h1 className="text-[2rem] md:text-5xl leading-[1.08] tracking-[-0.03em] font-bold" style={{ fontFamily: "'Merriweather', serif" }}>
-            Talk to AIC
-          </h1>
-          <p className="text-lg text-white/75 leading-[1.7] max-w-2xl mt-4">
-            About certification, the platform, a workshop, the regulatory map, or working
-            together. Every enquiry is read by a person, and you will hear back by email.
-          </p>
-        </div>
-      </section>
-
+    <div>
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-5 md:px-6 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-10 lg:gap-14 items-start">
             <div className="order-1">

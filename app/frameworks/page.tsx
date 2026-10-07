@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { TRACKED_FRAMEWORKS } from "@/app/data/platform-data";
 import { frameworks, frameworksReviewedAt } from "@/app/data/frameworks-data";
 
-export const metadata: Metadata = {
-  title: "Frameworks",
-  description:
-    "Where AI-assisted decisioning maps against established industry safety and governance frameworks — by industry, with an honest account of where the analogy holds and where it doesn't.",
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/frameworks",
+  title: "AI frameworks by industry and regulation",
+  description: "How AI maps onto the safety disciplines industries already use, from SIL to model risk and medical software, and the 20 frameworks the AIC platform tracks.",
+  cardTitle: "Industries already have a safety language. We map AI into it.",
+  cardKicker: "Frameworks",
+});
 
 export default function FrameworksPage() {
   return (

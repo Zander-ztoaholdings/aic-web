@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "For Insurers and Underwriters",
-  description:
-    "How underwriters recognise and verify AIC certification, what the mark verifies, and the boundary AIC keeps between certifying governance and pricing risk.",
-  openGraph: {
-    title: "For Insurers and Underwriters | AIC",
-    description:
-      "How underwriters recognise and verify AIC certification, what the mark verifies, and the boundary AIC keeps between certifying governance and pricing risk.",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/insurers",
+  title: "AI risk for insurers and underwriters",
+  description: "A verifiable signal of AI accountability for underwriters: what an AIC record shows, how to check it without asking the insured, and what AIC does not do.",
+  cardTitle: "You are already writing AI risk. You just cannot see it.",
+  cardKicker: "For insurers",
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

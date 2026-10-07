@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { ogImageUrl } from "@/lib/seo";
 import CookieConsent from "@/app/components/CookieConsent";
 import { ClientLayout } from "./components/ClientLayout";
 
@@ -8,11 +9,11 @@ const SITE_URL = "https://aiccertified.cloud";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "AI Integrity Certification | Certifying the human behind the algorithm",
+    default: "AI Integrity Certification | AI accountability, certified",
     template: "%s | AIC",
   },
   description:
-    "AIC is a South African certification body for AI accountability. We certify that a named human remains accountable for the automated decisions that matter, and publish the result so anyone can check it.",
+    "Independent certification that a named person stays accountable for automated decisions, built on POPIA section 71, with a published standard and public register.",
   keywords: [
     "AI certification",
     "AI accountability",
@@ -22,33 +23,33 @@ export const metadata: Metadata = {
     "AI assurance",
     "responsible AI",
     "South Africa",
+    "POPIA section 71",
+    "AI compliance platform",
+    "ISO 42001",
+    "EU AI Act",
+    "AI regulation",
   ],
   authors: [{ name: "AI Integrity Certification (Pty) Ltd" }],
   creator: "AI Integrity Certification (Pty) Ltd",
   publisher: "AI Integrity Certification (Pty) Ltd",
+  // Every page sets its own card through lib/seo.ts pageMetadata(); this is
+  // the fallback for anything that does not.
   openGraph: {
     type: "website",
     locale: "en_ZA",
     url: SITE_URL,
     siteName: "AI Integrity Certification",
-    title: "AI Integrity Certification | Certifying the human behind the algorithm",
+    title: "AI Integrity Certification | AI accountability, certified",
     description:
-      "A South African certification body for AI accountability. We certify that a named human remains accountable for the decisions that matter.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "AI Integrity Certification — AIC",
-      },
-    ],
+      "Independent certification that a named person stays accountable for automated decisions, starting with POPIA section 71 in South Africa.",
+    images: [{ url: ogImageUrl("Certifying the human behind the algorithm", "AI Integrity Certification"), width: 1200, height: 630, alt: "AI Integrity Certification" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Integrity Certification",
     description:
-      "A South African certification body for AI accountability. Certifying the human behind the algorithm.",
-    images: ["/opengraph-image"],
+      "Independent certification that a named person stays accountable for automated decisions.",
+    images: [ogImageUrl("Certifying the human behind the algorithm", "AI Integrity Certification")],
   },
   robots: {
     index: true,
@@ -91,6 +92,12 @@ const organizationLd = {
   description:
     "A South African certification body for AI accountability, built on the five Algorithmic Rights.",
   foundingDate: "2026",
+  sameAs: [
+    "https://www.linkedin.com/company/ai-integrity-certification/",
+    "https://x.com/aiccertified",
+  ],
+  areaServed: ["ZA", "Africa"],
+  knowsAbout: ["AI accountability", "AI governance", "POPIA section 71", "Automated decision-making", "AI certification"],
   address: {
     "@type": "PostalAddress",
     streetAddress: "15 Smit Street",

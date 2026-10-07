@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata, breadcrumbLd } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -70,21 +71,15 @@ export async function generateMetadata({
   const j = jurisdictionBySlug(country);
   if (!j) return {};
 
-  const title = `AI regulation in ${j.name}`;
-  const description = `${j.status} — ${j.framework}, administered by ${j.authority}. Last verified ${j.verifiedAt} by AIC.`;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: `/regulatory-map/${j.slug}` },
-    openGraph: {
-      title: `${title} | AIC`,
-      description,
-      url: `${SITE}/regulatory-map/${j.slug}`,
-      type: "article",
-    },
-    twitter: { card: "summary_large_image", title: `${title} | AIC`, description },
-  };
+  const description = `${j.status}: ${j.framework}, administered by ${j.authority}. What it requires, checked ${j.verifiedAt}, and how AIC's frameworks apply.`;
+  return pageMetadata({
+    path: `/regulatory-map/${j.slug}`,
+    title: `AI regulation in ${j.name}: what the law requires`,
+    description: description.length > 160 ? `${j.status}: ${j.framework}. What it requires, checked ${j.verifiedAt}, and how AIC's frameworks apply in ${j.name}.`.slice(0, 160) : description,
+    cardTitle: `AI regulation in ${j.name}`,
+    cardKicker: `${j.status}, checked ${j.verifiedAt}`,
+    type: "article",
+  });
 }
 
 export default async function JurisdictionPage({
@@ -122,6 +117,16 @@ export default async function JurisdictionPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Regulatory map", path: "/regulatory-map" },
+            { name: j.name, path: `/regulatory-map/${j.slug}` },
+          ])),
+        }}
       />
 
       {/* WHERE — and immediately, how current this is. */}

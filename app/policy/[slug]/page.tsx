@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -23,22 +24,8 @@ export async function generateMetadata({
   const update = await getPolicyUpdateBySlug(slug);
   if (!update) return { title: "Policy update not found" };
 
-  return {
-    title: update.title,
-    description: update.summary,
-    alternates: { canonical: `/policy/${slug}` },
-    openGraph: {
-      type: "article",
-      title: update.title,
-      description: update.summary,
-      publishedTime: update.date,
-    },
-    twitter: {
-      card: "summary",
-      title: update.title,
-      description: update.summary,
-    },
-  };
+  const base = pageMetadata({ path: `/policy/${slug}`, title: update.title, description: update.summary, cardKicker: "Policy update", type: "article" });
+  return { ...base, openGraph: { ...base.openGraph, type: "article", publishedTime: update.date } };
 }
 
 export default async function PolicyUpdatePage({

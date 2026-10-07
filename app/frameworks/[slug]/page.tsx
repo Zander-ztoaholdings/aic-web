@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, AlertTriangle, ExternalLink } from "lucide-react";
@@ -16,10 +17,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const fw = frameworks.find((f) => f.slug === slug);
   if (!fw) return { title: "Framework not found" };
-  return {
-    title: `${fw.industry} — Frameworks`,
-    description: fw.title,
-  };
+  const first = fw.intro.split(/(?<=\.)\s/)[0];
+  return pageMetadata({
+    path: `/frameworks/${fw.slug}`,
+    title: `AI in ${fw.industry.replace(" / ", " and ")}: ${fw.standardName.split(/,| \/ /)[0]}`,
+    description: first.length > 158 ? `${fw.title}. How AIC maps AI against ${fw.standardName}, and where the analogy stops.` : first,
+    cardTitle: fw.title,
+    cardKicker: fw.industry,
+  });
 }
 
 export default async function FrameworkDetailPage({

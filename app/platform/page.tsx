@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 import { PLATFORM_AREAS, TRACKED_FRAMEWORKS, CONNECTOR_GROUPS, PLATFORM_URL } from "@/app/data/platform-data";
 
-export const metadata: Metadata = {
-  title: "The platform",
-  description:
-    "The AIC platform keeps your AI estate on the record: every system and who answers for it, the decisions it makes, the frameworks you track, and the evidence from your connected systems.",
-  alternates: { canonical: "/platform" },
-  openGraph: {
-    title: "The AIC platform",
-    description:
-      "Your AI estate on the record: systems, decisions, frameworks, evidence from connected systems, risks and people, in one workspace.",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/platform",
+  title: "AI governance and compliance platform",
+  description: "Your AI estate on the record: systems and owners, decisions, risks, and 20 frameworks such as POPIA, ISO 42001 and the EU AI Act, with evidence from your systems.",
+  cardTitle: "Your AI estate, kept on the record",
+  cardKicker: "The AIC platform",
+});
 
 /**
  * /platform — what app.aiccertified.cloud does.
@@ -43,6 +40,21 @@ const H2 = ({ id, children }: { id?: string; children: React.ReactNode }) => (
 export default function PlatformPage() {
   return (
     <div className="bg-[#f5f7f9] min-h-screen font-sans text-[#0f1f3d]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "AIC platform",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            url: `${SITE_URL}/platform`,
+            description: "A workspace that keeps an organisation's AI estate on the record: systems and accountable owners, decisions, risks, and evidence mapped to 20 compliance frameworks.",
+            publisher: { "@id": `${SITE_URL}/#organization` },
+          }),
+        }}
+      />
       {/* Opening */}
       <section className="bg-aic-navy text-white">
         <div className="max-w-6xl mx-auto px-5 md:px-6 py-14 md:py-20">

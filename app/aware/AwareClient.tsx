@@ -23,6 +23,7 @@ import { analyseAware, type AwareAnalysis } from "@/lib/aware-analysis";
 import { requirements, RIGHTS } from "@/app/data/requirements-data";
 import AwareResults from "./AwareResults";
 import AwareWelcome from "./AwareWelcome";
+import { trackAwareStarted, trackAwareQuestionsDone, trackAwareCompleted, trackAwareReport } from "@/lib/analytics";
 
 type Stage = "welcome" | "intro" | "section" | "quiz" | "review" | "gate" | "results";
 
@@ -214,6 +215,7 @@ export default function AwareClient() {
         setSubmitting(false);
         return;
       }
+      trackAwareCompleted(result.tier.name);
       setStage("results");
     } catch {
       setSubmitError("Couldn't reach the server. Check your connection and try again.");
@@ -224,6 +226,7 @@ export default function AwareClient() {
 
   async function downloadPDF() {
     if (!result || !analysis) return;
+    trackAwareReport();
     const { generatePDFReport } = await import("@/lib/report-generator");
     await generatePDFReport(result, company.trim() || "Your Organisation", analysis);
   }
@@ -301,7 +304,7 @@ export default function AwareClient() {
 
               <button
                 type="button"
-                onClick={() => setStage("section")}
+                onClick={() => { trackAwareStarted(); setStage("section"); }}
                 className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-full transition-all text-sm font-bold shadow-lg hover:-translate-y-0.5"
               >
                 Begin the assessment <ArrowRight className="w-4 h-4" />
@@ -475,7 +478,7 @@ export default function AwareClient() {
 
               <button
                 type="button"
-                onClick={() => setStage("gate")}
+                onClick={() => { trackAwareQuestionsDone(); setStage("gate"); }}
                 className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-full transition-all text-sm font-bold shadow-lg"
               >
                 These are accurate — continue <ArrowRight className="w-4 h-4" />

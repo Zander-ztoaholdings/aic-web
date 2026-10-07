@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "AIC Aware badge rules — AIC",
-  description: "Where and how an AIC Aware badge may be used, what it does and does not mean, and when AIC revokes one.",
-  alternates: { canonical: "/aware/badge-rules" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/aware/badge-rules",
+  title: "AIC Aware badge rules",
+  description: "Where and how an AIC Aware badge may be used, what it does and does not mean, and when AIC withdraws one.",
+  cardKicker: "AIC Aware",
+});
 
 // DRAFT for Zander's review. These are the rules the submission declaration
 // refers to; changing their meaning after badges are issued needs notice to

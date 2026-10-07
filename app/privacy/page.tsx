@@ -249,8 +249,11 @@ export default function PrivacyPolicy() {
                 This website uses <strong className="text-[#0f1f3d]">Google
                 Analytics</strong>, and only if you have explicitly allowed it.
                 Until you do, the script is not loaded and no analytics cookie is
-                set — declining stores a single preference in your browser&apos;s
-                local storage and nothing else.
+                set. Your browser keeps two things on your own device: the address
+                you first arrived at during this visit, which is cleared when you
+                close the tab, and your choice once you make it. Neither is sent
+                anywhere unless you allow analytics; if you do, the first lets us
+                see which page or link brought you here.
               </p>
             )}
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
@@ -258,10 +261,12 @@ export default function PrivacyPolicy() {
               browser a persistent identifier and records which pages you visit,
               how you arrived, and your device and approximate location. That is
               personal information under POPIA, and it is processed by Google
-              LLC, including on infrastructure outside South Africa. We enable
-              IP anonymisation. We use it to see which pages are read, and for
-              nothing else — there is no advertising, no remarketing, and no
-              profile is built about you by us.
+              LLC, including on infrastructure outside South Africa. Google
+              Analytics 4 does not log or store IP addresses. We use it to see
+              which pages are read, which links and campaigns bring people here,
+              and how many go on to register or get in touch, and for nothing
+              else: there is no advertising, no remarketing, and no profile is
+              built about you by us.
             </p>
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
               You can change your mind at any time using the analytics

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getArticles } from "@/lib/notion";
 import ArticlesClient from "./ArticlesClient";
 
@@ -13,16 +14,12 @@ import ArticlesClient from "./ArticlesClient";
 // what is editorial; never cache a status.
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Articles",
-  description:
-    "Writing from AI Integrity Certification on algorithmic accountability, certification practice, and the regulatory landscape for AI governance.",
-  openGraph: {
-    title: "Articles | AIC",
-    description:
-      "Writing from AI Integrity Certification on algorithmic accountability, certification practice and AI regulation.",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/articles",
+  title: "AI governance articles and analysis",
+  description: "Writing from AIC on AI accountability, certification practice and AI regulation, from POPIA section 71 to the EU AI Act.",
+  cardKicker: "Articles",
+});
 
 const heroBg =
   "https://images.unsplash.com/photo-1764087957302-ef0756ed8e0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb3VudGFpbiUyMHBlbiUyMHBhcGVyJTIwd3JpdGluZyUyMG5vdGVib29rfGVufDF8fHx8MTc3NTUwODgxN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";

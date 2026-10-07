@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import StandardClient from "./StandardClient";
 import {
@@ -7,17 +8,13 @@ import {
   STANDARD_ISSUED,
 } from "@/app/data/requirements-data";
 
-export const metadata: Metadata = {
-  title: "The AIC Standard",
-  description:
-    "The 44 requirements AIC assesses an organisation against, published in full — what is tested, which Divisions it applies to, and what evidence it takes.",
-  alternates: { canonical: "/standard" },
-  openGraph: {
-    title: "The AIC Standard — 44 requirements, published in full",
-    description:
-      "What specifically will you test us against? This is the answer: 44 testable requirements across five algorithmic rights.",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/standard",
+  title: "The AIC standard: 44 AI accountability requirements",
+  description: "Every requirement AIC assesses against, published in full: what each tests, which Divisions it applies to and the evidence it takes. Version 1, open to challenge.",
+  cardTitle: "What we actually test: 44 requirements, published in full",
+  cardKicker: "The AIC standard",
+});
 
 export default function StandardPage() {
   const flagships = requirements.filter((r) => r.flagship).length;

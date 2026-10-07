@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getPolicyUpdates } from "@/lib/notion";
 import GovernanceHubClient from "./GovernanceHubClient";
 
@@ -7,16 +8,12 @@ import GovernanceHubClient from "./GovernanceHubClient";
 // editorial content tolerates being minutes old; certification status does not.
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Governance Hub",
-  description:
-    "The Declaration of Algorithmic Rights, policy updates, and AIC's governance positions on accountable AI.",
-  openGraph: {
-    title: "Governance Hub | AIC",
-    description:
-      "The Declaration of Algorithmic Rights, policy updates and AIC's governance positions.",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/governance-hub",
+  title: "Declaration of Algorithmic Rights",
+  description: "The five Algorithmic Rights behind AIC certification, with AIC's governance positions and the policy record on accountable AI.",
+  cardKicker: "Governance hub",
+});
 
 // No fallback policy updates. The previous placeholders asserted a specific
 // EU AI Act compliance deadline that is not correct, and a capacity claim

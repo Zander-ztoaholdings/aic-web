@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Gauge, ArrowRight, AlertTriangle, Building2, BadgeCheck } from "lucide-react";
 import { listAwareDirectory } from "@/lib/aware-directory";
@@ -6,6 +8,13 @@ import { listPlatformDirectory } from "@/lib/aware-platform";
 // Server-rendered for the same reason /registry is: this list must reflect
 // real data, not a build-time snapshot.
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/aware/directory",
+  title: "AIC Aware directory",
+  description: "Organisations holding a current AIC Aware badge that chose to be listed. Self-declared awareness, not certification, and labelled as such.",
+  cardKicker: "AIC Aware",
+});
 
 // listAwareDirectory() returns null when the datastore is unreachable and []
 // when nobody has opted in yet — rendered differently on purpose, mirroring

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  path: "/terms",
-  title: "Terms of use",
-  description: "The terms governing use of the AI Integrity Certification website, the public register, certificate verification and connected systems.",
-  cardKicker: "Terms",
+  path: "/security",
+  title: "Security at AIC",
+  description: "How AIC protects your data and the evidence you share: encryption, read-only connections, access controls and how to report a vulnerability.",
+  cardKicker: "Security",
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {

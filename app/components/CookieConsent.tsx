@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +29,8 @@ import { DURATION, EASE_OUT } from "@/lib/motion";
  */
 
 import { ANALYTICS_DEFAULT_ON } from "@/lib/analytics-mode";
+import { captureLanding, startAnalytics } from "@/lib/analytics";
+import AnalyticsEvents from "./AnalyticsEvents";
 
 const STORAGE_KEY = "aic-analytics-consent";
 type Consent = "granted" | "denied";
@@ -47,6 +49,20 @@ export function readConsent(): Consent | null {
 export default function CookieConsent({ gaId }: { gaId?: string }) {
   const [consent, setConsent] = useState<Consent | null>(null);
   const [asked, setAsked] = useState(true);
+
+  // Where this visit started, kept in this tab only, so a campaign that
+  // brought someone here is not lost if they consent a few pages later.
+  // Nothing is sent anywhere unless they say yes.
+  useEffect(() => { captureLanding(); }, []);
+
+  // Start GA once, the moment consent exists.
+  const started = useRef(false);
+  useEffect(() => {
+    if (consent === "granted" && gaId && !started.current) {
+      started.current = true;
+      startAnalytics(gaId);
+    }
+  }, [consent, gaId]);
 
   useEffect(() => {
     // Default-on mode: analytics loads for everyone and the banner never
@@ -81,21 +97,12 @@ export default function CookieConsent({ gaId }: { gaId?: string }) {
 
   return (
     <>
-      {/* Only mounted once someone has actually said yes. */}
+      {/* Only mounted once someone has actually said yes. The queue that
+          startAnalytics() fills is read by this script when it arrives. */}
       {consent === "granted" && gaId && (
         <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}', { anonymize_ip: true });
-            `}
-          </Script>
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
+          <AnalyticsEvents />
         </>
       )}
 

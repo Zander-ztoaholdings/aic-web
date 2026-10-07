@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { getArticleBySlug } from "@/lib/notion";
 import { notFound } from "next/navigation";
@@ -21,23 +22,17 @@ export async function generateMetadata({
   const article = await getArticleBySlug(slug);
   if (!article) return { title: "Article not found" };
 
+  const base = pageMetadata({ path: `/articles/${slug}`, title: article.title, description: article.excerpt, cardKicker: "Article", type: "article" });
   return {
-    title: article.title,
-    description: article.excerpt,
+    ...base,
     openGraph: {
+      ...base.openGraph,
       type: "article",
-      title: article.title,
-      description: article.excerpt,
-      images: article.image ? [{ url: article.image }] : undefined,
       publishedTime: article.date,
       authors: article.author ? [article.author] : undefined,
+      ...(article.image ? { images: [{ url: article.image }] } : {}),
     },
-    twitter: {
-      card: "summary_large_image",
-      title: article.title,
-      description: article.excerpt,
-      images: article.image ? [article.image] : undefined,
-    },
+    twitter: { ...base.twitter, ...(article.image ? { images: [article.image] } : {}) },
   };
 }
 
