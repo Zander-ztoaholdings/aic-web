@@ -80,6 +80,13 @@ export const metadata: Metadata = {
   // app/icon.svg is a vector. The artwork was never the difference; the format
   // was. This now matches the platform exactly.
   category: "technology",
+  // Search Console and Bing Webmaster Tools ownership. Set the tokens in the
+  // environment (the content value only, not the whole tag); nothing is
+  // emitted when they are absent.
+  verification: {
+    ...(process.env["GOOGLE_SITE_VERIFICATION"] ? { google: process.env["GOOGLE_SITE_VERIFICATION"] } : {}),
+    ...(process.env["BING_SITE_VERIFICATION"] ? { other: { "msvalidate.01": process.env["BING_SITE_VERIFICATION"] } } : {}),
+  },
   other: { publish_date: PUBLISHED_AT },
 };
 
@@ -141,6 +148,7 @@ export default function RootLayout({
         {/* Fonts loaded via <link> rather than a CSS @import, so the browser can
             start fetching them in parallel with the stylesheet instead of only
             discovering them after globals.css has downloaded and parsed. */}
+        <link rel="alternate" type="application/rss+xml" title="AIC news" href="/news/feed.xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font --

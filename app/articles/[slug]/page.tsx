@@ -1,159 +1,64 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
-import Image from "next/image";
-import { getArticleBySlug } from "@/lib/notion";
 import { notFound } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Calendar, Clock, User, ArrowLeft, Shield } from "lucide-react";
-import Link from "next/link";
-import { Card } from "@/app/components/ui/card";
+import { pageMetadata } from "@/lib/seo";
+import { getArticleBySlug, getArticles } from "@/lib/notion";
+import { cleanAuthor, getNews, relatedNews } from "@/lib/news";
+import EditorialArticle from "@/app/components/EditorialArticle";
 
 // The heaviest page: a database query plus a fetch of every block in the page.
 // Caching takes it from ~1.5s to near-instant for everyone after the first hit.
 export const revalidate = 300;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateStaticParams() {
+  const data = await getArticles(100).catch(() => null);
+  return (data?.results ?? []).filter((a) => a.slug).map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
-  if (!article) return { title: "Article not found" };
+  if (!article) return { title: "Article not found", robots: { index: false } };
 
-  const base = pageMetadata({ path: `/articles/${slug}`, title: article.title, description: article.excerpt, cardKicker: "Article", type: "article", publishedAt: article.date });
+  const author = cleanAuthor(article.author);
+  const base = pageMetadata({
+    path: `/articles/${slug}`,
+    title: article.title,
+    description: article.excerpt,
+    cardKicker: article.category === "Uncategorized" ? "Analysis" : article.category,
+    type: "article",
+    publishedAt: article.date,
+  });
   return {
     ...base,
+    authors: author ? [{ name: author }] : [{ name: "AI Integrity Certification" }],
     openGraph: {
       ...base.openGraph,
       type: "article",
-      publishedTime: article.date,
-      authors: article.author ? [article.author] : undefined,
-      ...(article.image ? { images: [{ url: article.image }] } : {}),
+      publishedTime: article.date || undefined,
+      modifiedTime: article.date || undefined,
+      section: article.category,
+      authors: author ? [author] : undefined,
     },
-    twitter: { ...base.twitter, ...(article.image ? { images: [article.image] } : {}) },
   };
 }
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const [article, news] = await Promise.all([getArticleBySlug(slug), getNews()]);
+  if (!article) notFound();
 
-  if (!article) {
-    notFound();
-  }
-
-  const articleLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.title,
-    description: article.excerpt,
-    image: article.image,
-    datePublished: article.date,
-    author: article.author
-      ? { "@type": "Person", name: article.author }
-      : { "@type": "Organization", name: "AI Integrity Certification" },
-    publisher: {
-      "@type": "Organization",
-      name: "AI Integrity Certification",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://aiccertified.cloud/apple-icon.png",
-      },
-    },
-    mainEntityOfPage: `https://aiccertified.cloud/articles/${slug}`,
-  };
-
+  const topic = article.category === "Uncategorized" ? "AI governance" : article.category;
   return (
-    <div className="min-h-screen bg-[#f0f4f8] pb-20">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
-      />
-      {/* Hero Header */}
-      <div className="relative h-[400px] w-full overflow-hidden">
-        <Image
-          src={article.image}
-          alt={article.title}
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-[#0a1628]/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="max-w-4xl mx-auto">
-            <Link
-              href="/articles"
-              className="inline-flex items-center gap-2 text-aic-paper/70 hover:text-[#c9920a] mb-6 transition-colors text-sm font-medium"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to Articles
-            </Link>
-            <div className="flex items-center gap-3 text-xs text-aic-paper/70 mb-4 uppercase tracking-widest font-mono">
-              <span className="px-2 py-1 bg-[#c9920a] text-white rounded font-medium">
-                {article.category}
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                {article.date}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" />
-                {article.readTime}
-              </span>
-            </div>
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl text-aic-paper font-bold leading-tight"
-              style={{ fontFamily: "'Merriweather', serif" }}
-            >
-              {article.title}
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-5 md:px-8 -mt-10 relative z-10">
-        <Card className="p-8 md:p-12 shadow-2xl border-none">
-          <div className="flex items-center gap-4 mb-10 pb-8 border-b border-[#e5e7eb]">
-            <div className="w-12 h-12 rounded-full bg-[#0a1628] flex items-center justify-center text-white">
-              <User className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="text-sm text-[#6b7280]/60 uppercase tracking-widest font-mono">Author</div>
-              <div className="font-semibold text-[#0f1f3d]">{article.author}</div>
-            </div>
-          </div>
-
-          {/* Article Content */}
-          <article className="prose prose-lg max-w-none prose-slate prose-headings:font-serif prose-headings:text-[#0f1f3d] prose-a:text-[#c9920a] prose-strong:text-[#0f1f3d]">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {article.content}
-            </ReactMarkdown>
-          </article>
-
-          <div className="mt-16 pt-10 border-t border-[#e5e7eb] flex flex-col items-center text-center">
-            <Shield className="w-10 h-10 text-[#c9920a] mb-4" />
-            <h3 className="text-xl font-bold text-[#0f1f3d] mb-2 font-serif">
-              Certifying the human behind the algorithm
-            </h3>
-            <p className="text-[#6b7280] max-w-md mx-auto mb-6">
-              AIC certifies that a named human remains accountable for the automated
-              decisions that matter, and publishes the result so anyone can check it.
-            </p>
-            <Link
-              href="/contact"
-              className="bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-3 rounded-lg font-medium transition-all shadow-lg shadow-[#c9920a]/20"
-            >
-              Contact us
-            </Link>
-          </div>
-        </Card>
-      </div>
-    </div>
+    <EditorialArticle
+      kind="article"
+      slug={slug}
+      title={article.title}
+      summary={article.excerpt}
+      date={article.date}
+      topic={topic}
+      author={cleanAuthor(article.author)}
+      content={article.content}
+      related={relatedNews(news ?? [], { kind: "article", slug, topic })}
+    />
   );
 }

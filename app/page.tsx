@@ -6,6 +6,14 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import EmpathyScorer from "@/app/components/EmpathyScorer";
 
+// Kept short and in the question's own words; the full list is /guides.
+const HOME_GUIDES = [
+  { href: "/guides/popia-section-71-automated-decisions", q: "What does POPIA section 71 say about automated decisions?", d: "The three tests, the exceptions, and what a compliant decision looks like in practice." },
+  { href: "/guides/ai-governance-south-africa", q: "What AI rules apply in South Africa in 2026?", d: "No AI Act yet, but POPIA, King V and sector rules already reach your AI." },
+  { href: "/guides/king-v-ai-governance", q: "What does King V ask boards to oversee on AI?", d: "Accountability for outputs, and how to turn the principle into evidence." },
+  { href: "/guides/eu-ai-act-south-african-companies", q: "Does the EU AI Act apply to South African companies?", d: "When it reaches you from outside Europe, and the dates after the Digital Omnibus." },
+];
+
 // Each right now carries its real requirement count from the published
 // standard. Descriptions are deliberately short: these sit five-across so they
 // can be compared, which is the whole reason they were pulled out of five
@@ -591,6 +599,36 @@ export default function MarketingPage() {
               ))}
             </dl>
           </div>
+        </div>
+      </section>
+
+      {/* ── GUIDES ───────────────────────────────────────────────────
+          The questions buyers search for, answered on this site. Links use the
+          question itself as their text, which is what tells a search engine
+          what each guide answers. */}
+      <section className="bg-[#f5f7f9] py-20 md:py-24 border-b border-[#e5e7eb]">
+        <div className="max-w-7xl mx-auto px-5 md:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-2xl">
+              <p className="text-sm text-[#5e6b7b]">Guides</p>
+              <h2 className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-4 text-balance" style={{ fontFamily: "'Merriweather', serif" }}>
+                The questions we are asked most
+              </h2>
+            </div>
+            <Link href="/guides" className="inline-flex items-center gap-2 text-sm font-semibold text-[#8a6114] hover:gap-3 transition-all">
+              All guides <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <ul className="mt-10 grid gap-4 md:grid-cols-2">
+            {HOME_GUIDES.map((g) => (
+              <li key={g.href}>
+                <Link href={g.href} className="group flex h-full flex-col rounded-xl border border-[#dde2e8] bg-white p-6 hover:border-[#a8772a] transition-colors">
+                  <span className="text-lg font-bold leading-snug text-[#0f1f3d] group-hover:underline decoration-[#a8772a] underline-offset-4" style={{ fontFamily: "'Merriweather', serif" }}>{g.q}</span>
+                  <span className="mt-2 text-[15px] text-[#5e6b7b] leading-relaxed">{g.d}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

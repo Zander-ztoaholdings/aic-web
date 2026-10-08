@@ -45,6 +45,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
   const [industry, setIndustry] = useState(industrySlug);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
+  const [notified, setNotified] = useState(false);
 
   // Keeps following the tab selection until the visitor overrides it themselves.
   const [touchedIndustry, setTouchedIndustry] = useState(false);
@@ -102,6 +103,7 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
             `We couldn't record that. Please email ${CONTACT_EMAIL} directly.`
         );
       }
+      setNotified(data?.notified === true);
       setState("sent");
     } catch (err) {
       setState("error");
@@ -131,8 +133,9 @@ export default function WorkshopIntake({ industrySlug }: { industrySlug: string 
           We have it
         </h3>
         <p className="text-[#5e6b7b] leading-relaxed max-w-md mx-auto">
-          Your enquiry is recorded and a person has been notified — not a queue.
-          You will hear from Zander directly, usually within two working days.
+          {notified
+            ? "Your enquiry is recorded and Zander has been told. You will hear from him directly, usually within two working days."
+            : "Your enquiry is recorded. Zander will reply directly, usually within two working days."}
         </p>
       </motion.div>
     );

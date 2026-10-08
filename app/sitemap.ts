@@ -1,10 +1,14 @@
 import { MetadataRoute } from "next";
-import { getArticles, getPolicyUpdateSlugs } from "@/lib/notion";
+import { getNews } from "@/lib/news";
+import { GUIDES } from "@/app/data/guides";
 import { allJurisdictions } from "@/app/data/regulatory-data";
 
 // Async because the editorial routes are driven by the CMS. Previously this
 // listed only static routes, so no article or policy update was ever submitted
 // for indexing — the pages existed and nothing pointed search engines at them.
+// Rebuilt hourly so new posts reach the sitemap without a deploy.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://aiccertified.cloud";
   const now = new Date();
@@ -31,35 +35,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/frameworks/financial-services`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/frameworks/medical-devices`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/workshops`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/news`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${base}/guides`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${base}/glossary`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/articles`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/policy`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/security`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
-  // A CMS outage must not empty the sitemap: getArticles returns null when it
-  // cannot reach Notion, and dropping every editorial URL from the sitemap on a
-  // transient failure is worse than briefly omitting a new one. Static routes
-  // are returned regardless.
-  const [articlesData, policySlugs] = await Promise.all([
-    getArticles(100).catch(() => null),
-    getPolicyUpdateSlugs().catch(() => [] as string[]),
-  ]);
-
-  const articleRoutes: MetadataRoute.Sitemap = (articlesData?.results ?? [])
-    .filter((a) => a.slug)
-    .map((a) => ({
-      url: `${base}/articles/${a.slug}`,
-      lastModified: a.date ? new Date(a.date) : now,
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    }));
-
-  const policyRoutes: MetadataRoute.Sitemap = policySlugs.map((slug) => ({
-    url: `${base}/policy/${slug}`,
-    lastModified: now,
+  // A CMS outage must not empty the sitemap: getNews returns null when it
+  // cannot reach Notion, and dropping every editorial URL on a transient
+  // failure is worse than briefly omitting a new one. lastModified is each
+  // item's own date, so a crawler is told when content actually changed.
+  const news = (await getNews().catch(() => null)) ?? [];
+  const newsRoutes: MetadataRoute.Sitemap = news.map((n) => ({
+    url: `${base}${n.href}`,
+    lastModified: n.date ? new Date(n.date) : now,
     changeFrequency: "monthly" as const,
-    priority: 0.5,
+    priority: 0.6,
+  }));
+
+  // Guides answer the questions people search for, so they rank high here.
+  const guideRoutes: MetadataRoute.Sitemap = GUIDES.map((g) => ({
+    url: `${base}/guides/${g.slug}`,
+    lastModified: new Date(g.updated),
+    changeFrequency: "monthly" as const,
+    priority: 0.9,
   }));
 
   // One page per mapped jurisdiction. These are the map's actual addressable
@@ -74,5 +76,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...articleRoutes, ...policyRoutes, ...jurisdictionRoutes];
+  return [...staticRoutes, ...guideRoutes, ...newsRoutes, ...jurisdictionRoutes];
 }

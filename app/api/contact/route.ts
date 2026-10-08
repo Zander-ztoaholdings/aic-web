@@ -191,14 +191,16 @@ export async function POST(req: NextRequest) {
     email: body.email,
     organization: body.organization || body.company,
     role: body.role || body.jobTitle,
-    country: body.country,
+    // Optional: the workshop form does not ask, and a missing country was
+    // rejecting every workshop enquiry with "Missing required fields".
+    country: (body.country || "").trim() || "Not given",
     enquiryType: body.enquiryType || body.certificationType,
     message: body.message,
   };
 
   if (
     !data.firstName || !data.lastName || !data.email ||
-    !data.organization || !data.role || !data.country || !data.enquiryType
+    !data.organization || !data.role || !data.enquiryType
   ) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
@@ -269,5 +271,5 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  return NextResponse.json({ success: true, reference: ref }, { status: 200 });
+  return NextResponse.json({ success: true, reference: ref, notified: emailed }, { status: 200 });
 }

@@ -28,6 +28,8 @@ import {
   CalendarCheck,
   Users,
   Mail,
+  BookOpen,
+  BookMarked,
 } from "lucide-react";
 
 export interface NavLink {
@@ -83,10 +85,13 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: "News",
+    label: "News and guides",
     items: [
-      { href: "/articles", label: "Articles", icon: Newspaper, description: "Analysis on AI accountability and regulation" },
+      { href: "/news", label: "All news", icon: Newspaper, description: "Policy updates and analysis, newest first" },
       { href: "/policy", label: "Policy updates", icon: Radio, description: "Regulatory developments, with their sources" },
+      { href: "/articles", label: "Analysis", icon: FileText, description: "What the developments mean for accountable AI" },
+      { href: "/guides", label: "Guides", icon: BookOpen, description: "POPIA section 71, King V, the EU AI Act and more, answered in full" },
+      { href: "/glossary", label: "Glossary", icon: BookMarked, description: "AI governance terms, defined plainly" },
     ],
   },
   {
@@ -220,7 +225,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20 xl:h-[5.5rem]">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center group shrink-0">
+            <Link href="/" aria-label="AI Integrity Certification, home" className="flex items-center group shrink-0">
               <div>
                 <div className="font-bold text-lg xl:text-xl leading-tight tracking-tight text-[#0f1f3d]">AIC</div>
                 <div className="text-[12px] leading-tight text-[#5e6b7b]">AI Integrity Certification</div>
