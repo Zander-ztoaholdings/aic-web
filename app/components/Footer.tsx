@@ -12,11 +12,14 @@ import { CONTACT_EMAIL, GENERAL_EMAIL } from "@/lib/contact";
 // as static sub-headed lists instead of mirroring the nav's dropdown behaviour.
 
 // Published standards and laws AIC's own standard is built with reference to.
+// Where AIC has written a guide, the link stays on this site: a reader (and a
+// search engine) gets the explanation, with the source linked from the guide.
 const standards = [
-  { label: "ISO/IEC 42001", url: "https://www.iso.org/standard/81230.html" },
-  { label: "POPIA section 71", url: "https://popia.co.za/section-71-automated-decision-making/" },
+  { label: "POPIA section 71", url: "/guides/popia-section-71-automated-decisions" },
+  { label: "King V and AI", url: "/guides/king-v-ai-governance" },
+  { label: "EU AI Act", url: "/guides/eu-ai-act-south-african-companies" },
+  { label: "ISO/IEC 42001", url: "/guides/iso-42001-south-africa" },
   { label: "NIST AI RMF", url: "https://www.nist.gov/itl/ai-risk-management-framework" },
-  { label: "EU AI Act", url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj" },
   { label: "IEEE 7000 series", url: "https://standards.ieee.org/ieee/7000/6781/" },
 ];
 
@@ -47,6 +50,9 @@ function XIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+// Columns are found by name, not position, so adding a menu cannot shift them.
+const links = (label: string) => (navGroups.find((g) => g.label === label)?.items ?? []).map((i) => ({ label: i.label, href: i.href }));
 
 export default function Footer() {
   return (
@@ -117,13 +123,17 @@ export default function Footer() {
             </Link>
           </div>
 
-          {[navGroups[0], navGroups[1], { ...navGroups[4], items: [...navGroups[4].items, ...topLevelLinks.map((l) => ({ ...l, description: "" }))] }].map((group) => (
-            <FooterColumn key={group.label} title={group.label} links={group.items.map((i) => ({ label: i.label, href: i.href }))} />
-          ))}
-
+          <FooterColumn title="Certification" links={links("Certification")} />
           <div className="space-y-8">
-            <FooterColumn title={navGroups[2].label} links={navGroups[2].items.map((i) => ({ label: i.label, href: i.href }))} />
-            <FooterColumn title={navGroups[3].label} links={navGroups[3].items.map((i) => ({ label: i.label, href: i.href }))} />
+            <FooterColumn title="Platform" links={[...links("Platform"), { label: "Read API and MCP", href: "/platform/api-and-mcp" }]} />
+            <FooterColumn title="Solutions" links={links("Solutions")} />
+          </div>
+          <div className="space-y-8">
+            <FooterColumn title="Company" links={[...links("Company"), ...topLevelLinks.map((l) => ({ label: l.label, href: l.href }))]} />
+            <FooterColumn title="Regulation" links={links("Regulation")} />
+          </div>
+          <div className="space-y-8">
+            <FooterColumn title="News and guides" links={links("Resources")} />
           </div>
 
           <div className="space-y-8">
@@ -132,9 +142,11 @@ export default function Footer() {
               <ul className="space-y-2.5 text-sm">
                 {standards.map((std) => (
                   <li key={std.label}>
-                    <a href={std.url} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                      {std.label}
-                    </a>
+                    {std.url.startsWith("/") ? (
+                      <Link href={std.url} className="text-white/70 hover:text-white transition-colors">{std.label}</Link>
+                    ) : (
+                      <a href={std.url} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">{std.label}</a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -157,6 +169,9 @@ export default function Footer() {
             aiccertified.cloud | © 2026 AI Integrity Certification (Pty) Ltd. All rights reserved.
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-white/50">
+            <Link href="/trust" className="hover:text-[#c9920a] transition-colors">
+              Trust centre
+            </Link>
             <Link href="/privacy" className="hover:text-[#c9920a] transition-colors">
               Privacy Policy
             </Link>

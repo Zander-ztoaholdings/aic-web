@@ -10,6 +10,8 @@ export const PLATFORM_URL = (process.env.NEXT_PUBLIC_PLATFORM_URL || "https://ap
 export interface PlatformFeature {
   name: string;
   what: string;
+  /** The page on this site that describes it in full, where there is one. */
+  href?: string;
 }
 
 export interface PlatformArea {
@@ -26,8 +28,8 @@ export const PLATFORM_AREAS: PlatformArea[] = [
     summary: "What you run, what it decided, and who answered for it.",
     features: [
       { name: "Dashboard", what: "Your AI exposure at a glance: systems, decisions, spend, and what needs you this week." },
-      { name: "AI estate", what: "Every AI system you run, what it is for, and the named person accountable for it." },
-      { name: "Decision log", what: "Decisions your systems record through the API, the ones a person overrode, and who made the call." },
+      { name: "AI register", what: "Every system that makes or shapes a decision, what it decides, whether about people, who answers for it, and what is missing. Systems found in your record but not declared are offered for adding.", href: "/platform/ai-register" },
+      { name: "Decision log", what: "Decisions your systems record through the API, the ones held for a person to review, the overrides, and who made the call.", href: "/platform/decision-log" },
       { name: "AI spend", what: "What you spend on AI models, by provider, model and system, read from your provider accounts." },
       { name: "Continuity record", what: "The standing record of your AI estate and every change to it, kept so it cannot be quietly rewritten." },
     ],
@@ -39,7 +41,9 @@ export const PLATFORM_AREAS: PlatformArea[] = [
     features: [
       { name: "Frameworks", what: "Choose which frameworks you track, from the list below, or add your own." },
       { name: "Controls", what: "Each requirement, and the evidence behind it. Evidence is collected once and counts for every framework it supports." },
-      { name: "Connected systems", what: "AIC reads your systems every night with read-only access and records what changed." },
+      { name: "Connected systems", what: "AIC reads your systems every night with read-only access and records what changed.", href: "/integrations" },
+      { name: "Evidence packs", what: "A sealed copy of your record for a period, for an assessor, board or insurer, that anyone can check has not been changed.", href: "/platform/evidence-packs" },
+      { name: "Read API and MCP", what: "Your own dashboards and AI assistants can read your register, risks, checks and coverage, and change nothing.", href: "/platform/api-and-mcp" },
       { name: "Automated checks", what: "What AIC found in your connected systems, why it matters, and the steps to fix it." },
       { name: "Evidence vault", what: "The evidence you have filed, against the requirements for your Division." },
       { name: "Policies", what: "Your policies, the version in force, and who has accepted it." },
@@ -52,9 +56,9 @@ export const PLATFORM_AREAS: PlatformArea[] = [
     name: "Risk and people",
     summary: "What could go wrong, who holds your data, who has access, and who is trained.",
     features: [
-      { name: "Risk register", what: "What could go wrong, how bad it would be and who owns it, with risks suggested from what your connected systems show." },
-      { name: "Suppliers", what: "Who holds your data or runs part of your service, their documents, and when you last checked them." },
-      { name: "People", what: "Joiners and leavers from your HR system, matched to the accounts they hold." },
+      { name: "Risk register", what: "What could go wrong, how bad it would be and who owns it, tied to the AI system it concerns, with risks suggested from what your connected systems show.", href: "/platform/risk-management" },
+      { name: "Suppliers", what: "Who holds your data or runs part of your service, their documents, how their AI behaves, and a link that lets them answer for themselves.", href: "/platform/supplier-ai-review" },
+      { name: "People", what: "Joiners and leavers from your HR system, matched to the accounts they hold, and the systems and risks a leaver still owns, handed over in one step." },
       { name: "Access reviews", what: "Confirm, person by person, who still needs each account." },
       { name: "Training", what: "Security, POPIA and AI modules, and who has completed them." },
     ],
@@ -66,8 +70,8 @@ export const PLATFORM_AREAS: PlatformArea[] = [
     features: [
       { name: "AIC Aware", what: "Declare your AI awareness and hold a badge anyone can verify. Self-declared, and labelled as such." },
       { name: "Your certificate", what: "Your current status, and what stands between you and the next stage." },
-      { name: "Trust page", what: "A public page for your customers, live from your record rather than written once and left." },
-      { name: "Questionnaires", what: "Answer a buyer’s security questionnaire from your record instead of from memory." },
+      { name: "Trust page", what: "A public page for your customers, live from your record rather than written once and left.", href: "/platform/trust-page" },
+      { name: "Questionnaires", what: "Answer a buyer’s security questionnaire from your record instead of from memory.", href: "/platform/questionnaires" },
       { name: "Correspondence", what: "Messages with your assessor, kept on the record." },
     ],
   },

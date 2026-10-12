@@ -1,6 +1,8 @@
 import { getNews } from "@/lib/news";
 import { SITE_URL } from "@/lib/seo";
 import { GUIDES } from "@/app/data/guides";
+import { CAPABILITIES } from "@/app/data/capabilities";
+import { SOLUTIONS } from "@/app/data/solutions";
 
 // /llms.txt: a plain-text map of the site for AI assistants and answer
 // engines (the llmstxt.org convention). When someone asks an assistant about
@@ -36,6 +38,11 @@ export async function GET() {
     "## Company",
     `- [About AIC](${SITE_URL}/about): founders Zander Wilken and Albert von Ronge.`,
     `- [The platform](${SITE_URL}/platform): the AIC platform for keeping an AI estate on the record.`,
+    ...CAPABILITIES.map((c) => `- [${c.name}](${SITE_URL}/platform/${c.slug}): ${c.description}`),
+    `- [Integrations](${SITE_URL}/integrations): the systems the platform reads, read-only.`,
+    ...SOLUTIONS.map((x) => `- [${x.name}](${SITE_URL}/solutions/${x.slug}): ${x.description}`),
+    `- [Partner programme](${SITE_URL}/partners): how advisers, technology companies, insurers and brokers partner with AIC, and the independence rules.`,
+    `- [Trust centre](${SITE_URL}/trust): security, privacy, impartiality and accreditation status.`,
     `- [Workshops](${SITE_URL}/workshops): industry sessions on AI governance frameworks.`,
     `- [Contact](${SITE_URL}/contact)`,
     "",

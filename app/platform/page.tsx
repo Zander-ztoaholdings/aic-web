@@ -136,7 +136,7 @@ export default function PlatformPage() {
               <dl className="border-y border-[#dde2e8] divide-y divide-[#dde2e8] bg-white rounded-xl px-5 md:px-6">
                 {area.features.map((f) => (
                   <div key={f.name} className="grid sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-1 sm:gap-6 py-4">
-                    <dt className="font-semibold leading-snug">{f.name}</dt>
+                    <dt className="font-semibold leading-snug">{f.href ? <Link href={f.href} className="hover:text-[#8a6114] underline decoration-[#a8772a]/40 underline-offset-4">{f.name}</Link> : f.name}</dt>
                     <dd className="text-[15px] text-[#5e6b7b] leading-[1.6]">{f.what}</dd>
                   </div>
                 ))}

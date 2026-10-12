@@ -30,6 +30,14 @@ import {
   Mail,
   BookOpen,
   BookMarked,
+  ShieldAlert,
+  Truck,
+  PackageCheck,
+  Plug,
+  Briefcase,
+  Landmark,
+  Umbrella,
+  Lock,
 } from "lucide-react";
 
 export interface NavLink {
@@ -74,18 +82,31 @@ export const navGroups: NavGroup[] = [
     label: "Platform",
     items: [
       { href: "/platform", label: "The platform", icon: LayoutGrid, description: "Your AI estate, kept on the record" },
+      { href: "/platform/ai-register", label: "AI register", icon: BookMarked, description: "Every system, what it decides, and who answers for it" },
+      { href: "/platform/risk-management", label: "AI risk management", icon: ShieldAlert, description: "Risks scored, owned and tied to the evidence" },
+      { href: "/platform/supplier-ai-review", label: "Supplier AI review", icon: Truck, description: "The AI inside the software you buy" },
+      { href: "/platform/evidence-packs", label: "Evidence packs", icon: PackageCheck, description: "Sealed records for boards, assessors and insurers" },
+      { href: "/integrations", label: "Integrations", icon: Plug, description: "The systems AIC reads, read-only" },
       { href: "/intake", label: "November intake", icon: CalendarCheck, description: "Join the founding cohort" },
     ],
   },
   {
-    label: "Where we operate",
+    label: "Solutions",
+    items: [
+      { href: "/solutions/hr-and-recruitment", label: "HR and recruitment", icon: Briefcase, description: "Screening and ranking candidates" },
+      { href: "/solutions/financial-services", label: "Financial services", icon: Landmark, description: "Credit, fraud and collections decisions" },
+      { href: "/solutions/insurance", label: "Insurance", icon: Umbrella, description: "Pricing and claims, and insuring AI" },
+    ],
+  },
+  {
+    label: "Regulation",
     items: [
       { href: "/regulatory-map", label: "Regulatory map", icon: Globe2, description: "AI regulation by country, and how AIC's frameworks apply" },
       { href: "/frameworks", label: "Frameworks", icon: Layers, description: "AI mapped onto the safety frameworks your industry uses" },
     ],
   },
   {
-    label: "News and guides",
+    label: "Resources",
     items: [
       { href: "/news", label: "All news", icon: Newspaper, description: "Policy updates and analysis, newest first" },
       { href: "/policy", label: "Policy updates", icon: Radio, description: "Regulatory developments, with their sources" },
@@ -99,7 +120,8 @@ export const navGroups: NavGroup[] = [
     items: [
       { href: "/about", label: "About AIC", icon: Users, description: "Who we are and why AIC exists" },
       { href: "/insurers", label: "For insurers", icon: Building2, description: "A verifiable signal of AI accountability" },
-      { href: "/contact?topic=partnership", label: "Become a partner", icon: Handshake, description: "Research, distribution, training or another partnership" },
+      { href: "/partners", label: "Partner programme", icon: Handshake, description: "Advisers, technology companies, insurers and brokers" },
+      { href: "/trust", label: "Trust centre", icon: Lock, description: "Security, privacy, independence and accreditation" },
       { href: "/contact", label: "Contact", icon: Mail, description: "Talk to AIC" },
     ],
   },
@@ -233,8 +255,8 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop nav links */}
-            <div className="hidden lg:flex flex-1 items-center justify-between ml-6 xl:ml-14">
-              <div className="flex flex-1 items-center justify-center gap-0.5 xl:gap-3">
+            <div className="hidden lg:flex flex-1 items-center justify-between ml-6 xl:ml-10">
+              <div className="flex flex-1 items-center justify-center gap-0.5 xl:gap-1">
               {navGroups.map((group) => {
                 const isOpen = openGroup === group.label;
                 return (
@@ -243,7 +265,7 @@ export default function Navbar() {
                       type="button"
                       onClick={() => setOpenGroup(isOpen ? null : group.label)}
                       aria-expanded={isOpen}
-                      className={`flex items-center gap-1 whitespace-nowrap px-2.5 xl:px-4 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
+                      className={`flex items-center gap-1 whitespace-nowrap px-2.5 xl:px-3 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
                         isOpen
                           ? "text-[#0f1f3d] bg-[#f0f4f8]"
                           : "text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8]"
@@ -294,7 +316,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-1.5 whitespace-nowrap px-2.5 xl:px-4 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
+                    className={`hidden xl:flex items-center gap-1.5 whitespace-nowrap px-2.5 xl:px-3 py-2 rounded-lg text-sm xl:text-[15px] font-medium transition-colors ${
                       isActive
                         ? "text-[#0f1f3d] bg-[#f0f4f8]"
                         : "text-[#6b7280] hover:text-[#0f1f3d] hover:bg-[#f0f4f8]"

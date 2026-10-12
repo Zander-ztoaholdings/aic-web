@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { getNews } from "@/lib/news";
 import { GUIDES } from "@/app/data/guides";
+import { CAPABILITIES } from "@/app/data/capabilities";
+import { SOLUTIONS } from "@/app/data/solutions";
 import { allJurisdictions } from "@/app/data/regulatory-data";
 
 // Async because the editorial routes are driven by the CMS. Previously this
@@ -42,6 +44,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/policy`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/security`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${base}/trust`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/integrations`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    ...CAPABILITIES.map((c) => ({ url: `${base}/platform/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 })),
+    ...SOLUTIONS.map((x) => ({ url: `${base}/solutions/${x.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.9 })),
   ];
 
   // A CMS outage must not empty the sitemap: getNews returns null when it
