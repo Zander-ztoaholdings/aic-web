@@ -48,7 +48,7 @@ export default function HeroFilm({ children }: { children: ReactNode }) {
   return (
     <section
       ref={ref}
-      className="relative isolate bg-[#0a1628] overflow-hidden min-h-[calc(100svh-112px)] lg:min-h-[calc(100vh-112px)] flex items-end lg:items-center"
+      className="relative isolate bg-[#0a1628] overflow-hidden min-h-[calc(100svh-72px)] lg:min-h-[calc(100vh-72px)] flex items-end lg:items-center"
     >
       <motion.div
         aria-hidden="true"

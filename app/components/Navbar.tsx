@@ -15,8 +15,8 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
  * the logo and two pill buttons, and each menu opens one wide panel. A menu
  * with several kinds of page has a rail of sections on the left; the pages
  * sit in two columns on the right, each with a one-line description, no
- * icons. The intake moved from the button to a band under the bar, where a
- * campaign belongs; the button now asks for the thing every page leads to.
+ * icons. The intake moved from the button into the Platform menu; the
+ * button now asks for the thing every page leads to.
  */
 
 export interface NavLink {
@@ -155,7 +155,6 @@ export default function Navbar() {
   };
 
   return (
-    <>
     <header className="sticky top-0 z-50">
       <AnimatePresence>
         {overlayOpen && (
@@ -322,29 +321,6 @@ export default function Navbar() {
           </div>
         )}
       </nav>
-
-      {/* Campaign band, under the bar, as Vanta runs theirs. */}
-      {/* On a phone the band is one short line hanging under the bar, out of
-          the page flow, and slides up behind the bar once the page scrolls.
-          Hiding it in the flow instead changed the header's height mid-scroll,
-          which made the page jump. */}
-      <div
-        className={`relative z-30 bg-aic-navy text-white max-lg:absolute max-lg:inset-x-0 max-lg:top-full max-lg:h-10 max-lg:transition-[transform,opacity] max-lg:duration-300 ${
-          scrolled ? "max-lg:-translate-y-full max-lg:opacity-0 max-lg:pointer-events-none" : ""
-        }`}
-      >
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-10 py-2.5 max-lg:py-0 max-lg:h-full flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[14px] max-lg:flex-nowrap max-lg:justify-between max-lg:text-[13px]">
-          <span className="font-semibold hidden lg:inline">The November intake is open: join the founding cohort.</span>
-          <span className="font-semibold lg:hidden">The November intake is open</span>
-          <Link href="/intake" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white whitespace-nowrap">
-            Find out more <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
     </header>
-    {/* Holds the band's place in the page on a phone, so nothing below it
-        moves when the band slides away. */}
-    <div aria-hidden="true" className="lg:hidden h-10 bg-aic-navy" />
-    </>
   );
 }
