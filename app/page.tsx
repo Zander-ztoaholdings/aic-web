@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import SealArt from "@/app/components/SealArt";
+import HeroFilm from "@/app/components/HeroFilm";
+import StripeFrame from "@/app/components/StripeFrame";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -129,28 +131,8 @@ export default function MarketingPage() {
   return (
     <div className="bg-[#0a1628] selection:bg-[#c9920a] selection:text-[#0a1628]">
       {/* SECTION 1 — HERO */}
-      <section className="relative lg:min-h-screen flex items-center overflow-hidden bg-[#0a1628]">
-        {/* Animated radial gradient background */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(circle at 80% 20%, #c9920a 0%, transparent 40%)",
-            animation: "breathe 8s infinite ease-in-out",
-            opacity: 0.15
-          }}
-        />
-
-        {/* Drifting grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            animation: "gridDrift 60s linear infinite"
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-5 md:px-8 pt-14 pb-0 lg:pt-20 lg:pb-32 w-full">
+      <HeroFilm>
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 pt-24 pb-14 lg:pt-20 lg:pb-32 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <motion.div
               initial="hidden"
@@ -236,18 +218,6 @@ export default function MarketingPage() {
                 </Link>
               </motion.div>
 
-              {/* Phone: the product itself, rising out of the hero. */}
-              <div className="lg:hidden relative mt-12 h-[360px] overflow-hidden flex justify-center">
-                <Image
-                  src="/images/platform-phone-home.webp"
-                  alt="The AIC platform on a phone, showing the record of Karoo Lending (Demo)"
-                  width={624}
-                  height={1305}
-                  priority
-                  sizes="280px"
-                  className="w-[280px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]"
-                />
-              </div>
             </motion.div>
 
             {/* Right side — Brand Mark */}
@@ -280,7 +250,7 @@ export default function MarketingPage() {
             />
           </div>
         </div>
-      </section>
+      </HeroFilm>
 
       {/* ── THE PROBLEM, MADE CONCRETE ──────────────────────────────
           Asymmetric on purpose. The previous version of this section was a
@@ -349,7 +319,21 @@ export default function MarketingPage() {
               </div>
             </div>
 
-            <div className="lg:pt-12">
+            <div className="lg:pt-4">
+              {/* The film's last shot, framed: where the decision lands. */}
+              <StripeFrame className="mb-10">
+                <video
+                  src="/media/aic-decision-phone.mp4"
+                  poster="/media/aic-decision-phone-poster.jpg"
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  preload="none"
+                  aria-hidden="true"
+                  className="block w-full aspect-[4/5] object-cover rounded-xl shadow-[0_24px_48px_-24px_rgba(10,22,40,0.5)]"
+                />
+              </StripeFrame>
               <div className="border-l-2 border-aic-copper pl-5 py-1">
                 <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#9ca3af] mb-3 max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#5e6b7b]">
                   A decline letter, in full
