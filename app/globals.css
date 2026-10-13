@@ -383,3 +383,14 @@ html {
 .aic-prose table { width: 100%; border-collapse: collapse; font-size: 0.95em; display: block; overflow-x: auto; }
 .aic-prose th, .aic-prose td { border-bottom: 1px solid #dde2e8; padding: 0.55em 0.75em 0.55em 0; text-align: left; vertical-align: top; }
 .aic-prose th { color: #0e1b2c; font-weight: 700; }
+
+/* Background films never show a native play or pause control, even where a
+   browser would otherwise draw one when autoplay is held back. */
+video.ambient-video::-webkit-media-controls,
+video.ambient-video::-webkit-media-controls-panel,
+video.ambient-video::-webkit-media-controls-play-button,
+video.ambient-video::-webkit-media-controls-start-playback-button,
+video.ambient-video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}

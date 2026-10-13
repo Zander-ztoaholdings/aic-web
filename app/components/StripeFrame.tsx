@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
 /**
  * The hero's stripe wipe, carried into the page: navy and brass bars behind a
@@ -17,11 +17,11 @@ const BARS = [
   { top: "91%", h: "6%", w: "74%", c: "#0E1B2C", from: -140 },
 ];
 
-function Bar({ bar, progress, still }: { bar: (typeof BARS)[number]; progress: ReturnType<typeof useScroll>["scrollYProgress"]; still: boolean }) {
-  const x = useTransform(progress, [0, 0.5], [bar.from, 0]);
+function Bar({ bar, progress, still }: { bar: (typeof BARS)[number]; progress: ReturnType<typeof useSpring>; still: boolean }) {
+  const x = useTransform(progress, [0, 0.45], [bar.from, 0]);
   return (
     <motion.span
-      className="absolute left-0 block"
+      className="absolute left-0 block will-change-transform"
       style={{ top: bar.top, height: bar.h, width: bar.w, background: bar.c, x: still ? 0 : x }}
     />
   );
@@ -31,11 +31,12 @@ export default function StripeFrame({ children, className = "" }: { children: Re
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4, restDelta: 0.0005 });
   return (
     <div ref={ref} className={`relative ${className}`}>
       <div aria-hidden="true" className="absolute -left-5 sm:-left-8 right-6 top-0 bottom-0 overflow-hidden">
         {BARS.map((b) => (
-          <Bar key={b.top} bar={b} progress={scrollYProgress} still={!!reduce} />
+          <Bar key={b.top} bar={b} progress={smooth} still={!!reduce} />
         ))}
       </div>
       <div className="relative px-6 py-[12%] sm:px-10">{children}</div>

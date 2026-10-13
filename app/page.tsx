@@ -6,6 +6,7 @@ import { useState } from "react";
 import SealArt from "@/app/components/SealArt";
 import HeroFilm from "@/app/components/HeroFilm";
 import StripeFrame from "@/app/components/StripeFrame";
+import AmbientVideo from "@/app/components/AmbientVideo";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -320,17 +321,11 @@ export default function MarketingPage() {
             </div>
 
             <div className="lg:pt-4">
-              {/* The film's last shot, framed: where the decision lands. */}
+              {/* The film's last shot, framed: a named person signing for it. */}
               <StripeFrame className="mb-10">
-                <video
-                  src="/media/aic-decision-phone.mp4"
-                  poster="/media/aic-decision-phone-poster.jpg"
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  preload="none"
-                  aria-hidden="true"
+                <AmbientVideo
+                  src="/media/aic-signature.mp4"
+                  poster="/media/aic-signature-poster.jpg"
                   className="block w-full aspect-[4/5] object-cover rounded-xl shadow-[0_24px_48px_-24px_rgba(10,22,40,0.5)]"
                 />
               </StripeFrame>
@@ -529,8 +524,8 @@ export default function MarketingPage() {
               <Image
                 src="/images/platform-devices.webp"
                 alt="The AIC platform on a laptop and a phone: the record and the AI register of Karoo Lending (Demo)"
-                width={1804}
-                height={1194}
+                width={2400}
+                height={1515}
                 sizes="(min-width: 1280px) 1200px, 100vw"
                 className="w-full h-auto"
               />
