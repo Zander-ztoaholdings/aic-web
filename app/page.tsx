@@ -1,6 +1,9 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import SealArt from "@/app/components/SealArt";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -119,11 +122,14 @@ const standards = [
 
 export default function MarketingPage() {
   const headlineHuman = "Human".split("");
+  // On a phone the argument opens with its first and sharpest paragraphs;
+  // the rest is one tap away rather than five screens of text.
+  const [whyOpen, setWhyOpen] = useState(false);
 
   return (
     <div className="bg-[#0a1628] selection:bg-[#c9920a] selection:text-[#0a1628]">
       {/* SECTION 1 — HERO */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a1628]">
+      <section className="relative lg:min-h-screen flex items-center overflow-hidden bg-[#0a1628]">
         {/* Animated radial gradient background */}
         <div 
           className="absolute inset-0 pointer-events-none"
@@ -144,7 +150,7 @@ export default function MarketingPage() {
           }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-5 md:px-8 pt-20 pb-32 w-full">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 pt-14 pb-0 lg:pt-20 lg:pb-32 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <motion.div
               initial="hidden"
@@ -160,7 +166,7 @@ export default function MarketingPage() {
                   hidden: { opacity: 0 },
                   visible: { opacity: 1 }
                 }}
-                className="text-5xl md:text-8xl text-white mb-8 leading-[1.05] tracking-[-0.03em] font-bold"
+                className="text-[2.6rem] md:text-8xl text-white mb-6 lg:mb-8 leading-[1.08] lg:leading-[1.05] tracking-[-0.03em] font-bold"
                 style={{ fontFamily: "'Merriweather', serif" }}
               >
                 Certifying the{" "}
@@ -184,7 +190,7 @@ export default function MarketingPage() {
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 }
                 }}
-                className="text-lg md:text-xl text-white/80 mb-12 max-w-3xl leading-[1.65]"
+                className="text-lg md:text-xl text-white/80 mb-8 lg:mb-12 max-w-3xl leading-[1.6] lg:leading-[1.65]"
               >
                 Certifying that a named human remains accountable for every decision that matters.
               </motion.p>
@@ -196,25 +202,52 @@ export default function MarketingPage() {
                 }}
                 className="flex flex-wrap gap-4"
               >
+                {/* Phone: one primary action and one quiet link. */}
+                <Link
+                  href="/contact?topic=platform"
+                  className="lg:hidden inline-flex items-center gap-3 bg-white text-[#0e1b2c] pl-6 pr-2 py-2 rounded-full text-[15px] font-semibold"
+                >
+                  Book a walk-through
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-[#c9920a] text-white"><ArrowRight className="w-4 h-4" /></span>
+                </Link>
+                <Link
+                  href="/certification"
+                  className="lg:hidden inline-flex items-center py-3 text-[15px] font-medium text-white/80 underline underline-offset-4 decoration-white/30"
+                >
+                  See how it works
+                </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-10 py-5 rounded-full transition-all text-sm font-bold shadow-2xl shadow-[#c9920a]/30 hover:-translate-y-1"
+                  className="max-lg:hidden inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-10 py-5 rounded-full transition-all text-sm font-bold shadow-2xl shadow-[#c9920a]/30 hover:-translate-y-1"
                 >
                   Contact us <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/certification"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-10 py-5 rounded-full transition-all text-sm font-bold hover:-translate-y-1"
+                  className="max-lg:hidden inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-10 py-5 rounded-full transition-all text-sm font-bold hover:-translate-y-1"
                 >
                   SEE HOW IT WORKS <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/governance-hub"
-                  className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 px-10 py-5 rounded-full transition-all text-sm font-bold hover:-translate-y-1"
+                  className="max-lg:hidden inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 px-10 py-5 rounded-full transition-all text-sm font-bold hover:-translate-y-1"
                 >
                   ALGORITHMIC RIGHTS <ArrowRight className="w-4 h-4" />
                 </Link>
               </motion.div>
+
+              {/* Phone: the product itself, rising out of the hero. */}
+              <div className="lg:hidden relative mt-12 h-[360px] overflow-hidden flex justify-center">
+                <Image
+                  src="/images/platform-phone-home.webp"
+                  alt="The AIC platform on a phone, showing the record of Karoo Lending (Demo)"
+                  width={624}
+                  height={1305}
+                  priority
+                  sizes="280px"
+                  className="w-[280px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]"
+                />
+              </div>
             </motion.div>
 
             {/* Right side — Brand Mark */}
@@ -239,7 +272,7 @@ export default function MarketingPage() {
         </div>
 
         {/* Animated Scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+        <div className="max-lg:hidden absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
           <div className="w-[2px] h-12 bg-white/10 relative overflow-hidden rounded-full">
             <div 
               className="absolute top-0 left-0 w-full h-1/3 bg-[#c9920a] rounded-full"
@@ -258,7 +291,7 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-12 lg:gap-16 items-start">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#8a6114]">
                 Why AIC exists
               </span>
               <h2
@@ -275,7 +308,7 @@ export default function MarketingPage() {
                   automated systems — and the person on the receiving end
                   usually never learns that a system was involved at all.
                 </p>
-                <p>
+                <p className={whyOpen ? "" : "max-lg:hidden"}>
                   Technology can be audited. Code can be reviewed. But
                   accountability is not a property of software; it is a property
                   of a person. Right now there is no recognised standard for who
@@ -289,7 +322,7 @@ export default function MarketingPage() {
                 {/* The sharpest thing certification actually does, stated as a
                     cost rather than a benefit. A mark whose only effect is to
                     make you look better is a mark nobody should believe. */}
-                <p>
+                <p className={whyOpen ? "" : "max-lg:hidden"}>
                   Which closes a door. When an automated decision causes harm,
                   the position available today is that the system did it and
                   nobody understood it well enough to be responsible — no
@@ -300,16 +333,25 @@ export default function MarketingPage() {
                   the system actually behaves without checking with anyone
                   else.
                 </p>
-                <p>
+                <p className={whyOpen ? "" : "max-lg:hidden"}>
                   That is a defence given up, not a badge acquired. It is also
                   the reason the mark is worth anything.
                 </p>
+                {!whyOpen && (
+                  <button
+                    type="button"
+                    onClick={() => setWhyOpen(true)}
+                    className="lg:hidden text-[15px] font-semibold text-[#8a6114] underline underline-offset-4"
+                  >
+                    Read the whole argument
+                  </button>
+                )}
               </div>
             </div>
 
             <div className="lg:pt-12">
               <div className="border-l-2 border-aic-copper pl-5 py-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#9ca3af] mb-3">
+                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#9ca3af] mb-3 max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#5e6b7b]">
                   A decline letter, in full
                 </p>
                 <p className="text-[#3d4a58] leading-relaxed text-[15px]">
@@ -336,7 +378,7 @@ export default function MarketingPage() {
       <section className="bg-[#f0f4f8] py-20 md:py-28 border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="max-w-3xl mb-10">
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#8a6114]">
               Try the standard
             </span>
             <h2
@@ -366,7 +408,7 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#8a6114]">
                 The framework
               </span>
               <h2
@@ -389,17 +431,17 @@ export default function MarketingPage() {
             </Link>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 border-t border-[#e5e7eb]">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 border-t border-[#e5e7eb] max-sm:flex max-sm:gap-3 max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory max-sm:border-t-0 max-sm:-mx-5 max-sm:px-5 max-sm:pb-2 [scrollbar-width:none]">
             {algorithmicRights.map((right) => (
               <div
                 key={right.title}
-                className="border-b sm:border-r border-[#e5e7eb] last:border-r-0 p-6 flex flex-col gap-3 hover:bg-[#f8f9fb] transition-colors"
+                className="border-b sm:border-r border-[#e5e7eb] last:border-r-0 p-6 flex flex-col gap-3 hover:bg-[#f8f9fb] transition-colors max-sm:snap-start max-sm:shrink-0 max-sm:w-[78%] max-sm:rounded-2xl max-sm:border max-sm:last:border-r max-sm:bg-[#f5f7f9] max-sm:min-h-[220px]"
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-aic-copper">
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:tracking-normal max-lg:text-[#8a6114]">
                     {right.code}
                   </span>
-                  <span className="font-mono text-[11px] text-[#9ca3af] tabular-nums">
+                  <span className="font-mono text-[11px] text-[#9ca3af] tabular-nums max-lg:font-sans max-lg:text-sm max-lg:text-[#5e6b7b]">
                     {right.count} tests
                   </span>
                 </div>
@@ -425,7 +467,7 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#8a6114]">
                 Check us
               </span>
               <h2
@@ -441,12 +483,12 @@ export default function MarketingPage() {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-px bg-white/10 border border-white/10">
+            <div className="grid grid-cols-2 gap-px bg-white/10 border border-white/10 max-lg:rounded-2xl max-lg:overflow-hidden">
               {proofPoints.map((p) => (
                 <Link
                   key={p.href}
                   href={p.href}
-                  className="group bg-[#0a1628] p-6 hover:bg-[#0f1f3d] transition-colors"
+                  className="group bg-[#0a1628] p-6 max-sm:p-5 hover:bg-[#0f1f3d] transition-colors"
                 >
                   <div
                     className="text-4xl font-bold text-white tabular-nums leading-none mb-2"
@@ -457,7 +499,7 @@ export default function MarketingPage() {
                   <div className="text-sm font-medium text-white mb-1.5">
                     {p.label}
                   </div>
-                  <p className="text-[13px] text-white/50 leading-relaxed mb-3">
+                  <p className="max-sm:hidden text-[13px] text-white/50 leading-relaxed mb-3">
                     {p.detail}
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-aic-copper group-hover:gap-2.5 transition-all">
@@ -477,7 +519,7 @@ export default function MarketingPage() {
       <section className="bg-white py-20 md:py-24 border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-16">
-            <div>
+            <div className="order-1">
               <p className="text-sm text-[#5e6b7b]">The platform</p>
               <h2
                 className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-3 mb-5 text-balance"
@@ -498,14 +540,26 @@ export default function MarketingPage() {
                 See what the platform does
               </Link>
             </div>
-            <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
+            {/* The product, not an illustration of it. Sample data, labelled. */}
+            <figure className="order-2 lg:order-3 lg:col-span-2 lg:mt-6 max-lg:-mx-2">
+              <Image
+                src="/images/platform-devices.webp"
+                alt="The AIC platform on a laptop and a phone: the record and the AI register of Karoo Lending (Demo)"
+                width={1804}
+                height={1194}
+                sizes="(min-width: 1280px) 1200px, 100vw"
+                className="w-full h-auto"
+              />
+              <figcaption className="mt-3 text-[13px] text-[#5e6b7b]">Karoo Lending (Demo) is sample data.</figcaption>
+            </figure>
+            <ul className="order-3 lg:order-2 grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
               {PLATFORM_AREAS.map((a) => (
                 <li key={a.id} className="border-t border-[#dde2e8] pt-4">
                   <Link href={`/platform#${a.id}`} className="font-semibold text-[#0f1f3d] hover:text-[#8a6114] transition-colors">
                     {a.name}
                   </Link>
                   <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-1">{a.summary}</p>
-                  <p className="text-[13px] text-[#5e6b7b] leading-[1.6] mt-2">
+                  <p className="max-lg:hidden text-[13px] text-[#5e6b7b] leading-[1.6] mt-2">
                     {a.features.map((f) => f.name).join(", ")}
                   </p>
                 </li>
@@ -543,7 +597,7 @@ export default function MarketingPage() {
             <div className="flex md:justify-end">
               <Link
                 href="/aware"
-                className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-full transition-all text-sm font-bold shadow-md hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 bg-[#c9920a] hover:bg-[#b07d08] text-white px-8 py-4 rounded-full transition-all text-sm font-bold shadow-md hover:-translate-y-0.5 max-sm:w-full max-sm:justify-center max-sm:px-5"
               >
                 Take the free self-assessment <ArrowRight className="w-4 h-4" />
               </Link>
@@ -588,7 +642,7 @@ export default function MarketingPage() {
                   key={s.code}
                   className="grid sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] gap-2 sm:gap-6 py-5"
                 >
-                  <dt className="font-mono text-sm font-semibold text-[#0f1f3d] tracking-tight">
+                  <dt className="font-mono text-sm font-semibold text-[#0f1f3d] tracking-tight max-lg:font-sans">
                     {s.code}
                   </dt>
                   <dd className="text-sm text-[#6b7280] leading-relaxed">
@@ -633,8 +687,9 @@ export default function MarketingPage() {
       </section>
 
       {/* ── CLOSE ────────────────────────────────────────────────── */}
-      <section className="bg-[#0a1628] py-20 md:py-28">
-        <div className="max-w-4xl mx-auto px-5 md:px-8">
+      <section className="relative overflow-hidden bg-[#0a1628] py-20 md:py-28">
+        <SealArt className="pointer-events-none absolute -right-24 -top-10 w-[300px] lg:right-[-60px] lg:top-1/2 lg:-translate-y-1/2 lg:w-[560px] opacity-60" />
+        <div className="relative max-w-4xl mx-auto px-5 md:px-8">
           <p className="text-sm text-white/60">
             Founding cohort, November intake
           </p>

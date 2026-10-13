@@ -323,10 +323,13 @@ export default function Navbar() {
       </nav>
 
       {/* Campaign band, under the bar, as Vanta runs theirs. */}
-      <div className="relative z-30 bg-aic-navy text-white">
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-10 py-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[14px]">
-          <span className="font-semibold">The November intake is open: join the founding cohort.</span>
-          <Link href="/intake" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white">
+      {/* On a phone the band is one short line and leaves once the page
+          scrolls, so it never sits over the content. */}
+      <div className={`relative z-30 bg-aic-navy text-white ${scrolled ? "max-lg:hidden" : ""}`}>
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-10 py-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[14px] max-lg:flex-nowrap max-lg:justify-between max-lg:text-[13px]">
+          <span className="font-semibold hidden lg:inline">The November intake is open: join the founding cohort.</span>
+          <span className="font-semibold lg:hidden">The November intake is open</span>
+          <Link href="/intake" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white whitespace-nowrap">
             Find out more <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

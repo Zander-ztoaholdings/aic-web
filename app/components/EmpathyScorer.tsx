@@ -133,8 +133,9 @@ export default function EmpathyScorer() {
       {/* ── The letter ──────────────────────────────────────────────── */}
       <div className="border-b lg:border-b-0 lg:border-r border-[#e5e7eb] bg-[#f8f9fb]">
         <div className="px-5 py-3 border-b border-[#e5e7eb] bg-white">
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#9ca3af]">
-            Automated decline · composite, no organisation named
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#9ca3af] max-lg:font-sans max-lg:text-[13px] max-lg:normal-case max-lg:tracking-normal max-lg:text-[#5e6b7b]">
+            <span className="max-lg:hidden">Automated decline · composite, no organisation named</span>
+            <span className="lg:hidden">An automated decline: a composite, with no organisation named</span>
           </span>
         </div>
         <div className="p-6 sm:p-8 text-[15px] leading-relaxed text-[#3d4a58] space-y-4">
@@ -165,7 +166,7 @@ export default function EmpathyScorer() {
               <h3 className="text-lg font-semibold text-[#0f1f3d]">
                 Score it yourself
               </h3>
-              <span className="font-mono text-xs text-[#9ca3af] tabular-nums">
+              <span className="font-mono text-xs text-[#9ca3af] tabular-nums max-lg:font-sans max-lg:text-[13px]">
                 {answered}/{DIMENSIONS.length}
               </span>
             </div>
@@ -246,7 +247,7 @@ export default function EmpathyScorer() {
 
             <div className="flex gap-3 mb-6">
               <div className="flex-1 border border-[#e5e7eb] rounded-lg p-3.5">
-                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9ca3af] mb-1">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9ca3af] mb-1 max-lg:font-sans max-lg:text-[13px] max-lg:normal-case max-lg:tracking-normal max-lg:text-[#5e6b7b]">
                   You scored it
                 </div>
                 <div className="text-3xl font-bold text-[#0f1f3d] tabular-nums">
@@ -254,7 +255,7 @@ export default function EmpathyScorer() {
                 </div>
               </div>
               <div className="flex-1 border border-aic-copper/40 bg-aic-copper/5 rounded-lg p-3.5">
-                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#8a6607] mb-1">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#8a6607] mb-1 max-lg:font-sans max-lg:text-[13px] max-lg:normal-case max-lg:tracking-normal">
                   AIC scored it
                 </div>
                 <div className="text-3xl font-bold text-[#0f1f3d] tabular-nums">
@@ -283,7 +284,7 @@ export default function EmpathyScorer() {
                       <span className="text-sm font-medium text-[#0f1f3d] flex-1">
                         {d.label}
                       </span>
-                      <span className="font-mono text-xs text-[#9ca3af] tabular-nums shrink-0">
+                      <span className="font-mono text-xs text-[#9ca3af] tabular-nums max-lg:font-sans max-lg:text-[13px] shrink-0">
                         you {mine} · AIC {d.aic}
                       </span>
                     </div>

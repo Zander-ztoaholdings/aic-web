@@ -268,13 +268,17 @@ html {
 }
 
 /* ─── Typography responsiveness ─────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Improve tap targets on mobile */
-  nav a,
-  button {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+/* In the base layer so a utility class (hidden, flex, block) on a button or
+   link still wins; unlayered, this rule overrode every "hidden" on a phone. */
+@layer base {
+  @media (max-width: 640px) {
+    /* Improve tap targets on mobile */
+    nav a,
+    button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
   }
 }
 
