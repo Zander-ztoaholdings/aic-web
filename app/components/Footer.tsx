@@ -53,6 +53,8 @@ function XIcon({ className }: { className?: string }) {
 
 // Columns are found by name, not position, so adding a menu cannot shift them.
 const links = (label: string) => (navGroups.find((g) => g.label === label)?.items ?? []).map((i) => ({ label: i.label, href: i.href }));
+const sectionLinks = (group: string, section: string) =>
+  (navGroups.find((g) => g.label === group)?.sections.find((s) => s.label === section)?.items ?? []).map((i) => ({ label: i.label, href: i.href }));
 
 export default function Footer() {
   return (
@@ -125,15 +127,15 @@ export default function Footer() {
 
           <FooterColumn title="Certification" links={links("Certification")} />
           <div className="space-y-8">
-            <FooterColumn title="Platform" links={[...links("Platform"), { label: "Read API and MCP", href: "/platform/api-and-mcp" }]} />
-            <FooterColumn title="Solutions" links={links("Solutions")} />
+            <FooterColumn title="Platform" links={links("Platform")} />
+            <FooterColumn title="Solutions" links={sectionLinks("Solutions", "By industry")} />
           </div>
           <div className="space-y-8">
-            <FooterColumn title="Company" links={[...links("Company"), ...topLevelLinks.map((l) => ({ label: l.label, href: l.href }))]} />
-            <FooterColumn title="Regulation" links={links("Regulation")} />
+            <FooterColumn title="Company" links={[...links("Company"), ...topLevelLinks.map((l) => ({ label: l.label, href: l.href })), ...sectionLinks("Solutions", "Training")]} />
+            <FooterColumn title="Regulation" links={sectionLinks("Resources", "Regulation")} />
           </div>
           <div className="space-y-8">
-            <FooterColumn title="News and guides" links={links("Resources")} />
+            <FooterColumn title="News and guides" links={sectionLinks("Resources", "News and guides")} />
           </div>
 
           <div className="space-y-8">
