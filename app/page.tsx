@@ -1,12 +1,12 @@
 'use client';
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import SealArt from "@/app/components/SealArt";
 import HeroFilm from "@/app/components/HeroFilm";
 import StripeFrame from "@/app/components/StripeFrame";
 import AmbientVideo from "@/app/components/AmbientVideo";
+import TabletStage from "@/app/components/TabletStage";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -498,7 +498,7 @@ export default function MarketingPage() {
       <section className="bg-white py-20 md:py-24 border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-16">
-            <div className="order-1">
+            <div>
               <p className="text-sm text-[#5e6b7b]">The platform</p>
               <h2
                 className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-[#0f1f3d] font-bold mt-3 mb-5 text-balance"
@@ -519,19 +519,7 @@ export default function MarketingPage() {
                 See what the platform does
               </Link>
             </div>
-            {/* The product, not an illustration of it. Sample data, labelled. */}
-            <figure className="order-2 lg:order-3 lg:col-span-2 lg:mt-6 max-lg:-mx-2">
-              <Image
-                src="/images/platform-devices.webp"
-                alt="The AIC platform on a laptop and a phone: the record and the AI register of Karoo Lending (Demo)"
-                width={2400}
-                height={1515}
-                sizes="(min-width: 1280px) 1200px, 100vw"
-                className="w-full h-auto"
-              />
-              <figcaption className="mt-3 text-[13px] text-[#5e6b7b]">Karoo Lending (Demo) is sample data.</figcaption>
-            </figure>
-            <ul className="order-3 lg:order-2 grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
+            <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-6 content-start">
               {PLATFORM_AREAS.map((a) => (
                 <li key={a.id} className="border-t border-[#dde2e8] pt-4">
                   <Link href={`/platform#${a.id}`} className="font-semibold text-[#0f1f3d] hover:text-[#8a6114] transition-colors">
@@ -545,6 +533,27 @@ export default function MarketingPage() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* ── THE PLATFORM, IN USE ─────────────────────────────────────
+          The workspace itself on a tablet, rising out of the dark as the
+          page scrolls, the way FNZ shows its platform. Filmed from the
+          product with sample data, and labelled. */}
+      <section className="relative overflow-hidden bg-[#070d18] text-white">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 pt-20 md:pt-28 pb-28 md:pb-36">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl md:text-[2.75rem] leading-[1.1] tracking-[-0.02em] font-bold text-balance" style={{ fontFamily: "'Merriweather', serif" }}>
+              The record, in use
+            </h2>
+            <p className="mt-4 text-white/65 leading-relaxed">
+              The record, the AI register, the decision log, the risk register and the frameworks you track, as your team sees them every day.
+            </p>
+          </div>
+          <div className="mt-14 md:mt-20">
+            <TabletStage />
+          </div>
+          <p className="mt-24 text-center text-[13px] text-white/45">Karoo Lending (Demo) is sample data.</p>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
+import { SOLUTIONS } from "@/app/data/solutions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -76,12 +77,11 @@ export const navGroups: NavGroup[] = [
   ]),
   group("Solutions", [
     { label: "By industry", items: [
-      { href: "/solutions/hr-and-recruitment", label: "HR and recruitment", description: "Screening and ranking candidates" },
-      { href: "/solutions/financial-services", label: "Financial services", description: "Credit, fraud and collections decisions" },
-      { href: "/solutions/insurance", label: "Insurance", description: "Pricing and claims, and insuring AI" },
+      ...SOLUTIONS.map((x) => ({ href: `/solutions/${x.slug}`, label: x.name, description: x.short })),
     ] },
     { label: "Training", items: [
       { href: "/workshops", label: "Workshops", description: "Industry sessions on AI governance frameworks" },
+      { href: "/solutions", label: "All industries", description: "Where AI decides, and the rules that apply" },
     ] },
   ]),
   group("Resources", [

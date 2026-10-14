@@ -11,7 +11,7 @@ export type Tone = "good" | "warn" | "bad" | "neutral" | "brass";
 /** A status that starts as `from` and moves to `to` once the scene is in view. */
 export type Chip = { from: string; to?: string; tone: Tone; toTone?: Tone };
 
-export type Mock =
+export type Mock = { sample?: boolean } & (
   | { kind: "table"; title: string; cols: string[]; rows: { cells: string[]; chip?: Chip }[] }
   | { kind: "list"; title: string; note?: string; items: { label: string; sub?: string; chip: Chip }[] }
   | { kind: "detail"; title: string; sub?: string; fields: [string, string][]; chip?: Chip; actions?: string[] }
@@ -20,7 +20,8 @@ export type Mock =
   | { kind: "log"; title: string; entries: { when: string; text: string }[] }
   | { kind: "chat"; title: string; question: string; tool: string; answer: string[] }
   | { kind: "code"; title: string; request: string[]; response: string[]; status: Chip }
-  | { kind: "page"; title: string; sections: { label: string; tone: Tone; items: string[] }[] };
+  | { kind: "page"; title: string; sections: { label: string; tone: Tone; items: string[] }[] }
+);
 
 export type CapabilityScenes = {
   /** The large scene under the page heading. */

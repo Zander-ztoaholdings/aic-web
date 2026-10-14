@@ -12,7 +12,7 @@ const MENUS = ["AI overview", "Compliance tracking", "Risk and people", "AIC cer
  * ground with the seal's brass arcs behind it. A second, smaller scene can
  * float over the corner, as a detail panel would open in the product.
  */
-export default function AppStage({ main, aside, menu = 0 }: { main: Mock; aside?: Mock; menu?: number }) {
+export default function AppStage({ main, aside, menu = 0, org = "Karoo Lending (Demo)" }: { main: Mock; aside?: Mock; menu?: number; org?: string }) {
   const reduce = useReducedMotion();
   return (
     <div className="relative">
@@ -33,7 +33,7 @@ export default function AppStage({ main, aside, menu = 0 }: { main: Mock; aside?
       >
         <div className="flex items-center gap-3 border-b border-[#dde2e8] bg-white px-4 py-2.5">
           <span className="font-bold text-[15px] text-[#0e1b2c]">AIC<span className="text-[#c9920a]">.</span></span>
-          <span className="text-[12px] text-[#5e6b7b] truncate">Karoo Lending (Demo)</span>
+          <span className="text-[12px] text-[#5e6b7b] truncate">{org}</span>
           <span className="ml-auto hidden md:flex gap-1">
             {MENUS.map((m, i) => (
               <span key={m} className={`rounded-full px-3 py-1 text-[12px] ${i === menu ? "bg-[#0e1b2c] text-white" : "text-[#5e6b7b]"}`}>{m}</span>

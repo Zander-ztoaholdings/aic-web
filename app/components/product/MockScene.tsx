@@ -89,7 +89,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
   return (
     <div ref={ref} className={`min-w-0 ${compact ? "text-[13px]" : ""}`}>
       {mock.kind === "table" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <div className="hidden sm:grid gap-3 border-b border-[#eef1f5] pb-2 text-[12px] text-[#94a0ae]" style={{ gridTemplateColumns: `minmax(0,1.6fr) repeat(${mock.cols.length - 2}, minmax(0,1fr)) auto` }}>
             {mock.cols.map((c) => <span key={c}>{c}</span>)}
           </div>
@@ -113,7 +113,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "list" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           {mock.note && <p className="text-[12px] text-[#94a0ae] -mt-1 mb-1">{mock.note}</p>}
           <ul>
             {mock.items.map((it, i) => (
@@ -130,7 +130,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "detail" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           {mock.sub && <p className="text-[12px] text-[#5e6b7b] -mt-1 mb-2">{mock.sub}</p>}
           <dl>
             {mock.fields.map(([k, v], i) => (
@@ -161,7 +161,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "meter" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <ul className="space-y-3 py-1">
             {mock.bars.map((b, i) => (
               <li key={b.label}>
@@ -186,7 +186,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "seal" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <ul>
             {mock.items.map((it, i) => (
               <motion.li key={it} {...row(i, show, reduce)} className="flex items-center gap-2.5 py-1.5 text-[13.5px] text-[#0e1b2c]">
@@ -211,7 +211,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "log" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <ol className="relative py-1">
             {mock.entries.map((e, i) => (
               <motion.li key={e.text} {...row(i * 2, show, reduce)} className="relative grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3 py-2 text-[13.5px]">
@@ -227,7 +227,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "chat" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <div className="space-y-3 py-1">
             <motion.p {...row(0, show, reduce)} className="ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-[#0e1b2c] px-4 py-2.5 text-[13.5px] text-white w-fit">
               {mock.question}
@@ -241,7 +241,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "code" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <pre className="overflow-x-auto rounded-xl bg-[#0a1628] p-4 text-[12px] leading-[1.6] text-white/85 font-[ui-monospace,monospace]">
             {mock.request.join("\n")}
           </pre>
@@ -259,7 +259,7 @@ export default function MockScene({ mock, compact = false, eager = false }: { mo
       )}
 
       {mock.kind === "page" && (
-        <Frame title={mock.title}>
+        <Frame sample={mock.sample !== false} title={mock.title}>
           <div className="space-y-3 py-1">
             {mock.sections.map((s, i) => (
               <motion.section key={s.label} {...row(i * 2, show, reduce)}>

@@ -79,6 +79,7 @@ function ContactForm() {
       message: "I work for an insurer and would like to talk about testing whether AIC's record carries underwriting signal.",
     },
     platform: { type: "Platform", message: "" },
+    healthcare: { type: "Corporate Certification", message: "We would like to hear when AIC's healthcare programme opens in Q2 2027." },
     intake: { type: "Corporate Certification", message: "We would like to join the November intake of the founding cohort." },
   };
   const preset = PRESETS[enquiry];
