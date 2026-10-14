@@ -175,10 +175,10 @@ export default function EmpathyScorer() {
               communications. Nothing you enter leaves your browser.
             </p>
 
-            <div className="space-y-3.5">
+            <div className="space-y-3.5 max-lg:space-y-5">
               {DIMENSIONS.map((d) => (
                 <div key={d.key}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 mb-1.5">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 mb-1.5 max-lg:mb-2 max-lg:flex-col max-lg:gap-y-0.5">
                     <span className="text-sm font-medium text-[#0f1f3d]">
                       {d.label}
                     </span>
@@ -195,7 +195,7 @@ export default function EmpathyScorer() {
                           onClick={() =>
                             setScores((s) => ({ ...s, [d.key]: c.value }))
                           }
-                          className={`text-xs font-medium py-2 rounded-md border transition-colors ${
+                          className={`inline-flex items-center justify-center text-center text-xs font-medium py-2 rounded-md border transition-colors max-lg:min-h-[40px] max-lg:px-1 max-lg:text-[13.5px] ${
                             active
                               ? "border-aic-copper bg-aic-copper/10 text-[#8a6607]"
                               : "border-[#e5e7eb] bg-white text-[#6b7280] hover:border-aic-copper/40 hover:text-[#0f1f3d]"

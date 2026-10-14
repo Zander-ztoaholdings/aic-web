@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { Client } from "@notionhq/client";
 import { getSystemDb, contactSubmissions, eq } from "@/lib/db";
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { isValidEmail } from "@/lib/validation";
 
 // Contact form intake.
 //
@@ -26,16 +28,24 @@ import { getSystemDb, contactSubmissions, eq } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-const RATE_LIMIT_MAP = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const RATE_LIMIT_MAX = 3;
+/** Field caps. Anything longer is rejected rather than silently truncated. */
+const LIMITS = {
+  name: 120,
+  email: 200,
+  organization: 200,
+  role: 120,
+  country: 100,
+  enquiryType: 100,
+  message: 5000,
+} as const;
 
-function getClientIp(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    req.headers.get("x-real-ip") ??
-    "unknown"
-  );
+/** Trimmed string within the cap, or null. Empty counts as absent. */
+function field(value: unknown, max: number): string | null | false {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== "string") return false;
+  const v = value.trim();
+  if (!v) return null;
+  return v.length <= max ? v : false;
 }
 
 /** IP addresses are personal information under POPIA. We only need to
@@ -165,48 +175,55 @@ async function saveToNotion(data: Submission): Promise<boolean> {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req);
-  const now = Date.now();
-  const existing = RATE_LIMIT_MAP.get(ip);
-
-  if (existing && now - existing.timestamp < RATE_LIMIT_WINDOW) {
-    if (existing.count >= RATE_LIMIT_MAX) {
-      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-    }
-    existing.count += 1;
-  } else {
-    RATE_LIMIT_MAP.set(ip, { count: 1, timestamp: now });
+  const ip = getClientIP(req);
+  const { allowed } = checkRateLimit(`contact:${ip}`, 3, 60_000);
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
-  let body: Record<string, string>;
+  let body: Record<string, unknown>;
   try {
-    body = await req.json();
+    const parsed = await req.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
+    body = parsed as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const data: Submission = {
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email,
-    organization: body.organization || body.company,
-    role: body.role || body.jobTitle,
-    // Optional: the workshop form does not ask, and a missing country was
-    // rejecting every workshop enquiry with "Missing required fields".
-    country: (body.country || "").trim() || "Not given",
-    enquiryType: body.enquiryType || body.certificationType,
-    message: body.message,
-  };
+  const firstName = field(body.firstName, LIMITS.name);
+  const lastName = field(body.lastName, LIMITS.name);
+  const email = field(body.email, LIMITS.email);
+  const organization = field(body.organization ?? body.company, LIMITS.organization);
+  const role = field(body.role ?? body.jobTitle, LIMITS.role);
+  // Optional: the workshop form does not ask, and a missing country was
+  // rejecting every workshop enquiry with "Missing required fields".
+  const country = field(body.country, LIMITS.country);
+  const enquiryType = field(body.enquiryType ?? body.certificationType, LIMITS.enquiryType);
+  const message = field(body.message, LIMITS.message);
 
-  if (
-    !data.firstName || !data.lastName || !data.email ||
-    !data.organization || !data.role || !data.enquiryType
-  ) {
+  if ([firstName, lastName, email, organization, role, country, enquiryType, message].some((v) => v === false)) {
+    return NextResponse.json({ error: "One or more fields are too long or invalid" }, { status: 400 });
+  }
+  if (!firstName || !lastName || !email || !organization || !role || !enquiryType) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
+  if (!isValidEmail(email)) {
+    return NextResponse.json({ error: "Please enter a valid email address" }, { status: 400 });
+  }
+
+  const data: Submission = {
+    firstName,
+    lastName,
+    email,
+    organization,
+    role,
+    country: country || "Not given",
+    enquiryType,
+    ...(message ? { message } : {}),
+  };
 
   const ipHash = hashIp(ip);
-  const userAgent = req.headers.get("user-agent");
+  const userAgent = req.headers.get("user-agent")?.slice(0, 400) ?? null;
 
   // Durable first, then notifications.
   const ref = await saveToDatabase(data, ipHash, userAgent);
@@ -271,5 +288,5 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  return NextResponse.json({ success: true, reference: ref, notified: emailed }, { status: 200 });
+  return NextResponse.json({ success: true }, { status: 200 });
 }

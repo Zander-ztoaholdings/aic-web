@@ -43,8 +43,9 @@ npm run db:push        # apply lib/db/schema.ts directly (fine pre-launch)
 npm run db:generate    # write a reviewable migration
 npm run db:migrate     # apply it
 ```
-Check it worked at `/api/health` — it reports the underlying error code and what
-to do about it, not just "failed".
+Check it worked at `/api/health`. Publicly it answers only ok/degraded; send
+`x-health-token: $HEALTH_TOKEN` to get the underlying error code and what to do
+about it.
 
 **4. Run the development server:**
 ```bash

@@ -13,7 +13,7 @@ export const SECTIONS: { title: string; items: string[] }[] = [
     title: "Keeping organisations apart",
     items: [
       "Every query for an organisation's data is scoped to that organisation in the application, and the database enforces the same separation with row-level security on a restricted database account.",
-      "Your continuity record is hash-chained: each entry includes a fingerprint of the one before it, so an edit or deletion anywhere in the record is detectable.",
+      "Your continuity record is hash-chained: each entry includes a fingerprint of the one before it, so an edit or deletion made through the application is detectable.",
     ],
   },
   {
@@ -35,8 +35,8 @@ export const SECTIONS: { title: string; items: string[] }[] = [
   {
     title: "Backups and continuity",
     items: [
-      "The database and evidence store are backed up every night, encrypted, to storage separate from the servers that run the platform. The key that decrypts them is not kept on those servers.",
-      "Restoring from backup is tested regularly, not assumed.",
+      "The database and evidence store are backed up automatically, encrypted, to storage separate from the servers that run the platform.",
+      "Backups are taken automatically; restore testing is part of our operating checklist.",
     ],
   },
   {

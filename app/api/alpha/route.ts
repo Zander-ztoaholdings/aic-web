@@ -32,7 +32,9 @@ export async function POST(request: Request) {
 
     const db = getSystemDb();
 
-    // 1. Insert or Update leads table (Lead management is unified)
+    // Insert-only. An existing lead is never overwritten from an anonymous
+    // form: anyone could otherwise rewrite the company or status recorded
+    // against someone else's email.
     await db
       .insert(leads)
       .values({
@@ -41,20 +43,14 @@ export async function POST(request: Request) {
         source: 'ALPHA_FORM',
         status: 'ALPHA_APPLIED'
       })
-      .onConflictDoUpdate({
-        target: leads.email,
-        set: { 
-          company, 
-          status: 'ALPHA_APPLIED' 
-        }
-      });
+      .onConflictDoNothing({ target: leads.email });
 
     // Note: alpha_applications table is managed via leads status now
     // to maintain a lean institutional schema.
 
     return NextResponse.json({
       success: true,
-      message: 'Application received. Our team will contact you shortly.'
+      message: 'Received.'
     });
   } catch (error) {
     console.error('Error processing alpha application:', error);

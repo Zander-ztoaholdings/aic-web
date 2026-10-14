@@ -88,8 +88,8 @@ describe("requirement matrix", () => {
   });
 
   it("orders evidence tiers by strength", () => {
-    expect(TIER_MEANING.A.weight).toBeGreaterThan(TIER_MEANING.B.weight);
-    expect(TIER_MEANING.B.weight).toBeGreaterThan(TIER_MEANING.C.weight);
-    expect(TIER_MEANING.C.weight).toBeGreaterThan(TIER_MEANING.D.weight);
+    expect(TIER_MEANING.A.rank).toBeLessThan(TIER_MEANING.B.rank);
+    expect(TIER_MEANING.B.rank).toBeLessThan(TIER_MEANING.C.rank);
+    expect(TIER_MEANING.C.rank).toBeLessThan(TIER_MEANING.D.rank);
   });
 });

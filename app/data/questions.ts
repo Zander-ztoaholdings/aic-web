@@ -265,7 +265,7 @@ export const questions: Question[] = [
     category: 'OVERSIGHT',
     text: 'Do you have a policy for how long AI decisions can operate without human review?',
     rationale:
-      'The observed oversight ratio must be consistent with the Division you have declared (HU-8). Declaring Supervised while operating at Monitored review rates is the specific mismatch Pulse monitoring exists to catch between audits.',
+      'The observed oversight ratio must be consistent with the Division you have declared (HU-8).',
     requirements: ['HU-4', 'HU-8'],
     options: [
       { text: 'No policy exists', value: 0, tierSignal: [1] },

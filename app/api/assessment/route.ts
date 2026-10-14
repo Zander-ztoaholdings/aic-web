@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSystemDb, leads, sql } from '@/lib/db';
+import { getSystemDb, leads } from '@/lib/db';
 import { isValidEmail, isValidScore, isValidTier, isNonEmptyString, safeParseJSON } from '@/lib/validation';
 import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
@@ -45,10 +45,9 @@ export async function POST(request: Request) {
 
     const db = getSystemDb();
 
-    // 1. Record the lead. Rows already LISTED are legacy directory entries from
-    // before badges moved to the platform: a retake by the same email must not
-    // silently delist them or rename the company they were listed under, so
-    // their status and company are left as they are.
+    // Insert-only. An existing lead is never overwritten from an anonymous
+    // form, so a retake (or anyone using someone else's email) cannot change
+    // the score, status or company already recorded.
     await db
       .insert(leads)
       .values({
@@ -58,23 +57,14 @@ export async function POST(request: Request) {
         status: 'NEW',
         ...(companyName ? { company: companyName } : {}),
       })
-      .onConflictDoUpdate({
-        target: leads.email,
-        set: {
-          score: Math.round(score),
-          status: sql`CASE WHEN ${leads.status} = 'LISTED' THEN 'LISTED' ELSE 'RE-ENGAGED' END`,
-          ...(companyName
-            ? { company: sql`CASE WHEN ${leads.status} = 'LISTED' THEN ${leads.company} ELSE ${companyName} END` }
-            : {}),
-        },
-      });
+      .onConflictDoNothing({ target: leads.email });
 
     // Note: detailed quiz answers can be archived in a separate log table
     // if required for deep telemetry.
 
     return NextResponse.json({
       success: true,
-      message: 'Assessment archived securely and lead recorded.'
+      message: 'Received.'
     });
   } catch (error) {
     console.error('Error processing assessment:', error);

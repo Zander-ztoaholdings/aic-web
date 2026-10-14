@@ -31,7 +31,7 @@ export const PLATFORM_AREAS: PlatformArea[] = [
       { name: "AI register", what: "Every system that makes or shapes a decision, what it decides, whether about people, who answers for it, and what is missing. Systems found in your record but not declared are offered for adding.", href: "/platform/ai-register" },
       { name: "Decision log", what: "Decisions your systems record through the API, the ones held for a person to review, the overrides, and who made the call.", href: "/platform/decision-log" },
       { name: "AI spend", what: "What you spend on AI models, by provider, model and system, read from your provider accounts." },
-      { name: "Continuity record", what: "The standing record of your AI estate and every change to it, kept so it cannot be quietly rewritten." },
+      { name: "Continuity record", what: "The standing record of your AI estate and every change to it, kept so a change to it is evident." },
     ],
   },
   {
@@ -42,7 +42,7 @@ export const PLATFORM_AREAS: PlatformArea[] = [
       { name: "Frameworks", what: "Choose which frameworks you track, from the list below, or add your own." },
       { name: "Controls", what: "Each requirement, and the evidence behind it. Evidence is collected once and counts for every framework it supports." },
       { name: "Connected systems", what: "AIC reads your systems every night with read-only access and records what changed.", href: "/integrations" },
-      { name: "Evidence packs", what: "A sealed copy of your record for a period, for an assessor, board or insurer, that anyone can check has not been changed.", href: "/platform/evidence-packs" },
+      { name: "Evidence packs", what: "A fingerprinted copy of your record for a period, for an assessor, board or insurer, that anyone can check matches the record AIC holds.", href: "/platform/evidence-packs" },
       { name: "Read API and MCP", what: "Your own dashboards and AI assistants can read your register, risks, checks and coverage, and change nothing.", href: "/platform/api-and-mcp" },
       { name: "Automated checks", what: "What AIC found in your connected systems, why it matters, and the steps to fix it." },
       { name: "Evidence vault", what: "The evidence you have filed, against the requirements for your Division." },

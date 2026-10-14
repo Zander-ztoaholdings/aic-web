@@ -137,10 +137,12 @@ const websiteLd = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // No hardcoded fallback: the ID was defaulted to a literal, so unsetting
-  // NEXT_PUBLIC_GA_ID did not disable analytics — the one control that should
-  // have turned it off did nothing.
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  // AIC's own GA4 property is the default, so a deploy without the variable
+  // still measures (analytics had silently stopped when the variable went
+  // missing). It still only loads after a visitor says yes. To switch it off
+  // entirely, set NEXT_PUBLIC_GA_ID=off; a different ID overrides it.
+  const gaEnv = process.env.NEXT_PUBLIC_GA_ID?.trim();
+  const gaId = gaEnv === "off" ? undefined : gaEnv || "G-G7QB1VX27Q";
 
   return (
     <html lang="en-ZA">

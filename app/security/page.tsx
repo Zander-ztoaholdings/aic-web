@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
 import { SECTIONS } from "@/app/data/security";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 /**
  * Security at AIC: what is actually in place, stated plainly enough that a
@@ -50,8 +51,8 @@ export default function SecurityPage() {
           <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">{SECTIONS.length + 1}. Reporting a vulnerability</h2>
           <p className="text-[#6b7280] mb-8 text-lg leading-relaxed">
             If you believe you have found a security issue, email{" "}
-            <a href="mailto:security@aiccertified.cloud" className="text-aic-copper hover:underline">security@aiccertified.cloud</a>{" "}
-            with what you found and how to reproduce it. We acknowledge reports within two working days and will not take action against
+            <a href={`mailto:${CONTACT_EMAIL}?subject=Security%20report`} className="text-aic-copper hover:underline">{CONTACT_EMAIL}</a>{" "}
+            with &ldquo;Security report&rdquo; in the subject, what you found and how to reproduce it. We acknowledge reports within two working days and will not take action against
             anyone who reports in good faith, avoids other people&apos;s data, and gives us reasonable time to fix the issue.
           </p>
         </div>

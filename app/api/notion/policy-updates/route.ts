@@ -4,7 +4,8 @@ import { getPolicyUpdates } from "@/lib/notion";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const cursor = searchParams.get("cursor") || undefined;
-  const pageSize = parseInt(searchParams.get("pageSize") || "4");
+  const requested = Number.parseInt(searchParams.get("pageSize") || "4", 10);
+  const pageSize = Math.min(24, Math.max(1, Number.isFinite(requested) ? requested : 4));
 
   try {
     const data = await getPolicyUpdates(pageSize, cursor);

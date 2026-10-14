@@ -74,7 +74,6 @@ export default function PrivacyPolicy() {
                 { label: "Contact information", desc: "Work email addresses and telephone numbers used for certification correspondence." },
                 { label: "Organisational information", desc: "Business name, registration number, sector, and address of applicant organisations." },
                 { label: "Audit evidence", desc: "Governance documents, policy records, decision logs, and bias assessment data submitted for certification review." },
-                { label: "Practitioner data", desc: "Education records, CPD logs, examination results, and competency evidence for CAAP candidates." },
                 { label: "AIC Aware accounts", desc: "For organisations that register for an AIC Aware badge: the name, job title and email of the named Accountable Person, the answers to the AIC Aware questions, the name of the person who confirmed the declaration and when, and a one-way hash of the IP address used to accept it (never the address itself)." },
                 { label: "Connected systems", desc: "For organisations that connect GitHub or an AI provider (OpenAI, Anthropic) to the platform: repository names and their branch, review and alert settings; the GitHub usernames of the authors and reviewers of recently merged pull requests; the list of packages a repository depends on; and daily usage and cost per AI model. We do not read source code, prompts, model outputs or your customers' data. If you choose to give us a read-only provider admin key instead of running our exporter, it is stored encrypted, used only to read usage, and deleted when you disconnect." },
                 { label: "Website usage data", desc: "Google Analytics, and only if you allow it (see Section 9)." },
@@ -168,8 +167,6 @@ export default function PrivacyPolicy() {
                     ["AIC Aware badges and declarations", "Life of the badge + 5 years"],
                     ["AIC Aware answers (platform account)", "While the account is active + 2 years"],
                     ["AIC Aware self-check on the website (email, company, result)", "24 months from last contact"],
-                    ["Practitioner examination records", "Duration of credential + 7 years"],
-                    ["CPD logs", "7 years from the relevant CPD cycle"],
                     ["Website enquiry data", "24 months from last contact"],
                     ["Marketing consent records", "Until consent is withdrawn, then 2 years"],
                     ["Financial/invoicing records", "5 years (Companies Act requirement)"],
@@ -217,8 +214,8 @@ export default function PrivacyPolicy() {
             {/* 8 */}
             <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">8. Automated Decision-Making</h2>
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
-              AIC uses automated tools to generate preliminary Integrity Scores and flag potential
-              compliance gaps during an assessment. These outputs are <strong>advisory only</strong> —
+              AIC may use software to organise evidence and highlight possible gaps during an
+              assessment. Anything it produces is <strong>advisory only</strong> —
               no certification decision is made without a qualified human auditor reviewing and
               approving the result. This is consistent with POPIA Section&nbsp;71 and with the
               principles of the AIC Declaration of Algorithmic Rights.

@@ -238,7 +238,7 @@ export async function generatePDFReport(
     heading('Why this is not certification', 15);
     y += 3;
     body(
-        'The standard grades evidence in four tiers and weights each accordingly. Everything in this report sits in the bottom one.'
+        'The standard grades evidence in four tiers, strongest first, and stronger evidence counts for more. Everything in this report sits in the bottom one.'
     );
     y += 5;
     (['A', 'B', 'C', 'D'] as const).forEach((t) => {
@@ -246,7 +246,7 @@ export async function generatePDFReport(
         doc.setFont('mono', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(t === 'D' ? 201 : 26, t === 'D' ? 146 : 26, t === 'D' ? 10 : 26);
-        doc.text(`Tier ${t}  ×${TIER_MEANING[t].weight}`, MARGIN, y);
+        doc.text(`Tier ${t}`, MARGIN, y);
         doc.setFont('serif', 'normal');
         doc.setFontSize(9);
         doc.setTextColor(90, 90, 90);

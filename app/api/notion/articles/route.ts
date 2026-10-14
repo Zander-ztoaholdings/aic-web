@@ -4,7 +4,8 @@ import { getArticles } from "@/lib/notion";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const cursor = searchParams.get("cursor") || undefined;
-  const pageSize = parseInt(searchParams.get("pageSize") || "12");
+  const requested = Number.parseInt(searchParams.get("pageSize") || "12", 10);
+  const pageSize = Math.min(24, Math.max(1, Number.isFinite(requested) ? requested : 12));
 
   try {
     const data = await getArticles(pageSize, cursor);

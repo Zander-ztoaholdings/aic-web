@@ -5,7 +5,7 @@ import { useState } from "react";
 import SealArt from "@/app/components/SealArt";
 import HeroFilm from "@/app/components/HeroFilm";
 import StripeFrame from "@/app/components/StripeFrame";
-import AmbientVideo from "@/app/components/AmbientVideo";
+import DeclineLetterArt from "@/app/components/DeclineLetterArt";
 import TabletStage from "@/app/components/TabletStage";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
@@ -321,25 +321,12 @@ export default function MarketingPage() {
             </div>
 
             <div className="lg:pt-4">
-              {/* The film's last shot, framed: a named person signing for it. */}
+              {/* The letter the argument is about, marked up the way an assessor reads it. */}
               <StripeFrame className="mb-10">
-                <AmbientVideo
-                  src="/media/aic-signature.mp4"
-                  poster="/media/aic-signature-poster.jpg"
-                  className="block w-full aspect-[4/5] object-cover rounded-xl shadow-[0_24px_48px_-24px_rgba(10,22,40,0.5)]"
-                />
+                <DeclineLetterArt />
               </StripeFrame>
               <div className="border-l-2 border-aic-copper pl-5 py-1">
-                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#9ca3af] mb-3 max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#5e6b7b]">
-                  A decline letter, in full
-                </p>
-                <p className="text-[#3d4a58] leading-relaxed text-[15px]">
-                  “This decision was made in accordance with our internal credit
-                  policy. We are unable to provide further detail regarding the
-                  specific factors involved. This is an automated notification.
-                  Please do not reply to this message.”
-                </p>
-                <p className="text-sm text-[#6b7280] mt-4 leading-relaxed">
+                <p className="text-[15px] text-[#3d4a58] leading-relaxed">
                   Four sentences. No reason, no person, no way to reply, no
                   route to challenge it. We score letters like this against a
                   seven-part rubric, and a score below 40 out of 70 blocks

@@ -18,14 +18,15 @@
 
 export type RightCode = "HU" | "EX" | "EM" | "CO" | "TR";
 
-/** Best obtainable evidence for a requirement, and its weight in scoring. */
+/** Best obtainable evidence for a requirement. Tiers are listed strongest first;
+ *  the scoring weights live with the scoring model, not in published data. */
 export type EvidenceTier = "A" | "B" | "C" | "D";
 
-export const TIER_MEANING: Record<EvidenceTier, { label: string; weight: number; desc: string }> = {
-  A: { label: "Operational data", weight: 1.0, desc: "Live system data, telemetry or records — the organisation's actual behaviour rather than its account of it." },
-  B: { label: "Third-party or observed", weight: 0.8, desc: "Evidence an auditor observes directly, or that an independent party produced." },
-  C: { label: "Self-certified", weight: 0.6, desc: "Documentation the organisation maintains and supplies." },
-  D: { label: "Attestation", weight: 0.4, desc: "A statement that something is so, with nothing behind it but the statement." },
+export const TIER_MEANING: Record<EvidenceTier, { label: string; rank: number; desc: string }> = {
+  A: { label: "Operational data", rank: 1, desc: "Live system data, telemetry or records — the organisation's actual behaviour rather than its account of it." },
+  B: { label: "Third-party or observed", rank: 2, desc: "Evidence an auditor observes directly, or that an independent party produced." },
+  C: { label: "Self-certified", rank: 3, desc: "Documentation the organisation maintains and supplies." },
+  D: { label: "Attestation", rank: 4, desc: "A statement that something is so, with nothing behind it but the statement." },
 };
 
 export const RIGHTS: Record<RightCode, { name: string; blurb: string }> = {

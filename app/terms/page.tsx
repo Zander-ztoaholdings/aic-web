@@ -56,7 +56,7 @@ export default function TermsOfUse() {
             <div className="space-y-3 mb-8">
               {[
                 { term: "\"Platform\"", def: "The AIC Governance Platform at aiccertified.cloud, including the certification workspace, public registry, and assessment tools." },
-                { term: "\"Services\"", def: "Organisational certification assessments, CAAP practitioner credentialling, bias analysis, and related advisory outputs." },
+                { term: "\"Services\"", def: "Organisational certification assessments, bias analysis, and related advisory outputs." },
                 { term: "\"Certification Marks\"", def: "The trademarks, logos, badges, and trust mark SVGs owned by AIC, including \"AIC Certified\" and \"AIC Methodology Assessed\"." },
                 { term: "\"Declaration\"", def: "The Declaration of Algorithmic Rights published by AIC under Creative Commons Attribution 4.0." },
                 { term: "\"Accountable Person\"", def: "The named individual documented as responsible for an AI system under the AIC certification framework." },
@@ -170,8 +170,8 @@ export default function TermsOfUse() {
             {/* 6 */}
             <h2 className="text-aic-navy font-serif italic text-3xl mb-4 mt-16">6. Intellectual Property</h2>
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
-              All content on this website and Platform — including the AIC methodology, scoring
-              rubric, Empathy Engine, assessment frameworks, and Integrity Score algorithm — is
+              All content on this website and Platform — including the AIC methodology, standard,
+              assessment and scoring materials — is
               the proprietary intellectual property of AI Integrity Certification (Pty) Ltd.
             </p>
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">

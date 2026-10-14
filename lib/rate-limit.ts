@@ -53,12 +53,21 @@ export function checkRateLimit(
 }
 
 /**
- * Get client IP from request headers (handles proxies).
+ * The client IP, as the reverse proxy saw it.
+ *
+ * x-real-ip is set by Traefik (Coolify's proxy) and overwrites anything the
+ * client sent. Failing that, the RIGHTMOST X-Forwarded-For entry is the one
+ * appended by the nearest proxy; the leftmost is whatever the client chose to
+ * send and must never be trusted for rate limiting.
  */
 export function getClientIP(request: Request): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
-  const real = request.headers.get('x-real-ip');
+  const real = request.headers.get('x-real-ip')?.trim();
   if (real) return real;
-  return '127.0.0.1';
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    const parts = forwarded.split(',').map((p) => p.trim()).filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (last) return last;
+  }
+  return 'unknown';
 }

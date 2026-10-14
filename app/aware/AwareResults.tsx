@@ -288,7 +288,7 @@ export default function AwareResults({
           Why none of this is certification
         </h2>
         <p className="text-white/70 leading-relaxed max-w-2xl mb-6">
-          The standard grades evidence in four tiers, and weights each accordingly. Everything you
+          The standard grades evidence in four tiers, strongest first, and stronger evidence counts for more. Everything you
           have just produced sits in the bottom one.
         </p>
         <div className="grid sm:grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-lg overflow-hidden mb-6">
@@ -300,9 +300,6 @@ export default function AwareResults({
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="font-mono text-sm font-bold text-white">Tier {t}</span>
                 <span className="text-xs text-white/60">{TIER_MEANING[t].label}</span>
-                <span className="ml-auto font-mono text-xs text-aic-copper tabular-nums">
-                  ×{TIER_MEANING[t].weight}
-                </span>
               </div>
               <p className="text-xs text-white/60 leading-relaxed">{TIER_MEANING[t].desc}</p>
               {t === "D" && (

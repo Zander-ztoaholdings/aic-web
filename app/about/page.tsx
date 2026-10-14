@@ -29,7 +29,7 @@ const PEOPLE = [
     photo: "/team/zander-wilken.jpg" as string | null,
     linkedin: "https://www.linkedin.com/in/zander-wilken-b81349323/",
     answersFor: ["The AIC standard and its development", "The AIC platform", "Client relationships", "Information Officer under POPIA and PAIA"],
-    bio: "Driven, principled and commercially minded, Zander founded AIC on the conviction that when systems make decisions about people, people must remain accountable. He leads the company's strategy, client relationships and the development of the AIC Pulse platform, turning South Africa's POPIA requirements into a practical, verifiable standard for organisations that rely on algorithmic decision systems.",
+    bio: "Driven, principled and commercially minded, Zander founded AIC on the conviction that when systems make decisions about people, people must remain accountable. He leads the company's strategy, client relationships and the development of the AIC platform, turning South Africa's POPIA requirements into a practical, verifiable standard for organisations that rely on algorithmic decision systems.",
   },
   {
     name: "Albert von Ronge",
@@ -38,7 +38,7 @@ const PEOPLE = [
     photo: existsSync(join(process.cwd(), "public/team/albert-von-ronge.jpg")) ? "/team/albert-von-ronge.jpg" : (null as string | null),
     linkedin: "https://www.linkedin.com/in/albert-von-r%C3%B6nge-15754528b",
     answersFor: ["Finance and the financial model", "Contracts and commercial agreements", "Operations, day to day"],
-    bio: "Structured in his approach and with a sharp eye for detail, Albert oversees AIC's finance, operations and commercial agreements. As the founder of Ronge Dental Management, a practice management company built on HPCSA-compliant service agreements, he brings first-hand experience of working within a tightly regulated professional environment. Albert joined AIC as a seed investor in 2026 and is responsible for the financial model, contracting and day-to-day running of the business.",
+    bio: "Structured in his approach and with a sharp eye for detail, Albert oversees AIC's finance, operations and commercial agreements. As the founder of Ronge Dental Management, a practice management company built on HPCSA-compliant service agreements, he brings first-hand experience of working within a tightly regulated professional environment.",
   },
 ];
 
@@ -98,20 +98,27 @@ export default function AboutPage() {
           <p className="mt-4 mx-auto max-w-xl text-center text-white/65 leading-[1.7]">We ask every organisation to name who answers for what. So here is who answers for what at AIC.</p>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
             {PEOPLE.map((p) => (
-              <article key={p.name} className="group rounded-[28px] bg-white/[0.04] border border-white/10 p-4 sm:p-5">
-                <div className="relative overflow-hidden rounded-[20px] aspect-[4/3.4] bg-[#eef1f5]">
-                  {p.photo ? (
-                    <Image src={p.photo} alt={`Portrait of ${p.name}`} fill sizes="(min-width: 768px) 560px, 100vw" className="object-cover object-[50%_30%] transition-transform duration-700 group-hover:scale-[1.03]" />
-                  ) : (
-                    <div aria-hidden="true" className="absolute inset-0 grid place-items-center text-5xl font-bold text-[#5e6b7b]" style={serif}>
-                      {p.name.split(" ").map((w) => w[0]).filter((c) => c === c.toUpperCase()).join("")}
-                    </div>
-                  )}
+              <article key={p.name} className="rounded-[28px] bg-white/[0.04] border border-white/10 p-5 sm:p-7">
+                {/* Portraits are shown whole and at no more than their own resolution: a 640px
+                    square at 168px is sharp on a retina screen, where the old full-width crop
+                    was enlarged and cut off at the top and bottom. */}
+                <div className="flex items-center gap-5 sm:gap-6">
+                  <div className="relative h-32 w-32 sm:h-[168px] sm:w-[168px] shrink-0 overflow-hidden rounded-2xl bg-[#eef1f5]">
+                    {p.photo ? (
+                      <Image src={p.photo} alt={`Portrait of ${p.name}`} fill quality={90} sizes="168px" className="object-cover" />
+                    ) : (
+                      <div aria-hidden="true" className="absolute inset-0 grid place-items-center text-4xl font-bold text-[#5e6b7b]" style={serif}>
+                        {p.name.split(" ").map((w) => w[0]).filter((c) => c === c.toUpperCase()).join("")}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[1.45rem] sm:text-[1.6rem] font-bold leading-tight" style={serif}>{p.name}</h3>
+                    <p className="mt-1.5 text-[15px] text-[#e0b85c]">{p.role}</p>
+                  </div>
                 </div>
-                <div className="px-2 sm:px-3 pt-6 pb-3">
-                  <h3 className="text-[1.6rem] font-bold" style={serif}>{p.name}</h3>
-                  <p className="mt-1 text-[15px] text-[#e0b85c]">{p.role}</p>
-                  <p className="mt-4 text-[15.5px] leading-[1.75] text-white/75">{p.bio}</p>
+                <div className="pt-6 pb-1">
+                  <p className="text-[15.5px] leading-[1.75] text-white/75">{p.bio}</p>
                   <div className="mt-6 border-t border-white/10 pt-5">
                     <p className="text-[13px] text-white/55">Answers for</p>
                     <ul className="mt-3 flex flex-wrap gap-2">

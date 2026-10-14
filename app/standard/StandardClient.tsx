@@ -213,11 +213,7 @@ export default function StandardClient() {
                 <li key={t} className="bg-white p-5">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className={`text-[15px] font-semibold ${TIER_FILL[t].text}`}>{m.label}</span>
-                    <span className="text-[13px] text-[#5e6b7b] tabular-nums">counts {Math.round(m.weight * 100)}%</span>
-                  </div>
-                  {/* The weight, drawn to scale. */}
-                  <div className="mt-3 h-1.5 rounded-full bg-[#eef1f5]" aria-hidden="true">
-                    <div className={`h-1.5 rounded-full ${TIER_FILL[t].dot}`} style={{ width: `${m.weight * 100}%` }} />
+                    <span className="text-[13px] text-[#5e6b7b] tabular-nums">{m.rank === 1 ? "Strongest" : m.rank === TIERS.length ? "Weakest" : `${m.rank} of ${TIERS.length}`}</span>
                   </div>
                   <p className="text-sm text-[#5e6b7b] leading-[1.6] mt-3">{m.desc}</p>
                   <p className="text-[13px] text-[#0e1b2c] mt-3 tabular-nums">
@@ -372,7 +368,7 @@ function ReadingPanel({ r, division }: { r: Requirement; division: number | null
         <div>
           <dt className="text-[13px] text-[#5e6b7b]">Strongest evidence it accepts</dt>
           <dd className={`leading-[1.55] mt-0.5 font-medium ${TIER_FILL[r.tier].text}`}>
-            {TIER_MEANING[r.tier].label}, counting {Math.round(TIER_MEANING[r.tier].weight * 100)}%
+            {TIER_MEANING[r.tier].label}
           </dd>
         </div>
         <div>

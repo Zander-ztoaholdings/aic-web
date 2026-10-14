@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Don't advertise the framework in an X-Powered-By header.
+  poweredByHeader: false,
   // Bypass TypeScript errors in dependencies (e.g. drizzle-orm type changes in @aic/db)
   // These are pre-existing package-level issues that should not block the frontend build.
   typescript: {
@@ -10,12 +12,18 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Only hosts the site's content actually draws images from. next/image is
+  // used with local files today; these cover the CMS: Notion-uploaded files
+  // (served from Notion's S3 bucket and file.notion.so) and the Unsplash
+  // placeholders lib/notion.ts falls back to. A wildcard here turned
+  // /_next/image into an open proxy for any HTTPS host.
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com' },
+      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' },
+      { protocol: 'https', hostname: 'file.notion.so' },
+      { protocol: 'https', hostname: 'www.notion.so' },
     ],
   },
   // Content Security Policy. Google Analytics only loads after consent, but its
@@ -26,10 +34,12 @@ const nextConfig: NextConfig = {
     const https = process.env.NODE_ENV === 'production';
     const csp = [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${https ? '' : " 'unsafe-eval'"} https://www.googletagmanager.com`,
+      `script-src 'self' 'unsafe-inline'${https ? '' : " 'unsafe-eval'"} https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https:",
+      // https: covers article images from the CMS; the GA hosts are listed so
+      // they stay allowed if that is ever narrowed.
+      "img-src 'self' data: blob: https: https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
       `connect-src 'self' ${platform} https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.google.com`,
       "frame-ancestors 'none'",
       "base-uri 'self'",
@@ -51,6 +61,11 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  // RFC 9116: security.txt lives under /.well-known/. Served by
+  // app/security.txt/route.ts.
+  async rewrites() {
+    return [{ source: '/.well-known/security.txt', destination: '/security.txt' }];
   },
   async redirects() {
     return [

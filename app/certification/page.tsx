@@ -48,7 +48,7 @@ const DIVISION_STYLE: Record<number, {
     accentBorderColor: "border-[#c9920a]/40",
     accentStripBg: "bg-[#c9920a]",
     what: "Every AI system registered. Override process tested and evidenced. Decision records include both AI recommendation and human decision. Explanation mechanisms exist. Rejection communications meet dignity standards. Appeal processes functional. AI involvement disclosed to affected persons.",
-    product: "Full Pulse monitoring.",
+    product: "Continuous Pulse monitoring (in development).",
     icon: Users,
   },
   3: {
@@ -57,7 +57,7 @@ const DIVISION_STYLE: Record<number, {
     accentBorderColor: "border-[#1a3160]/40",
     accentStripBg: "bg-[#1a3160]",
     what: "AI systems registered with documented risk categories. Periodic human review schedules documented and evidenced. Escalation protocols for flagged decisions functional. Bias testing conducted quarterly. Correction SLA ≤ 10 business days. Full transparency to users.",
-    product: "Pulse monitoring.",
+    product: "Pulse monitoring (in development).",
     icon: Eye,
   },
   4: {
@@ -66,7 +66,7 @@ const DIVISION_STYLE: Record<number, {
     accentBorderColor: "border-[#0a1628]/40",
     accentStripBg: "bg-[#0a1628]",
     what: "All AI systems registered with documented purpose and risk category. Continuous technical monitoring in place (drift detection, performance metrics). Annual human review documented. Users informed they are interacting with AI. Anomaly escalation path exists.",
-    product: "Pulse monitoring focused on drift detection and aggregate pattern alerts.",
+    product: "Pulse monitoring (in development), focused on drift detection and aggregate pattern alerts.",
     icon: Activity,
   },
   5: {
@@ -91,7 +91,7 @@ const journeySteps = [
   { step: "02", title: "Gap Analysis", desc: "AIC conducts a structured gap analysis against the accountability requirements for your Division, identifying what evidence and controls are needed." },
   { step: "03", title: "Evidence Review", desc: "Submit documentation of your human accountability structures, AI system registrations, override processes, and monitoring mechanisms." },
   { step: "04", title: "Certification Audit", desc: "An AIC auditor conducts the formal assessment. For Sovereign and Builder certifications, this is a point-in-time audit." },
-  { step: "05", title: "Certification & Pulse", desc: "Upon passing, receive your AIC Division certificate. Supervised, Reviewed, and Monitored organisations enter continuous Pulse monitoring." },
+  { step: "05", title: "Certification & Pulse", desc: "Upon passing, receive your AIC Division certificate. Once Pulse monitoring is available, Supervised, Reviewed, and Monitored organisations will move onto it." },
 ];
 
 // Stock photography removed — see the Intention Behind Context principle.
@@ -314,7 +314,7 @@ export default function CertificationPage() {
               Your Certification Journey
             </h2>
             <p className="text-[#6b7280] max-w-2xl mx-auto">
-              Five steps from self-assessment to certified — with ongoing Pulse monitoring for organisations in Divisions 2, 3, and 4. Not ready for an audit yet? Start with{" "}
+              Five steps from self-assessment to certified — with ongoing Pulse monitoring, now in development, to follow for organisations in Divisions 2, 3, and 4. Not ready for an audit yet? Start with{" "}
               <Link href="/aware" className="text-aic-copper font-medium hover:underline">
                 the free, self-declared AIC Aware assessment
               </Link>

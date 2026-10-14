@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSystemDb, sql } from "@/lib/db";
+import { tokenMatches } from "@/lib/secure-compare";
+
+export const dynamic = "force-dynamic";
 
 // Health check with actionable diagnostics.
 //
@@ -9,11 +12,11 @@ import { getSystemDb, sql } from "@/lib/db";
 // "Postgres is down", "wrong hostname", "bad password" and "connected fine but
 // the tables don't exist". Those need completely different fixes.
 //
-// Note on disclosure: this endpoint reports the database host and port with
-// credentials stripped. Those are internal Docker hostnames, not reachable
-// externally, and knowing them is what makes the common misconfiguration
-// diagnosable. If you would rather not publish even that, set
-// HEALTH_HIDE_TARGET=1 and the target line is omitted.
+// Disclosure: the public response is only {status, message}. The detailed
+// checks below (database target and error codes, notification configuration,
+// engine reachability) are returned only when the request carries an
+// x-health-token header matching HEALTH_TOKEN. With HEALTH_TOKEN unset, no
+// detail is ever returned. The engine is only contacted on the diagnostic path.
 
 const ENGINE_URL = process.env.ENGINE_URL;
 const ENGINE_API_KEY = process.env.ENGINE_API_KEY || "";
@@ -78,9 +81,33 @@ function safeTarget(): string {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const env = process.env;
+  const authorised = tokenMatches(request.headers.get("x-health-token"), env["HEALTH_TOKEN"]);
+  if (!authorised) return publicHealth();
+  return diagnosticHealth();
+}
+
+/** The only thing an anonymous caller learns: up or not. */
+async function publicHealth() {
+  let ok = true;
+  if (process.env["DATABASE_URL"] || process.env["POSTGRES_URL"]) {
+    try {
+      await getSystemDb().execute(sql`SELECT 1`);
+    } catch {
+      ok = false;
+    }
+  }
+  return NextResponse.json(
+    ok
+      ? { status: "ok", message: "Service is running." }
+      : { status: "degraded", message: "Service is experiencing problems." },
+    { status: ok ? 200 : 503, headers: { "Cache-Control": "no-store" } }
+  );
+}
+
+async function diagnosticHealth() {
   const checks: Record<string, ServiceCheck> = {};
-  const hideTarget = process.env["HEALTH_HIDE_TARGET"] === "1";
   const dbConfigured = Boolean(
     process.env["DATABASE_URL"] || process.env["POSTGRES_URL"]
   );
@@ -110,7 +137,7 @@ export async function GET() {
         latency_ms: Date.now() - dbStart,
         detail: code ? `${code}: ${message}` : message,
         hint: diagnose(code, message),
-        ...(hideTarget ? {} : { target: safeTarget() }),
+        target: safeTarget(),
       };
     }
   }
@@ -214,6 +241,6 @@ export async function GET() {
       checks,
       timestamp: new Date().toISOString(),
     },
-    { status: anyError ? 503 : 200 }
+    { status: anyError ? 503 : 200, headers: { "Cache-Control": "no-store" } }
   );
 }

@@ -95,12 +95,13 @@ beforeEach(() => {
 });
 
 describe("contact form durability contract", () => {
-  it("stores to the database and reports success with a reference", async () => {
+  it("stores to the database and reports success without exposing a reference", async () => {
     const res = await POST(makeReq({}, "10.0.0.1"));
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.success).toBe(true);
-    expect(body.reference).toBeTruthy();
+    // The response carries no internal reference: {success: true} only.
+    expect(body).toEqual({ success: true });
     expect(inserted).toHaveLength(1);
     expect(inserted[0]).toMatchObject({
       email: "chris@example.com",
@@ -129,7 +130,7 @@ describe("contact form durability contract", () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.success).toBe(true);
-    expect(body.reference).toBeNull();
+    expect(body).toEqual({ success: true });
   });
 
   it("still succeeds if the database is down but Notion accepts it", async () => {

@@ -140,7 +140,7 @@ export const SOLUTIONS: Solution[] = [
     faqs: [
       { q: "We already run model risk management. What does AIC add?", a: "Model risk asks whether a model is sound. AIC asks whether a named person answers for each decision it makes about a customer, and keeps the evidence that they did. The two meet on the risk register, where model risks are tied to the system and its owner." },
       { q: "Does every declined application need a person to review it?", a: "Not necessarily. The law looks for safeguards such as the ability to intervene and to make representations. Many lenders hold a sample, or every decline near a threshold, for review. Which design fits is your decision; the log shows what you actually do." },
-      { q: "Can we show our regulator or board without giving them access?", a: "Yes. An evidence pack is a sealed copy of the record for a period. Anyone holding it can check it has not been changed, without an account." },
+      { q: "Can we show our regulator or board without giving them access?", a: "Yes. An evidence pack is a fingerprinted copy of the record for a period. Anyone holding it can check it matches the record AIC holds, without an account." },
     ],
     scene: {
       kind: "table",
@@ -193,7 +193,7 @@ export const SOLUTIONS: Solution[] = [
     platform: [
       { title: "Your own AI, accountable", text: "Pricing and claims models on the register, with owners, risks and logged overrides.", href: "/platform/ai-register" },
       { title: "Evidence when you insure AI", text: "With a client's permission, read whether a person answers for its AI decisions.", href: "/insurers" },
-      { title: "Sealed packs for underwriting", text: "A client can give you a pack you can check has not been changed.", href: "/platform/evidence-packs" },
+      { title: "Evidence packs for underwriting", text: "A client can give you a pack you can check matches the record AIC holds.", href: "/platform/evidence-packs" },
       { title: "Flags and overrides, logged", text: "Every fraud flag a person reviewed, and what they decided.", href: "/platform/decision-log" },
     ],
     faqs: [
@@ -240,7 +240,7 @@ export const SOLUTIONS: Solution[] = [
         { title: "The check runs", text: "A structural design is run through an AI code-checking tool, which reports that it complies." },
         { title: "The engineer is named", text: "The register names the registered person who answers for the tool's use on this project." },
         { title: "The review is recorded", text: "The tool's output and the engineer's own review are logged together, including anything the engineer overrode." },
-        { title: "The file stands up", text: "A sealed evidence pack gives the client or an inspector a copy of the record that can be checked has not been changed." },
+        { title: "The file stands up", text: "An evidence pack gives the client or an inspector a fingerprinted copy of the record they can check matches the record AIC holds." },
       ],
     },
     rules: [

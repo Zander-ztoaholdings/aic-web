@@ -9,10 +9,7 @@ export function middleware() {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
-  )
+  // Strict-Transport-Security is set once, in next.config.ts.
 
   // Staging must never be indexed, even if its password protection is
   // switched off. Set AIC_ENV=staging on the staging app only.

@@ -81,7 +81,15 @@ export interface ScoreResult {
   version: typeof SCORING_VERSION;
 }
 
-const weight = (t: EvidenceTier) => TIER_MEANING[t].weight;
+/**
+ * Evidence weights. Kept here, with the rest of the scoring model, and out of
+ * app/data so they are neither rendered on the site nor shipped in client
+ * bundles. Served to the platform and engine only via the authenticated
+ * scoringModelPayload() below.
+ */
+export const EVIDENCE_WEIGHT: Record<EvidenceTier, number> = { A: 1.0, B: 0.8, C: 0.6, D: 0.4 };
+
+const weight = (t: EvidenceTier) => EVIDENCE_WEIGHT[t];
 
 /**
  * Per requirement: min(provided ÷ expected, 1). Supplying the best evidence a
@@ -197,7 +205,11 @@ export function score(division: number, submissions: EvidenceSubmission[], gates
   };
 }
 
-/** Everything a consuming system needs, in one payload. */
+/**
+ * The public payload: the published standard and nothing more. Requirement
+ * text, evidence expectations, the tier each requirement is assessed at (by
+ * label and order, never by weight), and the Rights.
+ */
 export function standardPayload() {
   return {
     version: SCORING_VERSION,
@@ -211,15 +223,22 @@ export function standardPayload() {
       divisions: r.divisions,
       flagship: Boolean(r.flagship),
     })),
-    // The five Rights, named. Published here so aic-platform can group an
-    // organisation's requirements by Right without keeping its own copy of the
-    // names — the same reason the requirements themselves are served from here.
     rights: RIGHTS,
     tiers: TIER_MEANING,
+  };
+}
+
+/**
+ * The full scoring model (weights, gates, bands, aggregation) for aic-platform
+ * and aic-engine. Only served by /api/standard to a caller presenting the
+ * shared STANDARD_API_TOKEN; never public.
+ */
+export function scoringModelPayload() {
+  return {
+    ...standardPayload(),
+    weights: EVIDENCE_WEIGHT,
     gates: GATES,
     bands: BANDS,
     aggregation: "geometric-mean-across-rights",
-    notes:
-      "Verification methods and ISO/IEC 42001 clause mappings are deliberately not published. Scores are never exposed on the public register — status bands only.",
   };
 }

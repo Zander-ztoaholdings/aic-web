@@ -88,12 +88,12 @@ const steps = [
   {
     title: "An insured presents an AIC badge",
     detail:
-      "Every AIC certificate carries a QR code and a verify URL — printed on the badge, not just claimed in a proposal.",
+      "Every AIC certificate will carry a QR code and a verify URL — printed on the badge, not just claimed in a proposal.",
   },
   {
     title: "You confirm it directly with AIC",
     detail:
-      "The verify page answers in under 30 seconds, with no login: status, scope, Division, expiry, and whether continuous Pulse monitoring is live.",
+      "The verify page answers in under 30 seconds, with no login: status, scope, Division and expiry.",
   },
   {
     title: "The status is never taken on trust",
@@ -321,10 +321,13 @@ export default function InsurersPage() {
             </p>
             <p className="text-[#5e6b7b] leading-[1.65] mb-4">
               A certification that can quietly lapse without anyone noticing
-              isn&apos;t worth much. Certified organisations can carry the{" "}
+              isn&apos;t worth much. AIC is developing Pulse, continuous
+              monitoring between audits. When it is available, certified
+              organisations whose Pulse telemetry is live and coherent will be
+              able to carry a{" "}
               <strong className="text-[#0f1f3d]">Continuously Monitored</strong>{" "}
-              overlay when Pulse telemetry is live and coherent — a mark that
-              stays accountable after the audit, not only on the day of it.
+              overlay — a mark that stays accountable after the audit, not only
+              on the day of it.
             </p>
             <p className="text-[#5e6b7b] leading-[1.65]">
               AIC also runs a free, self-declared tool called{" "}
