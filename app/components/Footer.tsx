@@ -189,6 +189,9 @@ export default function Footer() {
             <Link href="/disclosures" className="hover:text-[#c9920a] transition-colors">
               Disclosures
             </Link>
+            <Link href="/paia" className="hover:text-[#c9920a] transition-colors">
+              PAIA manual
+            </Link>
             {/* Consent has to be as easy to withdraw as it was to give,
                 otherwise it is not consent. Dispatches an event the banner
                 listens for, so it reopens without a page reload. */}
