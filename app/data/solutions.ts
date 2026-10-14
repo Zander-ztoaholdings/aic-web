@@ -17,7 +17,7 @@ export const SOLUTIONS: Solution[] = [
     slug: "hr-and-recruitment",
     name: "HR and recruitment",
     seoTitle: "AI in hiring: POPIA and accountable recruitment",
-    description: "CV screening, candidate ranking and automated assessments decide about people. How POPIA section 71 applies to AI in recruitment, and how to show a person answers for it.",
+    description: "CV screening, candidate ranking and automated assessments decide about people. How POPIA section 71 applies to AI in hiring, and how to show who answers for it.",
     h1: "AI in hiring decides about people. Someone has to answer for it.",
     lede: "Screening, ranking and assessing candidates is one of the clearest cases of a decision about a person made by profiling. Most of it runs on tools bought in from suppliers, and the employer still answers for every outcome.",
     decisions: ["Screening out CVs before a person reads them", "Ranking candidates for a shortlist", "Scoring video interviews or online assessments", "Flagging employees for performance or attrition risk"],

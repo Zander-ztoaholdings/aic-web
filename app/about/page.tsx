@@ -7,7 +7,7 @@ import { pageMetadata, SITE_URL } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   path: "/about",
   title: "About AIC: who we are and why we exist",
-  description: "AI Integrity Certification is an independent certification body for AI accountability, founded in Johannesburg in 2026. Who runs it, why it exists and where it stands.",
+  description: "An independent certification body for AI accountability, founded in Johannesburg in 2026: who runs it, why it exists and where it stands.",
   cardTitle: "Who is behind AI Integrity Certification",
   cardKicker: "About AIC",
 });

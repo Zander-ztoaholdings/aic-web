@@ -46,6 +46,37 @@ export function ogImageUrl(title: string, kicker?: string): string {
   return `/og?${q.toString()}`;
 }
 
+/**
+ * Search results cut titles at roughly 60 characters and descriptions at
+ * roughly 160. Content from the CMS (article titles, excerpts) has no such
+ * limit, so these keep what reaches the results page whole: the " | AIC"
+ * suffix is dropped before the title is cut, and a description is shortened
+ * at a word boundary rather than mid-word.
+ */
+export function fitTitle(title: string, max = 60): string {
+  const t = title.replace(/\s+/g, " ").trim();
+  if (`${t} | AIC`.length <= max) return `${t} | AIC`;
+  if (t.length <= max) return t;
+  return t.slice(0, max - 1).replace(/\s+\S*$/, "") + "…";
+}
+
+export function fitDescription(text: string, max = 158): string {
+  const t = (text || "").replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  return t.slice(0, max - 1).replace(/[\s,;:]+\S*$/, "") + "…";
+}
+
+/** Plain text from the opening of a markdown body, for a description when none was written. */
+export function excerptFromMarkdown(md: string, max = 158): string {
+  const plain = (md || "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/^#{1,6}\s.*$/gm, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_>`#|-]/g, " ");
+  return fitDescription(plain, max);
+}
+
 export function pageMetadata(p: PageSeo): Metadata {
   const url = `${SITE_URL}${p.path === "/" ? "" : p.path}`;
   const image = { url: ogImageUrl(p.cardTitle ?? p.title, p.cardKicker), width: 1200, height: 630, alt: p.cardTitle ?? p.title };
@@ -53,8 +84,8 @@ export function pageMetadata(p: PageSeo): Metadata {
     // Absolute, with the suffix added here, because a nested layout that sets
     // its own title stops the root template reaching the pages beneath it:
     // country pages were going out without "| AIC".
-    title: { absolute: `${p.title} | AIC` },
-    description: p.description,
+    title: { absolute: fitTitle(p.title) },
+    description: fitDescription(p.description),
     alternates: { canonical: p.path },
     openGraph: {
       type: p.type ?? "website",
@@ -62,13 +93,13 @@ export function pageMetadata(p: PageSeo): Metadata {
       siteName: SITE_NAME,
       url,
       title: p.cardTitle ?? p.title,
-      description: p.description,
+      description: fitDescription(p.description, 200),
       images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: p.cardTitle ?? p.title,
-      description: p.description,
+      description: fitDescription(p.description, 200),
       images: [image.url],
     },
     other: { publish_date: p.publishedAt ?? PUBLISHED_AT },

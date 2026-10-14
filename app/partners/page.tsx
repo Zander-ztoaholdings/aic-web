@@ -5,7 +5,7 @@ import { pageMetadata, SITE_URL, breadcrumbLd } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   path: "/partners",
   title: "Partner programme for AI accountability",
-  description: "Law firms, privacy consultants, auditors, HR and AI technology companies, insurers and brokers: how to partner with AIC, and the independence rules every partner keeps.",
+  description: "How law firms, privacy consultants, auditors, HR and AI technology companies and insurers partner with AIC, and the independence rules every partner keeps.",
   cardKicker: "Partners",
 });
 

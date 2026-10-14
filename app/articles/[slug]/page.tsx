@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, excerptFromMarkdown } from "@/lib/seo";
 import { getArticleBySlug, getArticles } from "@/lib/notion";
 import { cleanAuthor, getNews, relatedNews } from "@/lib/news";
 import EditorialArticle from "@/app/components/EditorialArticle";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const base = pageMetadata({
     path: `/articles/${slug}`,
     title: article.title,
-    description: article.excerpt,
+    description: (article.excerpt || "").trim().length >= 70 ? article.excerpt : excerptFromMarkdown(article.content),
     cardKicker: article.category === "Uncategorized" ? "Analysis" : article.category,
     type: "article",
     publishedAt: article.date,

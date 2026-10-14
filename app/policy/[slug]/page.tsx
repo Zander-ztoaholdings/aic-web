@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, excerptFromMarkdown } from "@/lib/seo";
 import { getPolicyUpdateBySlug, getPolicyUpdateSlugs } from "@/lib/notion";
 import { getNews, relatedNews } from "@/lib/news";
 import EditorialArticle from "@/app/components/EditorialArticle";
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const update = await getPolicyUpdateBySlug(slug);
   if (!update) return { title: "Policy update not found", robots: { index: false } };
 
-  const base = pageMetadata({ path: `/policy/${slug}`, title: update.title, description: update.summary, cardKicker: "Policy update", type: "article", publishedAt: update.date });
+  const base = pageMetadata({ path: `/policy/${slug}`, title: update.title, description: (update.summary || "").trim().length >= 70 ? update.summary : excerptFromMarkdown(update.content), cardKicker: "Policy update", type: "article", publishedAt: update.date });
   return {
     ...base,
     openGraph: { ...base.openGraph, type: "article", publishedTime: update.date || undefined, modifiedTime: update.date || undefined, section: update.tag },

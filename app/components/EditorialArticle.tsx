@@ -60,7 +60,14 @@ export default function EditorialArticle({
       "@type": kind === "policy" ? "NewsArticle" : "BlogPosting",
       headline: title.slice(0, 110),
       description: summary,
-      image: `${SITE_URL}/og?title=${encodeURIComponent(title)}&kicker=${encodeURIComponent(KIND_LABEL[kind])}`,
+      image: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/og?title=${encodeURIComponent(title)}&kicker=${encodeURIComponent(KIND_LABEL[kind])}`,
+        width: 1200,
+        height: 630,
+      },
+      keywords: [topic, ...jurisdictions, "AI governance", "AI accountability"].filter(Boolean).join(", "),
+      about: [{ "@type": "Thing", name: topic }, ...jurisdictions.map((j) => ({ "@type": "Place", name: j }))],
       datePublished: date || undefined,
       dateModified: date || undefined,
       inLanguage: "en-ZA",
@@ -78,6 +85,7 @@ export default function EditorialArticle({
     breadcrumbLd([
       { name: "Home", path: "/" },
       { name: "News", path: "/news" },
+      { name: KIND_LABEL[kind], path: kind === "article" ? "/articles" : "/policy" },
       { name: title, path },
     ]),
   ];
