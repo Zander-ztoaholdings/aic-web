@@ -55,7 +55,7 @@ export default function HeroFilm({ children }: { children: ReactNode }) {
         className="absolute inset-0 overflow-hidden will-change-transform [transform:translateZ(0)]"
         style={{ scale: filmScale, borderRadius: radius }}
       >
-        <AmbientVideo src={src} poster={poster} playbackRate={0.6} className="absolute inset-0 h-full w-full object-cover" />
+        <AmbientVideo src={src} poster={poster} className="absolute inset-0 h-full w-full object-cover" />
         {/* A flat black tint over the whole film, then the navy wash, so white type reads over any frame. */}
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,22,40,0.55)_0%,rgba(10,22,40,0.35)_40%,rgba(10,22,40,0.9)_100%)] lg:bg-[linear-gradient(90deg,rgba(10,22,40,0.88)_0%,rgba(10,22,40,0.6)_45%,rgba(10,22,40,0.25)_100%)]" />
