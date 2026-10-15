@@ -14,11 +14,14 @@ export default function AmbientVideo({
   poster,
   className = "",
   style,
+  playbackRate = 1,
 }: {
   src: string | null;
   poster: string;
   className?: string;
   style?: CSSProperties;
+  /** Below 1 slows the film; browsers reset the rate on load, so it is reapplied. */
+  playbackRate?: number;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -26,6 +29,13 @@ export default function AmbientVideo({
     const v = ref.current;
     if (!v || !src) return;
     v.muted = true;
+    const applyRate = () => {
+      v.defaultPlaybackRate = playbackRate;
+      if (v.playbackRate !== playbackRate) v.playbackRate = playbackRate;
+    };
+    applyRate();
+    v.addEventListener("loadedmetadata", applyRate);
+    v.addEventListener("playing", applyRate);
     const play = () => {
       if (v.paused) v.play().catch(() => {});
     };
@@ -41,8 +51,10 @@ export default function AmbientVideo({
       events.forEach((e) => window.removeEventListener(e, play));
       document.removeEventListener("visibilitychange", onVisible);
       v.removeEventListener("pause", play);
+      v.removeEventListener("loadedmetadata", applyRate);
+      v.removeEventListener("playing", applyRate);
     };
-  }, [src]);
+  }, [src, playbackRate]);
 
   return (
     <video
