@@ -267,9 +267,13 @@ export default function PrivacyPolicy() {
               built about you by us.
             </p>
             <p className="text-[#6b7280] mb-6 text-lg leading-relaxed">
-              You can change your mind at any time using the analytics
-              preference link in the footer. Nothing on this site requires
-              analytics to function, so declining costs you nothing.
+              When you first visit you can accept all, reject everything
+              optional, or open the settings and switch analytics on or off;
+              essential storage is the only thing that is always on. You can
+              change your mind at any time with the Cookie settings link in
+              the footer, and switching analytics off removes its cookies
+              straight away. Nothing on this site requires analytics to
+              function, so declining costs you nothing.
             </p>
 
             {/* 10 */}

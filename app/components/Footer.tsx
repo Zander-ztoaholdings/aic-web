@@ -206,7 +206,7 @@ export default function Footer() {
                  and not to this. Stated explicitly so it matches them. */
               className="text-[13px] text-white/50 hover:text-white transition-colors cursor-pointer"
             >
-              Analytics Preference
+              Cookie settings
             </button>
           </div>
         </div>
