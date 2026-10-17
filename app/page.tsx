@@ -62,42 +62,15 @@ const algorithmicRights = [
   },
 ];
 
-// Every figure here is real, and the two zeros are the point: a body that
-// publishes its own emptiness is making a checkable claim, which is the only
-// kind worth making.
-const proofPoints = [
-  {
-    figure: "44",
-    label: "Published requirements",
-    detail:
-      "The full standard — what each test demands and what evidence satisfies it.",
-    cta: "Read the standard",
-    href: "/standard",
-  },
-  {
-    figure: "28",
-    label: "Jurisdictions mapped",
-    detail:
-      "Each carrying its own verification date and a link to the primary source.",
-    cta: "Open the map",
-    href: "/regulatory-map",
-  },
-  {
-    figure: "0",
-    label: "Certified organisations",
-    detail:
-      "The register is empty because nobody has been assessed yet. We publish that.",
-    cta: "See the register",
-    href: "/registry",
-  },
-  {
-    figure: "0",
-    label: "Accreditations held",
-    detail:
-      "AIC is not accredited by UKAS, SANAS or anyone else. The application status is public.",
-    cta: "Where we stand",
-    href: "/disclosures#accreditation",
-  },
+// The rules a client's AI is already held to. Statuses and dates match
+// regulatory-data.ts, which carries the sources; nothing here goes further.
+const frameworks = [
+  { name: "POPIA section 71", where: "South Africa", status: "In force", detail: "Rights around decisions based solely on automated processing with legal or similarly significant effect.", href: "/regulatory-map/south-africa" },
+  { name: "EU AI Act", where: "European Union", status: "High-risk duties from 2 Dec 2027", detail: "Human oversight, logging and accountability for high-risk systems, after the Digital Omnibus deferral.", href: "/regulatory-map" },
+  { name: "GDPR article 22", where: "European Union", status: "In force", detail: "The right not to be subject to a solely automated decision with significant effect.", href: "/regulatory-map" },
+  { name: "ISO/IEC 42001", where: "International", status: "Certifiable standard", detail: "A management system for AI: roles, risk and impact assessment, life-cycle controls.", href: "/platform" },
+  { name: "NIST AI RMF", where: "United States", status: "Voluntary", detail: "A risk framework many global buyers and insurers use as their reference point.", href: "/regulatory-map/united-states" },
+  { name: "Industry frameworks", where: "Engineering, finance, health", status: "IEC 61511, SR 11-7, IEC 62304", detail: "AI mapped against the safety and model-risk disciplines your sector already audits.", href: "/frameworks" },
 ];
 
 const standards = [
@@ -423,54 +396,57 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* ── THE PROOF ────────────────────────────────────────────────
-          The densest, darkest block on the page, and the only one carrying
-          bare figures. It exists because the homepage previously argued in
-          adjectives — "evidence-based", "world's toughest" — while the actual
-          proof sat unlinked in the navigation. Every number here is real, and
-          the zero is deliberately included. */}
+      {/* ── THE RULES ────────────────────────────────────────────────
+          Replaces "Check us" until there are clients to point to. The laws
+          and frameworks a client's AI is already held to, each linking to the
+          map or framework page that sources it. */}
       <section className="bg-[#0a1628] py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#8a6114]">
-                Check us
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#c9920a]">
+                The rules
               </span>
               <h2
                 className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-white font-bold mt-4 mb-5 text-balance"
                 style={{ fontFamily: "'Merriweather', serif" }}
               >
-                Everything we assert is somewhere you can go and look
+                The laws and frameworks your AI is already held to
               </h2>
               <p className="text-white/60 leading-relaxed">
-                A certification body that asks to be trusted has already lost
-                the argument. These are the four things you can verify about AIC
-                without speaking to us.
+                Each requirement in the AIC standard is mapped to the law or
+                framework it helps you meet, and the platform tracks them for
+                you. Where a country stands, with its sources and the date we
+                last checked, is on the regulatory map.
               </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href="/regulatory-map" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#0a1628] hover:bg-white/90 transition-colors">
+                  Open the regulatory map <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link href="/frameworks" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white hover:border-white/60 transition-colors">
+                  Industry frameworks <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-px bg-white/10 border border-white/10 max-lg:rounded-2xl max-lg:overflow-hidden">
-              {proofPoints.map((p) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden [&>*]:min-w-0">
+              {frameworks.map((f) => (
                 <Link
-                  key={p.href}
-                  href={p.href}
+                  key={f.name}
+                  href={f.href}
                   className="group bg-[#0a1628] p-6 max-sm:p-5 hover:bg-[#0f1f3d] transition-colors"
                 >
-                  <div
-                    className="text-4xl font-bold text-white tabular-nums leading-none mb-2"
-                    style={{ fontFamily: "'Merriweather', serif" }}
-                  >
-                    {p.figure}
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="text-lg font-bold text-white leading-snug" style={{ fontFamily: "'Merriweather', serif" }}>
+                      {f.name}
+                    </h3>
+                    <ArrowRight className="mt-1 w-4 h-4 shrink-0 text-aic-copper transition-transform group-hover:translate-x-0.5" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1.5">
-                    {p.label}
-                  </div>
-                  <p className="max-sm:hidden text-[13px] text-white/50 leading-relaxed mb-3">
-                    {p.detail}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-aic-copper group-hover:gap-2.5 transition-all">
-                    {p.cta} <ArrowRight className="w-3.5 h-3.5" />
+                  <p className="text-[13px] text-white/50 mb-3">{f.where}</p>
+                  <span className="inline-block rounded-full border border-[#c9920a]/40 bg-[#c9920a]/10 px-2.5 py-1 text-[12px] font-semibold text-[#e0b85c] mb-3">
+                    {f.status}
                   </span>
+                  <p className="text-[13.5px] text-white/65 leading-relaxed">{f.detail}</p>
                 </Link>
               ))}
             </div>
