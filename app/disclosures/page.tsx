@@ -1,5 +1,7 @@
 'use client';
 import { CONTACT_EMAIL } from "@/lib/contact";
+import Link from "next/link";
+import { SAFEGUARDS } from "@/app/data/impartiality";
 
 import React, { useEffect, useRef, useState } from "react";
 import { scrollElementToTop } from "@/lib/scroll";
@@ -8,17 +10,11 @@ import {
   FileText,
   Shield,
   Scale,
-  Search,
-  Download,
   ExternalLink,
   CheckCircle,
   AlertCircle,
-  Globe,
-  Users,
   Building2,
 } from "lucide-react";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
 import { Card } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
@@ -27,25 +23,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/ta
 // out of step with the content the way a hand-typed date does. It read
 // "February 1, 2026" while sitting above the accreditation status rewritten in
 // September.
-const LAST_UPDATED = "4 September 2026";
-
-interface CertifiedOrganization {
-  name: string;
-  industry: string;
-  certNumber: string;
-  issueDate: string;
-  expiryDate: string;
-  status: "Active" | "Suspended" | "Expired";
-  scope: string;
-  country: string;
-}
-
-const certifiedOrgs: CertifiedOrganization[] = [];
+const LAST_UPDATED = "20 October 2026";
 
 const appealCases: { caseId: string; organization: string; dateSubmitted: string; status: string; issue: string }[] = [];
 
 export default function DisclosuresPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("impartiality");
 
   // These tabs are controlled state, so a link to /disclosures#accreditation
@@ -72,12 +54,6 @@ export default function DisclosuresPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredOrgs = certifiedOrgs.filter(
-    (org) =>
-      org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      org.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      org.certNumber.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div>
@@ -102,8 +78,8 @@ export default function DisclosuresPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <FileText className="w-4 h-4 text-[#c9920a]" />
-              <span className="text-[#c9920a] text-sm uppercase tracking-widest font-medium">
-                Mandatory Disclosures
+              <span className="text-[#c9920a] text-sm font-medium">
+                Governance and disclosures
               </span>
             </div>
             <h1 className="text-5xl md:text-6xl text-white mb-6" style={{ fontFamily: "'Merriweather', serif", fontWeight: 700 }}>
@@ -122,10 +98,13 @@ export default function DisclosuresPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: Shield, label: "Methodology", value: "Assessed" },
-              { icon: Globe, label: "Recognition", value: "Global" },
-              { icon: Users, label: "Founding Cohort", value: "Forming" },
-              { icon: Building2, label: "Public Registry", value: "Opening Soon" },
+              // Each tile states something the tabs below support. "Methodology:
+              // Assessed" and "Recognition: Global" sat above an accreditation
+              // tab that opens with "AIC is not yet accredited".
+              { icon: Shield, label: "Accreditation", value: "Not yet" },
+              { icon: Building2, label: "Certificates issued", value: "None yet" },
+              { icon: FileText, label: "The standard", value: "Published in full" },
+              { icon: Scale, label: "Impartiality statement", value: "Version 2.0" },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
@@ -152,11 +131,13 @@ export default function DisclosuresPage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div ref={tabsRef} className="scroll-mt-32">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-8">
-              <TabsTrigger value="impartiality">Impartiality Statement</TabsTrigger>
-              <TabsTrigger value="accreditation">Accreditation Status</TabsTrigger>
-              <TabsTrigger value="directory">Certified Directory</TabsTrigger>
-              <TabsTrigger value="appeals">Appeals Process</TabsTrigger>
+            {/* The four tabs measured 597px on a 390px phone and pushed the
+                whole page sideways. They now wrap into a 2 x 2 grid there. */}
+            <TabsList className="mb-8 grid grid-cols-2 sm:inline-flex h-auto w-full sm:w-fit gap-1">
+              <TabsTrigger value="impartiality" className="whitespace-normal sm:whitespace-nowrap py-2 sm:px-3">Impartiality</TabsTrigger>
+              <TabsTrigger value="accreditation" className="whitespace-normal sm:whitespace-nowrap py-2 sm:px-3">Accreditation status</TabsTrigger>
+              <TabsTrigger value="directory" className="whitespace-normal sm:whitespace-nowrap py-2 sm:px-3">Public register</TabsTrigger>
+              <TabsTrigger value="appeals" className="whitespace-normal sm:whitespace-nowrap py-2 sm:px-3">Appeals</TabsTrigger>
             </TabsList>
 
             {/* Impartiality Statement */}
@@ -203,7 +184,7 @@ export default function DisclosuresPage() {
                             <li>Internal audit services</li>
                             <li>Risk assessment design or execution</li>
                             <li>Policy or procedure development</li>
-                            <li>Training that compromises impartiality</li>
+                            <li>Training that designs, reviews or implements an organisation&apos;s controls</li>
                           </ul>
                         </div>
                       </div>
@@ -218,39 +199,7 @@ export default function DisclosuresPage() {
                         body that blurs them has no business grading anyone else.
                       </p>
                       <div className="grid md:grid-cols-2 gap-4">
-                        {[
-                          {
-                            title: "No advisory relationship",
-                            state: "in force",
-                            // The Arthur Andersen Rule, stated at full strength.
-                            // This previously read "within the preceding 3 years",
-                            // which quietly downgraded an absolute rule to a
-                            // cooling-off period and gained nothing for it.
-                            desc: "AIC never certifies an organisation it has a commercial or advisory relationship with. Not a cooling-off period — a permanent bar, and the rule the entire body is built on.",
-                          },
-                          {
-                            title: "Client concentration limit",
-                            state: "committed",
-                            desc: "Our impartiality policy commits us to no single client exceeding 15% of annual revenue. AIC has issued no certificates yet, so this commitment has not been tested in practice.",
-                          },
-                          {
-                            title: "Independent conflicts panel",
-                            state: "not yet in place",
-                            // Previously asserted as an existing "independent
-                            // ethics committee". It does not exist. Impartiality
-                            // arrangements are one of the five workstreams UKAS
-                            // named as prerequisites for accreditation.
-                            desc: "Conflict allegations are currently handled by AIC's founders, because AIC is a small body and there is no panel yet. An independent panel is a prerequisite for accreditation and will be in place before the first certificate is issued.",
-                          },
-                          {
-                            title: "Annual impartiality report",
-                            state: "not yet in place",
-                            // Previously asserted as "published and audited by
-                            // accreditation body" — AIC has no accreditation
-                            // body, and no report has ever been published.
-                            desc: "No impartiality report has been published. Once AIC is accredited, its accreditation body reviews these arrangements; until then there is no external auditor of them and we will not imply otherwise.",
-                          },
-                        ].map((safeguard, i) => (
+                        {SAFEGUARDS.map((safeguard, i) => (
                           <div key={i} className="flex items-start gap-3 p-4 bg-aic-paper rounded-lg border border-[#e5e7eb]">
                             {safeguard.state === "in force" ? (
                               <CheckCircle className="w-5 h-5 text-[#0a7a54] shrink-0 mt-0.5" />
@@ -280,6 +229,16 @@ export default function DisclosuresPage() {
                     </div>
 
                     <div>
+                      <h3 className="font-semibold text-[#0f1f3d] mb-2">Tools and certification</h3>
+                      <p className="text-sm text-[#6b7280] leading-relaxed">
+                        The AIC platform is a tool. Using it neither raises nor lowers an
+                        organisation&apos;s chance of certification, which is decided only against
+                        the published standard, by assessors who treat evidence the same way
+                        wherever it came from.
+                      </p>
+                    </div>
+
+                    <div>
                       <h3 className="font-semibold text-[#0f1f3d] mb-2">Reporting Concerns</h3>
                       <p className="mb-3">
                         If you believe AIC has violated its impartiality commitments, you may report concerns confidentially to:
@@ -300,12 +259,16 @@ export default function DisclosuresPage() {
                         exists, this page IS the statement, and says so. */}
                     <div className="pt-6 border-t border-[#e5e7eb]">
                       <p className="text-sm text-[#6b7280] leading-relaxed">
-                        This page is AIC&apos;s impartiality statement in full.
-                        A separate formal policy document is being prepared as
+                        The full statement, with the conflict of interest
+                        prohibitions, declaration obligations and how it is
+                        reviewed, is at{" "}
+                        <Link href="/impartiality" className="text-[#8a6114] underline underline-offset-2">
+                          the Statement of Impartiality
+                        </Link>
+                        . A separate formal policy document is being prepared as
                         part of the management-system work required for
-                        accreditation; when it exists it will be published here
-                        and dated. We would rather say that than offer a
-                        download that does not resolve.
+                        accreditation; when it exists it will be published and
+                        dated.
                       </p>
                     </div>
                   </div>
@@ -345,12 +308,15 @@ export default function DisclosuresPage() {
                       <div>
                         <h3 className="font-semibold text-[#0f1f3d] mb-2">The scheme we are pursuing</h3>
                         <p className="text-sm text-[#6b7280] leading-relaxed">
-                          AIC offers certification against{" "}
-                          <strong className="text-[#0f1f3d]">ISO/IEC 42001</strong>, the AI
-                          management system standard. Accrediting a body to certify against a
-                          management system standard is governed by{" "}
-                          <strong className="text-[#0f1f3d]">ISO/IEC 17021-1</strong>, and that is
-                          the standard AIC is being assessed against.
+                          AIC&apos;s application to UKAS is for accreditation as a certification body for{" "}
+                          <strong className="text-[#0f1f3d]">ISO/IEC 42001</strong>, the AI management
+                          system standard. A body that certifies management systems is assessed against{" "}
+                          <strong className="text-[#0f1f3d]">ISO/IEC 17021-1</strong>, and for AI
+                          management systems also against{" "}
+                          <strong className="text-[#0f1f3d]">ISO/IEC 42006</strong>, which adds
+                          requirements specific to auditing AI. Accreditation, once granted, would cover
+                          ISO/IEC 42001 certificates. It would not on its own cover certification against
+                          the AIC standard, which is AIC&apos;s own published scheme and is unaccredited.
                         </p>
                       </div>
 
@@ -418,96 +384,25 @@ export default function DisclosuresPage() {
 
             {/* Certified Directory */}
             <TabsContent value="directory">
-              <motion.div
-                initial={{ opacity: 1, y: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                <Card className="p-8 mb-6">
-                  <div className="flex items-start justify-between mb-6">
-                    <div>
-                      <h2 className="text-2xl font-semibold text-[#0f1f3d] mb-2">
-                        Certified Organizations
-                      </h2>
-                      <p className="text-sm text-[#6b7280]/80">
-                        The public registry opens with our founding cohort, currently forming.
-                      </p>
-                    </div>
-                    {/* The export button had no handler and nothing to
-                        export. It returns when the register has rows. */}
-                  </div>
-
-                  <div className="relative mb-6">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b7280]/60" />
-                    <Input
-                      placeholder="Search by organization name, industry, or certificate number..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    {filteredOrgs.map((org, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 1, y: 0 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="border border-[#e5e7eb] rounded-lg p-5 bg-aic-paper hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="font-semibold text-[#0f1f3d] text-lg">{org.name}</h3>
-                              <Badge
-                                className={
-                                  org.status === "Active"
-                                    ? "bg-[#c9920a]/10 text-[#c9920a]"
-                                    : org.status === "Suspended"
-                                    ? "bg-[#c9920a]/10 text-[#c9920a]"
-                                    : "bg-[#d4183d]/10 text-[#d4183d]"
-                                }
-                              >
-                                {org.status}
-                              </Badge>
-                            </div>
-                            <div className="text-sm text-[#6b7280]/80">
-                              {org.industry} • {org.country}
-                            </div>
-                          </div>
-                          <Button size="sm" variant="ghost">
-                            <ExternalLink className="w-4 h-4" />
-                          </Button>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <div className="text-[#6b7280]/80 mb-1">Certificate Number</div>
-                            <div className="font-mono text-[#0f1f3d]">{org.certNumber}</div>
-                          </div>
-                          <div>
-                            <div className="text-[#6b7280]/80 mb-1">Validity Period</div>
-                            <div className="text-[#0f1f3d]">
-                              {org.issueDate} — {org.expiryDate}
-                            </div>
-                          </div>
-                          <div className="md:col-span-2">
-                            <div className="text-[#6b7280]/80 mb-1">Certification Scope</div>
-                            <div className="text-[#0f1f3d]">{org.scope}</div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {filteredOrgs.length === 0 && (
-                    <div className="text-center py-12 border border-dashed border-[#e5e7eb] rounded-lg text-[#6b7280]/80 text-sm">
-                      No organisation currently holds AIC certification. The register opens with our founding cohort.
-                    </div>
-                  )}
-                </Card>
-              </motion.div>
+              {/* This tab was a second, hardcoded copy of the register that would
+                  have stayed empty after /registry, which reads live data,
+                  started listing certificates. It now points to the real one. */}
+              <Card className="p-8 mb-6">
+                <h2 className="text-2xl font-semibold text-[#0f1f3d] mb-2">Public register</h2>
+                <p className="text-[#0f1f3d] leading-relaxed mb-6">
+                  No organisation currently holds AIC certification. When one does, it appears on the
+                  public register, where anyone can check whether a certificate is current without
+                  asking the organisation that holds it.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/registry" className="inline-flex items-center gap-2 rounded-lg bg-[#0a1628] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0f1f3d]">
+                    Search the register <ExternalLink className="w-4 h-4" />
+                  </Link>
+                  <Link href="/verify" className="inline-flex items-center gap-2 rounded-lg border border-[#e5e7eb] px-5 py-2.5 text-sm font-semibold text-[#0f1f3d] hover:border-[#0f1f3d]">
+                    Verify a certificate
+                  </Link>
+                </div>
+              </Card>
             </TabsContent>
 
             {/* Appeals Process */}
@@ -600,12 +495,15 @@ export default function DisclosuresPage() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-6 border-t border-[#e5e7eb] flex gap-3">
-                      <Button className="bg-[#0a1628] hover:bg-[#0f1f3d] text-white">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download Appeals Form
-                      </Button>
-                      <Button variant="outline">View Full Appeals Policy</Button>
+                    {/* "Download Appeals Form" and "View Full Appeals Policy" pointed at
+                        files that have never existed. Email is the route. */}
+                    <div className="mt-6 pt-6 border-t border-[#e5e7eb]">
+                      <a
+                        href={`mailto:${CONTACT_EMAIL}?subject=Appeal`}
+                        className="inline-flex items-center gap-2 rounded-lg bg-[#0a1628] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0f1f3d]"
+                      >
+                        Email an appeal
+                      </a>
                     </div>
                   </Card>
 
@@ -657,13 +555,16 @@ export default function DisclosuresPage() {
       <section className="py-16 bg-aic-paper border-t border-[#e5e7eb]">
         <div className="max-w-4xl mx-auto px-5 md:px-8 text-center">
           <h2 className="text-3xl text-[#0f1f3d] mb-4" style={{ fontFamily: "'Merriweather', serif" }}>
-            Questions About Our Processes?
+            Questions about our processes?
           </h2>
           <p className="text-[#6b7280] mb-8">
-            Our compliance team is available to answer questions about impartiality, accreditation, or appeals procedures.
+            Write to us about impartiality, accreditation or appeals, and one of the founders will answer.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button className="bg-[#0a1628] hover:bg-[#0f1f3d] text-white px-8 py-3">Contact Compliance Team</Button>
+            {/* Was a button with no link ("Contact Compliance Team"). */}
+            <Link href="/contact" className="inline-flex items-center rounded-lg bg-[#0a1628] hover:bg-[#0f1f3d] text-white px-8 py-3 font-semibold">
+              Write to us
+            </Link>
           </div>
         </div>
       </section>

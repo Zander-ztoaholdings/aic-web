@@ -3,6 +3,7 @@ import { CONTACT_EMAIL } from "@/lib/contact";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SAFEGUARDS, type SafeguardState as State } from "@/app/data/impartiality";
 import { Shield, Scale, CheckCircle, AlertCircle, Download, ExternalLink, FileSearch } from "lucide-react";
 
 // Rewritten 7 September 2026. The previous version asserted a set of running
@@ -23,8 +24,6 @@ import { Shield, Scale, CheckCircle, AlertCircle, Download, ExternalLink, FileSe
 // in force / committed / not yet in place — because a commitment and a
 // running mechanism are different things, and the distinction is the whole
 // point of the document.
-
-type State = "in force" | "committed" | "not yet in place";
 
 function StateBadge({ state }: { state: State }) {
   return (
@@ -60,49 +59,6 @@ function SafeguardCard({ title, state, desc }: { title: string; state: State; de
     </div>
   );
 }
-
-const SAFEGUARDS: { title: string; state: State; desc: string }[] = [
-  {
-    title: "No advisory relationship",
-    state: "in force",
-    desc: "AIC never certifies an organisation it has a commercial or advisory relationship with. Not a cooling-off period — a permanent bar, and the rule the entire body is built on.",
-  },
-  {
-    title: "Training separated from certification",
-    state: "in force",
-    desc: "AIC's governance workshops teach only. They never design, review or implement an organisation's controls, because doing so would put AIC in the position of grading its own work.",
-  },
-  {
-    title: "Conflict declaration per engagement",
-    state: "committed",
-    desc: "A written independence declaration, naming the organisation, signed before assessment work begins. The form is drafted; it has not been used, because no assessment has been carried out.",
-  },
-  {
-    title: "Client concentration limit",
-    state: "committed",
-    desc: "No single client to exceed 15% of annual revenue. AIC has issued no certificates, so this commitment has not been tested in practice.",
-  },
-  {
-    title: "Assessor and decision-maker separated",
-    state: "not yet in place",
-    desc: "AIC is currently small enough that the person who would assess and the person who would decide are the same person. No wording fixes that. It will be resolved by appointing an independent reviewer before the first certificate is issued, not before accreditation.",
-  },
-  {
-    title: "Impartiality risk analysis",
-    state: "committed",
-    desc: "AIC maintains a risk register covering the business as a whole, including the structural conflicts that threaten impartiality. A dedicated impartiality analysis against each recognised threat category is being added to it, with the first quarterly review scheduled for December 2026.",
-  },
-  {
-    title: "Independent conflicts panel",
-    state: "not yet in place",
-    desc: "Conflict allegations are currently handled by AIC's founders, because AIC is a small body and there is no panel yet. Balanced representation of interested parties is not achievable at AIC's present size; it is a prerequisite for accreditation and will be in place before the first certificate is issued.",
-  },
-  {
-    title: "Published impartiality report",
-    state: "not yet in place",
-    desc: "No impartiality report has been published. Once AIC is accredited, its accreditation body reviews these arrangements; until then there is no external auditor of them and we will not imply otherwise.",
-  },
-];
 
 const PROHIBITIONS = [
   "Provide consultancy or advisory services to any organisation that is applying for, or holds, AIC certification.",
