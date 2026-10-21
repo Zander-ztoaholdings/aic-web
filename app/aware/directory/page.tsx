@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Gauge, ArrowRight, AlertTriangle, BadgeCheck } from "lucide-react";
-import { listAwareDirectory } from "@/lib/aware-directory";
 import { listPlatformDirectory } from "@/lib/aware-platform";
 
 // Server-rendered for the same reason /registry is: this list must reflect
@@ -16,15 +15,19 @@ export const metadata: Metadata = pageMetadata({
   cardKicker: "AIC Aware",
 });
 
-// listAwareDirectory() returns null when the datastore is unreachable and []
+// listPlatformDirectory() returns null when the datastore is unreachable and []
 // when nobody has opted in yet — rendered differently on purpose, mirroring
 // the distinction lib/registry.ts draws for the certified register (an
 // outage must never read as "nobody has declared").
 export default async function AwareDirectoryPage() {
-  // Platform-issued badges are the directory. Entries from the website's old
-  // opt-in checkbox are shown separately and labelled, because nothing tied
-  // those names to the organisation they name.
-  const [entries, legacy] = await Promise.all([listPlatformDirectory(), listAwareDirectory()]);
+  // Platform-issued badges are the directory, and only they appear here.
+  // October 2026: the "Earlier declarations" list beside it showed company
+  // names typed into the website's old self-check (leads marked LISTED).
+  // Nothing tied those names to the organisation they name, revoking a badge
+  // could not remove them because they were never badges, and test entries
+  // showed in public. A certification body should not publish names it has
+  // not confirmed, so the list is gone; the rows stay in leads.
+  const entries = await listPlatformDirectory();
   const fmt = (iso: string) => iso.slice(0, 10);
 
   return (
@@ -101,24 +104,6 @@ export default async function AwareDirectoryPage() {
                 </li>
               ))}
             </ul>
-          )}
-
-          {legacy && legacy.length > 0 && (
-            <div className="mt-14">
-              <h2 className="text-sm font-bold text-[#0f1f3d]">Earlier declarations</h2>
-              <p className="mt-1 mb-4 text-sm text-[#6b7280] max-w-2xl leading-relaxed">
-                Made through the website before badges were issued from an AIC account. These names were entered
-                by whoever completed the self-check and have not been confirmed as the organisation they name.
-              </p>
-              <ul className="divide-y divide-[#e5e7eb] border border-[#e5e7eb] rounded-xl overflow-hidden bg-white/60">
-                {legacy.map((e) => (
-                  <li key={`${e.company}-${e.declaredOn}`} className="flex items-center justify-between px-6 py-3.5">
-                    <span className="text-[#374151]">{e.company}</span>
-                    <span className="text-sm text-[#9ca3af] font-mono">{e.declaredOn}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           )}
 
           <div className="mt-10">

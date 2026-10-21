@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import { findAwareBadgeEntry } from "@/lib/aware-badge";
 import { normaliseBadgeCode, verifyBadge } from "@/lib/aware-platform";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
@@ -163,22 +162,13 @@ export async function GET(
     );
   }
 
-  const entry = await findAwareBadgeEntry(slug);
-  if (!entry) {
-    return new Response("Not found — this organisation hasn't declared via AIC Aware.", {
-      status: 404,
-    });
-  }
-
-  const declaredDate = entry.declaredOn ? fmt(`${entry.declaredOn}T00:00:00Z`) : "an unspecified date";
-  return image(
-    render({
-      company: entry.company,
-      tag: "Self-Declared",
-      line: `Declared ${declaredDate} · not AIC Certified, not independently verified`,
-    }),
-    `aic-aware-badge-${slug}.png`,
-    download,
-    3600
-  );
+  // October 2026: a badge used to be drawn for any company name typed into
+  // the website's old self-check (leads marked LISTED), looked up by a slug of
+  // that name. Nothing tied the name to the organisation, so anyone could
+  // fetch a "Self-Declared" badge for a name they had entered, and revoking
+  // could not stop it. Badges now exist only as codes issued from an AIC
+  // account (handled above).
+  return new Response("Not found. AIC Aware badges are verified by their badge code, issued from an AIC account.", {
+    status: 404,
+  });
 }
