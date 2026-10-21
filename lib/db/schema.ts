@@ -114,7 +114,7 @@ export const organizations = pgTable('organizations', {
   // absence would stop meaning anything (not certified, or certified and
   // hiding?). A register whose silence is ambiguous verifies nothing.
   //
-  // It must never suppress a Suspended or Lapsed status. Suppress before
+  // It must never suppress a Suspended, Revoked or Withdrawn status. Suppress before
   // certification if at all, never retroactively after a bad outcome.
   //
   // Note the default is false: gating on this naively would empty the entire

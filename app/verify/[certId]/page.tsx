@@ -9,7 +9,8 @@ import {
   ShieldAlert,
   CircleSlash,
 } from "lucide-react";
-import { verifyCertificate } from "@/lib/registry";
+import { verifyCertificate, type RegistryListing } from "@/lib/registry";
+import { ACCREDITATION_NOTICE } from "@/lib/registry-notice";
 
 // The URL printed on every badge (PRD §8.4). Answers for ALL statuses, not just
 // the happy path: a register that can only confirm good news is not a register.
@@ -107,6 +108,29 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+/** What the certificate says about itself. Rows with nothing recorded are
+ *  hidden by DetailRow, so a certificate issued before migration 026 simply
+ *  shows fewer lines rather than blanks. */
+function CertificateDetails({ l, since }: { l: RegistryListing; since?: string }) {
+  return (
+    <>
+      <dl>
+        <DetailRow label="Organisation" value={l.organisation} />
+        <DetailRow label="Certificate" value={l.certId} />
+        {since !== undefined && <DetailRow label="Status" value={l.status} />}
+        {since !== undefined && <DetailRow label="Since" value={since} />}
+        <DetailRow label="Standard" value={l.standard} />
+        <DetailRow label="Division" value={l.division} />
+        <DetailRow label="Scope" value={l.scope} />
+        <DetailRow label="Systems in scope" value={l.scopeSystems.join(", ")} />
+        <DetailRow label="Issued" value={l.issued} />
+        <DetailRow label="Expires" value={l.expires} />
+      </dl>
+      <p className="text-xs text-[#6b7280] mt-4">{ACCREDITATION_NOTICE}</p>
+    </>
+  );
+}
+
 function ReportBlock({ certId }: { certId: string }) {
   return (
     <div className="mt-8 pt-8 border-t border-[#e5e7eb]">
@@ -149,14 +173,7 @@ export default async function VerifyCertPage({
             AIC confirms this certificate. {l.organisation} holds AIC certification with the
             scope and validity below.
           </p>
-          <dl>
-            <DetailRow label="Organisation" value={l.organisation} />
-            <DetailRow label="Certificate" value={l.certId} />
-            <DetailRow label="Division" value={l.division} />
-            <DetailRow label="Scope" value={l.scope} />
-            <DetailRow label="Issued" value={l.issued} />
-            <DetailRow label="Expires" value={l.expires} />
-          </dl>
+          <CertificateDetails l={l} />
           {l.remediationNote && (
             <p className="text-sm text-aic-copper mt-4">{l.remediationNote}</p>
           )}
@@ -165,49 +182,21 @@ export default async function VerifyCertPage({
     );
   }
 
-  if (result.outcome === "confirmed-unlisted") {
-    return (
-      <Shell certId={decoded}>
-        <Card
-          tone="bg-aic-copper/10"
-          icon={<ShieldCheck className="w-5 h-5 text-aic-copper" />}
-          title="AIC Assessed"
-        >
-          <p className="text-[#6b7280] leading-relaxed mb-6">
-            {result.organisation} holds AIC Assessed status. This is confirmed here but is not
-            listed on the public register — Assessed status is a verified self-assessment, not
-            certification, and the two are deliberately kept distinct.
-          </p>
-          <dl>
-            <DetailRow label="Organisation" value={result.organisation} />
-            <DetailRow label="Certificate" value={result.certId} />
-            <DetailRow label="Scope" value={result.scope} />
-            <DetailRow label="Issued" value={result.issued} />
-          </dl>
-        </Card>
-      </Shell>
-    );
-  }
-
   if (result.outcome === "not-current") {
+    const l = result.listing;
     return (
       <Shell certId={decoded}>
         <Card
           tone="bg-[#d4183d]/10"
           icon={<ShieldAlert className="w-5 h-5 text-[#d4183d]" />}
-          title={result.status}
+          title={l.status}
         >
           <p className="text-[#6b7280] leading-relaxed mb-6">
             This certificate exists on the register but is not currently valid. AIC does not
-            delete certificates — status history stays visible, so a lapse can always be seen
-            rather than quietly disappearing.
+            delete certificates — status history stays visible, so a change of status can always
+            be seen rather than quietly disappearing.
           </p>
-          <dl>
-            <DetailRow label="Organisation" value={result.organisation} />
-            <DetailRow label="Certificate" value={result.certId} />
-            <DetailRow label="Status" value={result.status} />
-            <DetailRow label="Since" value={result.since} />
-          </dl>
+          <CertificateDetails l={l} since={l.since ?? ""} />
           <ReportBlock certId={decoded} />
         </Card>
       </Shell>

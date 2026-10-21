@@ -11,6 +11,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import type { RegistryListing } from "@/lib/registry";
+import { ACCREDITATION_NOTICE } from "@/lib/registry-notice";
 
 const statusBands = [
   {
@@ -22,9 +23,9 @@ const statusBands = [
     detail: "Listed with a 90-day remediation notation.",
   },
   {
-    label: "Suspended / Lapsed",
+    label: "Suspended, revoked, withdrawn or expired",
     detail:
-      "Status history stays visible — certificates are never silently removed.",
+      "Status history stays visible — certificates are never silently removed. Each shows the date its status changed.",
   },
 ];
 
@@ -32,7 +33,8 @@ const STATUS_TONE: Record<string, string> = {
   "Certified — Active": "bg-[#10b981]/10 text-[#0a7a54]",
   "Certified — Provisional": "bg-aic-copper/10 text-aic-copper",
   Suspended: "bg-[#d4183d]/10 text-[#d4183d]",
-  Lapsed: "bg-[#6b7280]/10 text-[#4b5563]",
+  Revoked: "bg-[#d4183d]/10 text-[#d4183d]",
+  Withdrawn: "bg-[#6b7280]/10 text-[#4b5563]",
   Expired: "bg-[#6b7280]/10 text-[#4b5563]",
 };
 
@@ -197,10 +199,24 @@ export default function RegistryClient({
                       <dt className="text-[#9ca3af]">Certificate</dt>
                       <dd className="text-[#0f1f3d] font-mono">{entry.certId}</dd>
                     </div>
-                    <div className="flex gap-2">
-                      <dt className="text-[#9ca3af]">Division</dt>
-                      <dd className="text-[#6b7280]">{entry.division}</dd>
-                    </div>
+                    {entry.division && (
+                      <div className="flex gap-2">
+                        <dt className="text-[#9ca3af]">Division</dt>
+                        <dd className="text-[#6b7280]">{entry.division}</dd>
+                      </div>
+                    )}
+                    {entry.standard && (
+                      <div className="flex gap-2">
+                        <dt className="text-[#9ca3af]">Standard</dt>
+                        <dd className="text-[#6b7280]">{entry.standard}</dd>
+                      </div>
+                    )}
+                    {entry.since !== undefined && entry.since && (
+                      <div className="flex gap-2">
+                        <dt className="text-[#9ca3af]">Since</dt>
+                        <dd className="text-[#6b7280]">{entry.since}</dd>
+                      </div>
+                    )}
                     <div className="flex gap-2">
                       <dt className="text-[#9ca3af]">Issued</dt>
                       <dd className="text-[#6b7280]">{entry.issued}</dd>
@@ -210,9 +226,22 @@ export default function RegistryClient({
                       <dd className="text-[#6b7280]">{entry.expires}</dd>
                     </div>
                   </dl>
+                  {entry.scope && (
+                    <p className="text-sm text-[#6b7280] mt-3">
+                      <span className="text-[#9ca3af]">Scope </span>
+                      {entry.scope}
+                    </p>
+                  )}
+                  {entry.scopeSystems.length > 0 && (
+                    <p className="text-sm text-[#6b7280] mt-1">
+                      <span className="text-[#9ca3af]">Systems in scope </span>
+                      {entry.scopeSystems.join(", ")}
+                    </p>
+                  )}
                   {entry.remediationNote && (
                     <p className="text-sm text-aic-copper mt-3">{entry.remediationNote}</p>
                   )}
+                  <p className="text-xs text-[#6b7280] mt-3">{ACCREDITATION_NOTICE}</p>
                   <Link
                     href={`/verify/${encodeURIComponent(entry.certId)}`}
                     className="inline-flex items-center gap-1.5 text-sm text-aic-copper font-medium mt-4 hover:gap-2.5 transition-all"

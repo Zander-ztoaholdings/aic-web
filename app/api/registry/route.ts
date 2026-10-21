@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listRegistry, verifyCertificate } from "@/lib/registry";
+import { ACCREDITATION_NOTICE } from "@/lib/registry-notice";
 
 // Public registry API.
 //
@@ -28,20 +29,7 @@ export async function GET(request: NextRequest) {
           verified: true,
           listed: true,
           certificate: result.listing,
-          verified_at: new Date().toISOString(),
-        });
-
-      case "confirmed-unlisted":
-        return NextResponse.json({
-          verified: true,
-          listed: false,
-          certificate: {
-            certId: result.certId,
-            organisation: result.organisation,
-            status: result.status,
-            scope: result.scope,
-            issued: result.issued,
-          },
+          notice: ACCREDITATION_NOTICE,
           verified_at: new Date().toISOString(),
         });
 
@@ -50,12 +38,8 @@ export async function GET(request: NextRequest) {
           verified: true,
           listed: true,
           current: false,
-          certificate: {
-            certId: result.certId,
-            organisation: result.organisation,
-            status: result.status,
-            since: result.since,
-          },
+          certificate: result.listing,
+          notice: ACCREDITATION_NOTICE,
           verified_at: new Date().toISOString(),
         });
 
@@ -87,6 +71,7 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     registry: listings,
+    ...(listings.length ? { notice: ACCREDITATION_NOTICE } : {}),
     count: listings.length,
     retrieved_at: new Date().toISOString(),
   });
