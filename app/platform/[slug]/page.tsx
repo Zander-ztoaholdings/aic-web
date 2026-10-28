@@ -12,7 +12,8 @@ import MockScene from "@/app/components/product/MockScene";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return CAPABILITIES.map((c) => ({ slug: c.slug }));
+  // supplier-ai-review has its own page at app/platform/supplier-ai-review.
+  return CAPABILITIES.filter((c) => c.slug !== "supplier-ai-review").map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
