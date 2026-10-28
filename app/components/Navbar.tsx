@@ -1,29 +1,44 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { SOLUTIONS } from "@/app/data/solutions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { DURATION, EASE_OUT } from "@/lib/motion";
-import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import {
+  Menu, X, ChevronDown, ArrowRight, BookMarked, Activity, ShieldAlert, Truck, PackageCheck, Globe, ClipboardList,
+  Plug, Braces, CalendarCheck, FileText, BadgeCheck, Search, ShieldCheck, Scale, Landmark,
+} from "lucide-react";
+import SealArt from "./SealArt";
 
 /**
- * Site navigation, October 2026, laid out the way Vanta's is.
+ * Site navigation, October 2026.
  *
- * Before: a utility bar, six menus, a standalone link, Log in and a long call
- * to action, which overflowed below 1280px. Now: five menus centred between
- * the logo and two pill buttons, and each menu opens one wide panel. A menu
- * with several kinds of page has a rail of sections on the left; the pages
- * sit in two columns on the right, each with a one-line description, no
- * icons. The intake moved from the button into the Platform menu; the
- * button now asks for the thing every page leads to.
+ * Five menus centred between the logo and two pill buttons. Each opens one
+ * wide panel on hover or click. Certification and Platform lead with a card
+ * that says what the menu is about and where to start, then their pages in
+ * columns, each with an icon and a one-line description. The other menus are
+ * columns only. Icons are line icons in brass: they help the eye find a page,
+ * so each one names what the page is about, never decoration.
  */
+
+type Icon = ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
 
 export interface NavLink {
   href: string;
   label: string;
   description: string;
+  icon?: Icon;
+}
+
+/** The card that opens a menu: what it is about, and where to start. */
+export interface NavFeature {
+  href: string;
+  title: string;
+  text: string;
+  cta: string;
+  art: "seal" | "record";
 }
 
 export interface NavSection {
@@ -36,6 +51,7 @@ export interface NavGroup {
   /** Pages in the order the panel shows them. Flattened from sections where there are several. */
   items: NavLink[];
   sections: NavSection[];
+  feature?: NavFeature;
 }
 
 /** Kept for the footer, which lists standalone links beside Company. None at present. */
@@ -44,37 +60,57 @@ export interface TopLevelLink {
   label: string;
 }
 
-const group = (label: string, sections: NavSection[]): NavGroup => ({ label, sections, items: sections.flatMap((s) => s.items) });
+const group = (label: string, sections: NavSection[], feature?: NavFeature): NavGroup => ({
+  label,
+  sections,
+  feature,
+  // The footer lists every page in a menu, the feature's page first.
+  items: [...(feature ? [{ href: feature.href, label: feature.title, description: feature.text }] : []), ...sections.flatMap((s) => s.items)],
+});
 
 export const navGroups: NavGroup[] = [
   group("Certification", [
-    { label: "Certification", items: [
-      { href: "/certification", label: "How certification works", description: "The five Divisions and what an assessment covers" },
-      { href: "/standard", label: "The standard", description: "All 44 requirements, published in full" },
-      { href: "/aware", label: "AIC Aware", description: "Free self-assessment against the standard" },
-      { href: "/registry", label: "Public register", description: "Organisations certified against the standard" },
-      { href: "/verify", label: "Verify a certificate", description: "Confirm a certificate in seconds" },
-      { href: "/governance-hub#declaration", label: "Algorithmic Rights", description: "The Declaration of Algorithmic Rights" },
-      { href: "/disclosures", label: "Governance and disclosures", description: "Impartiality, methodology, appeals" },
+    { label: "The standard", items: [
+      { href: "/standard", label: "The standard", description: "All 44 requirements, published in full", icon: FileText },
+      { href: "/aware", label: "AIC Aware", description: "Free self-assessment against the standard", icon: BadgeCheck },
+      { href: "/governance-hub#declaration", label: "Algorithmic Rights", description: "The Declaration of Algorithmic Rights", icon: Scale },
     ] },
-  ]),
+    { label: "Check a certificate", items: [
+      { href: "/registry", label: "Public register", description: "Organisations certified against the standard", icon: Landmark },
+      { href: "/verify", label: "Verify a certificate", description: "Confirm a certificate in seconds", icon: Search },
+      { href: "/disclosures", label: "Governance and disclosures", description: "Impartiality, methodology, appeals", icon: ShieldCheck },
+    ] },
+  ], {
+    href: "/certification",
+    title: "How certification works",
+    text: "The five Divisions, what an assessment covers, and who decides.",
+    cta: "See the process",
+    art: "seal",
+  }),
   group("Platform", [
-    { label: "Products", items: [
-      { href: "/platform/ai-register", label: "AI register", description: "Every system, what it decides, and who answers for it" },
-      { href: "/platform/risk-management", label: "AI risk management", description: "Risks scored, owned and tied to the evidence" },
-      { href: "/platform/supplier-ai-review", label: "Supplier AI review", description: "The AI inside the software you buy" },
-      { href: "/platform/decision-log", label: "Decision log", description: "Decisions, human review and every override" },
-      { href: "/platform/evidence-packs", label: "Evidence packs", description: "Sealed records for boards, assessors and insurers" },
-      { href: "/platform/trust-page", label: "Trust page", description: "A public page for your customers, live from your record" },
-      { href: "/platform/questionnaires", label: "Questionnaires", description: "Answer buyers and insurers from your record" },
+    { label: "Keep the record", items: [
+      { href: "/platform/ai-register", label: "AI register", description: "Every system, what it decides, and who answers for it", icon: BookMarked },
+      { href: "/platform/decision-log", label: "Decision log", description: "Decisions, human review and every override", icon: Activity },
+      { href: "/platform/risk-management", label: "AI risk management", description: "Risks scored, owned and tied to the evidence", icon: ShieldAlert },
+      { href: "/platform/supplier-ai-review", label: "Supplier AI review", description: "The AI inside the software you buy", icon: Truck },
     ] },
-    { label: "Platform", items: [
-      { href: "/platform", label: "Platform overview", description: "Your AI estate, kept on the record" },
-      { href: "/integrations", label: "Integrations", description: "The systems AIC reads, read-only" },
-      { href: "/platform/api-and-mcp", label: "Read API and MCP", description: "For your own dashboards and AI assistants" },
-      { href: "/intake", label: "November intake", description: "Join the founding cohort" },
+    { label: "Show it", items: [
+      { href: "/platform/evidence-packs", label: "Evidence packs", description: "Sealed records for boards, assessors and insurers", icon: PackageCheck },
+      { href: "/platform/trust-page", label: "Trust page", description: "A public page for your customers, live from your record", icon: Globe },
+      { href: "/platform/questionnaires", label: "Questionnaires", description: "Answer buyers and insurers from your record", icon: ClipboardList },
     ] },
-  ]),
+    { label: "Connect", items: [
+      { href: "/integrations", label: "Integrations", description: "The systems AIC reads, read-only", icon: Plug },
+      { href: "/platform/api-and-mcp", label: "Read API and MCP", description: "For your own dashboards and AI assistants", icon: Braces },
+      { href: "/intake", label: "Founding cohort", description: "Join the first ten organisations", icon: CalendarCheck },
+    ] },
+  ], {
+    href: "/platform",
+    title: "Platform overview",
+    text: "Your AI estate, kept on the record: who is accountable, and the evidence behind it.",
+    cta: "Tour the platform",
+    art: "record",
+  }),
   group("Solutions", [
     { label: "By industry", items: [
       ...SOLUTIONS.map((x) => ({ href: `/solutions/${x.slug}`, label: x.name, description: x.short })),
@@ -116,11 +152,11 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const [section, setSection] = useState(0);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const pathname = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion() ?? false;
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const overlayOpen = openGroup !== null || menuOpen;
   const active = navGroups.find((g) => g.label === openGroup) ?? null;
 
@@ -149,10 +185,25 @@ export default function Navbar() {
     };
   }, []);
 
-  const toggle = (label: string) => {
-    setSection(0);
-    setOpenGroup(openGroup === label ? null : label);
+  const toggle = (label: string) => setOpenGroup(openGroup === label ? null : label);
+
+  // Hover opens a menu on devices with a pointer; leaving the bar and panel
+  // closes it after a short pause, so moving diagonally into the panel works.
+  const cancelClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = null;
   };
+  const hoverOpen = (label: string) => {
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
+    cancelClose();
+    setOpenGroup(label);
+  };
+  const hoverClose = () => {
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
+    cancelClose();
+    closeTimer.current = setTimeout(() => setOpenGroup(null), 180);
+  };
+  useEffect(() => () => cancelClose(), []);
 
   return (
     <header className="sticky top-0 z-50">
@@ -174,6 +225,8 @@ export default function Navbar() {
       <nav
         ref={navRef}
         aria-label="Main"
+        onMouseLeave={hoverClose}
+        onMouseEnter={cancelClose}
         className={`relative z-50 bg-white transition-shadow duration-300 ${scrolled ? "shadow-[0_8px_24px_-12px_rgba(10,22,40,0.25)]" : "border-b border-[#dde2e8]"}`}
       >
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-6 xl:px-10">
@@ -193,6 +246,7 @@ export default function Navbar() {
                     key={g.label}
                     type="button"
                     onClick={() => toggle(g.label)}
+                    onMouseEnter={() => hoverOpen(g.label)}
                     aria-expanded={isOpen}
                     aria-controls="nav-panel"
                     className={`flex items-center gap-1 whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-[15px] font-medium transition-colors ${
@@ -233,39 +287,38 @@ export default function Navbar() {
         {active && (
           <div id="nav-panel" className="hidden lg:block absolute inset-x-0 top-full pt-2">
             <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-10">
-              <div className="flex overflow-hidden rounded-2xl border border-[#dde2e8] bg-white shadow-[0_30px_80px_-24px_rgba(10,22,40,0.45)]">
-                {active.sections.length > 1 && (
-                  <div className="w-64 shrink-0 bg-[#eef1f5] p-6 space-y-1.5" role="tablist" aria-label={active.label}>
-                    {active.sections.map((s, i) => (
-                      <button
-                        key={s.label}
-                        type="button"
-                        role="tab"
-                        aria-selected={section === i}
-                        onMouseEnter={() => setSection(i)}
-                        onFocus={() => setSection(i)}
-                        onClick={() => setSection(i)}
-                        className={`flex w-full items-center justify-between rounded-full px-4 py-2 text-left text-[15px] font-medium transition-colors ${
-                          section === i ? "bg-[#0e1b2c] text-white" : "text-[#0e1b2c] hover:bg-white"
-                        }`}
-                      >
-                        {s.label}
-                        <ArrowRight className="h-4 w-4" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div className="flex-1 p-8">
-                  <ul className="grid grid-cols-2 gap-x-10 gap-y-6">
-                    {(active.sections[section] ?? active.sections[0]).items.map((item) => (
-                      <li key={item.href}>
-                        <Link href={item.href} onClick={() => setOpenGroup(null)} className="group block">
-                          <span className="block text-[18px] leading-snug text-[#0e1b2c] group-hover:text-[#8a6114]" style={{ fontFamily: "'Merriweather', serif" }}>{item.label}</span>
-                          <span className="mt-1 block text-[13.5px] text-[#5e6b7b]">{item.description}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="flex gap-8 overflow-hidden rounded-2xl border border-[#dde2e8] bg-white p-6 shadow-[0_30px_80px_-24px_rgba(10,22,40,0.45)]">
+                {active.feature && <FeatureCard feature={active.feature} onNavigate={() => setOpenGroup(null)} />}
+                <div
+                  className={`grid flex-1 gap-x-8 gap-y-2 py-2 ${
+                    active.sections.length >= 3 ? "grid-cols-3" : active.sections.length === 2 ? "grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
+                  {active.sections.map((s) => (
+                    <div key={s.label}>
+                      <p className="px-3 pb-3 text-[17px] text-[#0e1b2c]" style={{ fontFamily: "'Merriweather', serif" }}>{s.label}</p>
+                      <ul className={active.sections.length === 1 ? "grid grid-cols-2 gap-x-8" : ""}>
+                        {s.items.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                onClick={() => setOpenGroup(null)}
+                                className="group flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-[#f5f7f9] focus-visible:bg-[#f5f7f9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#a8772a]"
+                              >
+                                {Icon && <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#a8772a]" aria-hidden />}
+                                <span>
+                                  <span className="block text-[15.5px] font-medium leading-snug text-[#0e1b2c] group-hover:text-[#8a6114]">{item.label}</span>
+                                  <span className="mt-0.5 block text-[13.5px] leading-snug text-[#5e6b7b]">{item.description}</span>
+                                </span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -293,6 +346,12 @@ export default function Navbar() {
                     </button>
                     {isOpen && (
                       <div className="pb-4 space-y-4">
+                        {g.feature && (
+                          <Link href={g.feature.href} onClick={() => setMenuOpen(false)} className="block rounded-xl bg-[#f5f7f9] px-3 py-3">
+                            <span className="block text-[15px] font-semibold text-[#0e1b2c]">{g.feature.title}</span>
+                            <span className="block text-[13px] text-[#5e6b7b]">{g.feature.text}</span>
+                          </Link>
+                        )}
                         {g.sections.map((s) => (
                           <div key={s.label}>
                             {g.sections.length > 1 && <p className="px-2 pb-1 text-[13px] font-semibold text-[#8a6114]">{s.label}</p>}
@@ -322,5 +381,45 @@ export default function Navbar() {
         )}
       </nav>
     </header>
+  );
+}
+
+/** Open outlines of a record: rows, an owner mark and one brass seal. No words or numbers, so it can never claim a fact. */
+function RecordArt() {
+  const rows = [0, 1, 2, 3];
+  return (
+    <svg viewBox="0 0 260 150" className="h-full w-full" aria-hidden="true" focusable="false">
+      <rect x="14" y="10" width="232" height="130" rx="12" fill="#ffffff" stroke="#dde2e8" />
+      {rows.map((r) => (
+        <g key={r} transform={`translate(30 ${28 + r * 27})`}>
+          <circle cx="6" cy="6" r="6" fill="none" stroke="#a8772a" strokeOpacity={0.35 + r * 0.15} strokeWidth="1.5" />
+          <rect x="22" y="2" width={92 - r * 10} height="8" rx="4" fill="#dde2e8" />
+          <rect x="128" y="2" width="44" height="8" rx="4" fill="#eef1f5" />
+          <rect x="182" y="0" width="18" height="12" rx="6" fill="none" stroke={r === 0 ? "#2e7a57" : "#dde2e8"} strokeWidth="1.25" />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function FeatureCard({ feature, onNavigate }: { feature: NavFeature; onNavigate: () => void }) {
+  return (
+    <Link
+      href={feature.href}
+      onClick={onNavigate}
+      className="group relative flex w-[320px] shrink-0 flex-col overflow-hidden rounded-xl bg-[#f5f7f9] p-6 transition-colors hover:bg-[#eef1f5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#a8772a]"
+    >
+      <span className="text-[20px] leading-snug text-[#0e1b2c]" style={{ fontFamily: "'Merriweather', serif" }}>{feature.title}</span>
+      <span className="mt-2 text-[14px] leading-relaxed text-[#5e6b7b]">{feature.text}</span>
+      <span className="relative mt-5 flex h-[150px] items-center justify-center">
+        {feature.art === "seal" ? <SealArt className="h-[170px] w-[170px]" /> : <RecordArt />}
+      </span>
+      <span className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-[#0e1b2c] pl-4 pr-1.5 py-1.5 text-[14px] font-semibold text-white">
+        {feature.cta}
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#c9920a] text-[#0e1b2c] transition-transform group-hover:translate-x-0.5">
+          <ArrowRight className="h-3.5 w-3.5" />
+        </span>
+      </span>
+    </Link>
   );
 }
