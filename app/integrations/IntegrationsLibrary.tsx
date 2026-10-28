@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { CATEGORIES, INTEGRATIONS, type IntegrationCategory, type IntegrationStatus } from "@/app/data/integrations";
+import IntegrationLogo from "./IntegrationLogo";
 
 type StatusFilter = "all" | IntegrationStatus;
 
@@ -16,19 +17,9 @@ const STATUS_TONE: Record<IntegrationStatus, string> = {
   built: "bg-[#eef1f5] text-[#3d4a58]",
 };
 
-const initials = (name: string) =>
-  name
-    .replace(/[^A-Za-z0-9 ]/g, " ")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-
 /**
  * A browsable library of the systems AIC reads: search, a category filter and
- * a status filter. Names only, no third-party logos.
+ * a status filter. Vendor marks come from IntegrationLogo.
  */
 export default function IntegrationsLibrary() {
   const [query, setQuery] = useState("");
@@ -102,9 +93,7 @@ export default function IntegrationsLibrary() {
           {shown.map((i) => (
             <li key={i.name} className="flex flex-col rounded-xl border border-[#dde2e8] bg-white p-5">
               <div className="flex items-start gap-3">
-                <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-[#0e1b2c] text-[14px] font-bold tracking-wide text-white">
-                  {initials(i.name)}
-                </span>
+                <IntegrationLogo name={i.name} />
                 <div className="min-w-0">
                   <h3 className="text-[16.5px] font-bold leading-snug">{i.name}</h3>
                   <p className="text-[13.5px] text-[#5e6b7b]">{i.category}</p>

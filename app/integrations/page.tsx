@@ -4,6 +4,7 @@ import { ArrowRight, Eye, Moon, Layers } from "lucide-react";
 import { pageMetadata, SITE_URL, breadcrumbLd } from "@/lib/seo";
 import { INTEGRATIONS } from "@/app/data/integrations";
 import IntegrationsLibrary from "./IntegrationsLibrary";
+import IntegrationLogo from "./IntegrationLogo";
 
 export const metadata: Metadata = pageMetadata({
   path: "/integrations",
@@ -81,7 +82,10 @@ export default function IntegrationsPage() {
           {live.map((i) => (
             <li key={i.name} className="rounded-xl border border-[#dde2e8] bg-white p-6">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-lg font-bold">{i.name}</h3>
+                <div className="flex items-center gap-3">
+                  <IntegrationLogo name={i.name} />
+                  <h3 className="text-lg font-bold">{i.name}</h3>
+                </div>
                 <span className="rounded-full bg-[#2e7a57]/10 px-2.5 py-1 text-[12.5px] font-medium text-[#22603f]">Live</span>
               </div>
               <p className="mt-2 text-[16px] leading-relaxed text-[#2b3a4d]">{i.reads}</p>
