@@ -9,7 +9,8 @@ import DeclineLetterArt from "@/app/components/DeclineLetterArt";
 import TabletStage from "@/app/components/TabletStage";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, ShieldCheck, Landmark, Scale, BadgeCheck } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import RuleBadge from "@/app/components/RuleBadge";
 import EmpathyScorer from "@/app/components/EmpathyScorer";
 
 // Kept short and in the question's own words; the full list is /guides.
@@ -65,10 +66,10 @@ const algorithmicRights = [
 // The rules a client's AI is already held to. Statuses and dates match
 // regulatory-data.ts, which carries the sources; nothing here goes further.
 const ruleBand = [
-  { name: "POPIA section 71", where: "South Africa", status: "In force", href: "/regulatory-map/south-africa", icon: ShieldCheck },
-  { name: "EU AI Act", where: "European Union", status: "High-risk duties from 2 Dec 2027", href: "/regulatory-map", icon: Landmark },
-  { name: "GDPR article 22", where: "European Union", status: "In force", href: "/regulatory-map", icon: Scale },
-  { name: "ISO/IEC 42001", where: "International", status: "Certifiable standard", href: "/platform", icon: BadgeCheck },
+  { name: "POPIA section 71", where: "South Africa", status: "In force", href: "/regulatory-map/south-africa", badge: { top: "POPIA", bottom: "s71", ring: "South Africa" } },
+  { name: "EU AI Act", where: "European Union", status: "High-risk duties from 2 Dec 2027", href: "/regulatory-map", badge: { top: "AI Act", bottom: "EU", ring: "European Union" } },
+  { name: "GDPR article 22", where: "European Union", status: "In force", href: "/regulatory-map", badge: { top: "GDPR", bottom: "Art 22", ring: "European Union" } },
+  { name: "ISO/IEC 42001", where: "International", status: "Certifiable standard", href: "/platform", badge: { top: "42001", bottom: "ISO/IEC", ring: "International" } },
 ];
 
 const ruleColumns = [
@@ -461,16 +462,13 @@ export default function MarketingPage() {
 
           <ul className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 border-y border-[#dde2e8] bg-white">
             {ruleBand.map((r, i) => {
-              const Icon = r.icon;
               return (
                 <li
                   key={r.name}
                   className={`border-[#dde2e8] ${i > 0 ? "max-sm:border-t" : ""} ${i % 2 === 1 ? "sm:border-l" : ""} ${i >= 2 ? "sm:max-lg:border-t" : ""} ${i > 0 ? "lg:border-l" : ""}`}
                 >
                   <Link href={r.href} className="group flex items-center gap-4 p-6 h-full hover:bg-[#fafbfc] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#a8772a]">
-                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-[#dde2e8] bg-white">
-                      <Icon className="h-6 w-6 text-[#a8772a]" aria-hidden />
-                    </span>
+                    <RuleBadge id={String(i)} {...r.badge} />
                     <span className="min-w-0">
                       <span className="block text-[17px] font-bold leading-snug text-[#0e1b2c] group-hover:text-[#8a6114]">{r.name}</span>
                       <span className="block text-[14.5px] text-[#3d4a58]">{r.where}</span>
