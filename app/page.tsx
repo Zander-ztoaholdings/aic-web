@@ -9,7 +9,7 @@ import DeclineLetterArt from "@/app/components/DeclineLetterArt";
 import TabletStage from "@/app/components/TabletStage";
 import { PLATFORM_AREAS } from "@/app/data/platform-data";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, Landmark, Scale, BadgeCheck } from "lucide-react";
 import EmpathyScorer from "@/app/components/EmpathyScorer";
 
 // Kept short and in the question's own words; the full list is /guides.
@@ -64,13 +64,45 @@ const algorithmicRights = [
 
 // The rules a client's AI is already held to. Statuses and dates match
 // regulatory-data.ts, which carries the sources; nothing here goes further.
-const frameworks = [
-  { name: "POPIA section 71", where: "South Africa", status: "In force", detail: "Rights around decisions based solely on automated processing with legal or similarly significant effect.", href: "/regulatory-map/south-africa" },
-  { name: "EU AI Act", where: "European Union", status: "High-risk duties from 2 Dec 2027", detail: "Human oversight, logging and accountability for high-risk systems, after the Digital Omnibus deferral.", href: "/regulatory-map" },
-  { name: "GDPR article 22", where: "European Union", status: "In force", detail: "The right not to be subject to a solely automated decision with significant effect.", href: "/regulatory-map" },
-  { name: "ISO/IEC 42001", where: "International", status: "Certifiable standard", detail: "A management system for AI: roles, risk and impact assessment, life-cycle controls.", href: "/platform" },
-  { name: "NIST AI RMF", where: "United States", status: "Voluntary", detail: "A risk framework many global buyers and insurers use as their reference point.", href: "/regulatory-map/united-states" },
-  { name: "Industry frameworks", where: "Engineering, finance, health", status: "IEC 61511, SR 11-7, IEC 62304", detail: "AI mapped against the safety and model-risk disciplines your sector already audits.", href: "/frameworks" },
+const ruleBand = [
+  { name: "POPIA section 71", where: "South Africa", status: "In force", href: "/regulatory-map/south-africa", icon: ShieldCheck },
+  { name: "EU AI Act", where: "European Union", status: "High-risk duties from 2 Dec 2027", href: "/regulatory-map", icon: Landmark },
+  { name: "GDPR article 22", where: "European Union", status: "In force", href: "/regulatory-map", icon: Scale },
+  { name: "ISO/IEC 42001", where: "International", status: "Certifiable standard", href: "/platform", icon: BadgeCheck },
+];
+
+const ruleColumns = [
+  {
+    title: "What the standard maps to",
+    items: [
+      "POPIA section 71: rights around decisions based solely on automated processing",
+      "GDPR article 22: no solely automated decision with significant effect",
+      "EU AI Act: human oversight, logging and accountability for high-risk systems",
+      "ISO/IEC 42001: roles, risk and impact assessment, life-cycle controls",
+      "NIST AI RMF: the reference many global buyers and insurers use",
+    ],
+    link: { href: "/standard", label: "Read the standard" },
+  },
+  {
+    title: "What the platform tracks for you",
+    items: [
+      "Twenty frameworks to switch on, from POPIA and GDPR to ISO 27001 and SOC 2",
+      "Each requirement, with the evidence behind it",
+      "Evidence collected once counts for every framework it supports",
+      "Your own framework, added alongside the rest",
+    ],
+    link: { href: "/platform", label: "See the platform" },
+  },
+  {
+    title: "Industry frameworks",
+    items: [
+      "Process engineering: IEC 61511 and safety integrity levels",
+      "Financial services: SR 11-7 model risk management",
+      "Medical devices: IEC 62304, GMLP and PCCP",
+      "AI mapped against the disciplines your sector already audits",
+    ],
+    link: { href: "/frameworks", label: "Industry frameworks" },
+  },
 ];
 
 const standards = [
@@ -397,59 +429,76 @@ export default function MarketingPage() {
       </section>
 
       {/* ── THE RULES ────────────────────────────────────────────────
-          Replaces "Check us" until there are clients to point to. The laws
-          and frameworks a client's AI is already held to, each linking to the
-          map or framework page that sources it. */}
-      <section className="bg-[#0a1628] py-20 md:py-28">
+          The laws and frameworks a client's AI is already held to. A band of
+          the four that matter most, each linking to the page that sources it,
+          then what the standard maps to, what the platform tracks and the
+          industry frameworks, as checklists. */}
+      <section className="bg-[#f5f7f9] py-20 md:py-28 border-y border-[#dde2e8]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="grid lg:grid-cols-[minmax(0,4fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end">
+            <h2
+              className="text-3xl md:text-[2.6rem] leading-[1.1] tracking-[-0.02em] text-[#0e1b2c] font-bold text-balance"
+              style={{ fontFamily: "'Merriweather', serif" }}
+            >
+              The laws and frameworks your AI is already held to
+            </h2>
             <div>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-aic-copper max-lg:font-sans max-lg:text-sm max-lg:normal-case max-lg:tracking-normal max-lg:text-[#c9920a]">
-                The rules
-              </span>
-              <h2
-                className="text-3xl md:text-[2.5rem] leading-[1.1] tracking-[-0.02em] text-white font-bold mt-4 mb-5 text-balance"
-                style={{ fontFamily: "'Merriweather', serif" }}
-              >
-                The laws and frameworks your AI is already held to
-              </h2>
-              <p className="text-white/60 leading-relaxed">
-                Each requirement in the AIC standard is mapped to the law or
-                framework it helps you meet, and the platform tracks them for
-                you. Where a country stands, with its sources and the date we
-                last checked, is on the regulatory map.
+              <p className="text-[#3d4a58] leading-relaxed">
+                Each requirement in the AIC standard is mapped to the law or framework it helps you
+                meet, and the platform tracks them for you. Where a country stands, with its sources
+                and the date we last checked, is on the regulatory map.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/regulatory-map" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#0a1628] hover:bg-white/90 transition-colors">
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/regulatory-map" className="inline-flex items-center gap-2 rounded-full bg-[#0e1b2c] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1c2f47] transition-colors">
                   Open the regulatory map <ArrowRight className="w-4 h-4" />
                 </Link>
-                <Link href="/frameworks" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-white hover:border-white/60 transition-colors">
+                <Link href="/frameworks" className="inline-flex items-center gap-2 rounded-full border border-[#c9ced6] bg-white px-5 py-2.5 text-sm font-semibold text-[#0e1b2c] hover:border-[#0e1b2c] transition-colors">
                   Industry frameworks <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden [&>*]:min-w-0">
-              {frameworks.map((f) => (
-                <Link
-                  key={f.name}
-                  href={f.href}
-                  className="group bg-[#0a1628] p-6 max-sm:p-5 hover:bg-[#0f1f3d] transition-colors"
+          <ul className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 border-y border-[#dde2e8] bg-white">
+            {ruleBand.map((r, i) => {
+              const Icon = r.icon;
+              return (
+                <li
+                  key={r.name}
+                  className={`border-[#dde2e8] ${i > 0 ? "max-sm:border-t" : ""} ${i % 2 === 1 ? "sm:border-l" : ""} ${i >= 2 ? "sm:max-lg:border-t" : ""} ${i > 0 ? "lg:border-l" : ""}`}
                 >
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white leading-snug" style={{ fontFamily: "'Merriweather', serif" }}>
-                      {f.name}
-                    </h3>
-                    <ArrowRight className="mt-1 w-4 h-4 shrink-0 text-aic-copper transition-transform group-hover:translate-x-0.5" />
-                  </div>
-                  <p className="text-[13px] text-white/50 mb-3">{f.where}</p>
-                  <span className="inline-block rounded-full border border-[#c9920a]/40 bg-[#c9920a]/10 px-2.5 py-1 text-[12px] font-semibold text-[#e0b85c] mb-3">
-                    {f.status}
-                  </span>
-                  <p className="text-[13.5px] text-white/65 leading-relaxed">{f.detail}</p>
+                  <Link href={r.href} className="group flex items-center gap-4 p-6 h-full hover:bg-[#fafbfc] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#a8772a]">
+                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-[#dde2e8] bg-white">
+                      <Icon className="h-6 w-6 text-[#a8772a]" aria-hidden />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[17px] font-bold leading-snug text-[#0e1b2c] group-hover:text-[#8a6114]">{r.name}</span>
+                      <span className="block text-[14.5px] text-[#3d4a58]">{r.where}</span>
+                      <span className="block text-[13px] text-[#5e6b7b]">{r.status}</span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="grid md:grid-cols-3">
+            {ruleColumns.map((c, i) => (
+              <div key={c.title} className={`py-10 md:px-8 ${i === 0 ? "md:pl-0" : "md:border-l border-[#dde2e8] max-md:border-t"} ${i === 2 ? "md:pr-0" : ""}`}>
+                <h3 className="text-[17px] font-bold text-[#0e1b2c]">{c.title}</h3>
+                <ul className="mt-5 space-y-3.5">
+                  {c.items.map((it) => (
+                    <li key={it} className="flex gap-3 text-[15px] leading-relaxed text-[#3d4a58]">
+                      <Check className="mt-1 h-4 w-4 shrink-0 text-[#a8772a]" aria-hidden />
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={c.link.href} className="mt-6 inline-flex text-sm font-semibold text-[#8a6114] underline-offset-2 hover:underline">
+                  {c.link.label}
                 </Link>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
