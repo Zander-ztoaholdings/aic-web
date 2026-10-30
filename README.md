@@ -1,65 +1,52 @@
-# AIC Marketing Website (`apps/web`)
+# AIC Website
 
-This is the public-facing engine for the **AI Integrity Certification (AIC)** ecosystem. It is designed to educate enterprise prospects, qualify leads via an interactive assessment, and drive recruitment for the Alpha Program.
+The public website for AI Integrity Certification at **aiccertified.cloud**: what AIC certifies and how, the published standard, the public certification register and certificate verification, AIC Aware, news, guides and the regulatory map, and the contact and intake forms.
 
-## ✨ Features
+AIC records and tracks. It does not consult, and it never certifies the output of its own tools.
 
-*   **Gallery Aesthetic:** High-end, minimalist design inspired by boutique architecture firms.
-*   **Three-Tier Framework:** Detailed landing pages explaining the risk-based accountability model.
-*   **Self-Assessment Quiz:** An interactive 20-question engine that calculates a preliminary "Integrity Score."
-*   **Lead Generation:** Automatic database synchronization for quiz results and Alpha Program applications.
-*   **PDF Report Generation:** Client-side generation of professional assessment summaries using `jsPDF`.
-*   **Motion UI:** Smooth, scroll-triggered reveals and staggered entries powered by **Framer Motion**.
+## What is in this repository
 
-## 🛠️ Tech Stack
+| Path | What it is |
+| --- | --- |
+| [`app/`](app/README.md) | Pages, API routes and components (Next.js App Router). |
+| [`lib/`](lib/README.md) | Logic shared by pages and routes: scoring, registry, Aware, news, SEO, analytics. |
+| [`db/`](db/README.md) | Drizzle migrations for the website's tables. |
+| [`scripts/`](scripts/README.md) | Applying migrations, the `db:push` guard, and the map data builders. |
+| [`data/`](data/README.md) | Raw source data the map builders read. |
+| `public/` | Static files: logos, images, the Declaration PDF, prebuilt map data. |
+| `deploy/directus/` | Runbook and compose file for Directus, the admin interface for the register. |
+| [`docs/`](docs/README.md) | Explanatory documents: architecture, development, database, deployment and releases. |
+| `__tests__/` | Vitest tests. |
 
-*   **Framework:** Next.js 16 (App Router)
-*   **Animation:** Framer Motion
-*   **Styling:** Tailwind CSS 4
-*   **Database:** PostgreSQL (via `@types/pg`)
-*   **Analytics:** Google Analytics 4
+## Stack
 
-## 🚀 Development
+Next.js 15 (App Router) and React 19, TypeScript, Tailwind CSS 4, Framer Motion, Drizzle ORM on PostgreSQL (the database shared with the platform), Notion as the CMS for articles and policy updates, Resend for contact notifications, Google Analytics 4 after consent. Node 22.
 
-**1. Install dependencies:**
+## Quick start
+
 ```bash
-npm install
+nvm use                  # Node 22, from .nvmrc
+cp .env.example .env.local
+npm ci
+npm run dev              # http://localhost:3000
 ```
 
-**2. Set up environment variables:**
-Create a `.env` file with the following:
-```env
-# Single connection string — this is what lib/db actually reads.
-# Split POSTGRES_USER/HOST/PORT/DB variables are NOT read and will not connect.
-# In Docker/Coolify the host must be the database service name, never localhost.
-DATABASE_URL=postgresql://aic_admin:your_password@localhost:5432/aic_platform
-NEXT_PUBLIC_GA_ID=G-XXXXXXX
-```
+Pages that read the database (register, verification, forms) need `DATABASE_URL`, and news and articles need `NOTION_API_KEY`; the rest of the site runs without them. Full set-up: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
-**3. Apply the database schema:**
-```bash
-npm run db:push        # apply lib/db/schema.ts directly (fine pre-launch)
-# or, once real certificates exist and schema history matters:
-npm run db:generate    # write a reviewable migration
-npm run db:migrate     # apply it
-```
-Check it worked at `/api/health`. Publicly it answers only ok/degraded; send
-`x-health-token: $HEALTH_TOKEN` to get the underlying error code and what to do
-about it.
+## Everyday commands
 
-**4. Run the development server:**
-```bash
-npm run dev
-```
+| Command | Does |
+| --- | --- |
+| `npm run dev` | Runs the site on port 3000. |
+| `npm test` | Runs the Vitest suite. |
+| `npm run type-check` | TypeScript, no output files. |
+| `npm run lint` | ESLint. |
+| `npm run build` | Production build. |
 
-## 📈 Conversion Funnel
+## Deploying
 
-The site is architected to track users through a 5-stage funnel:
-1.  **Awareness:** Homepage / Blog
-2.  **Engagement:** Tier Framework deep-dive
-3.  **Interest:** Assessment Quiz start
-4.  **Qualification:** Email gate at Question 15
-5.  **Intent:** Alpha Program application submission
+Coolify builds the site with Nixpacks: `main` to production, `staging` to staging.aiccertified.cloud. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
----
-**© 2026 AI Integrity Certification (AIC).**
+## Security
+
+See [SECURITY.md](SECURITY.md) to report a vulnerability. Proprietary. Copyright 2026 AI Integrity Certification (AIC), Johannesburg, South Africa.

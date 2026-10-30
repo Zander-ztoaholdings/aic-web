@@ -11,12 +11,12 @@ build/
 # Turbo cache
 .turbo/
 
-# TypeScript incremental build info — must never be committed.
+# TypeScript incremental build info: must never be committed.
 # Nixpacks mounts a build-cache volume at this path; a committed file
 # there clashes with the directory mount and crashes the container.
 *.tsbuildinfo
 
-# Environment — NEVER commit these
+# Environment: NEVER commit these
 .env
 .env.local
 .env.*.local
@@ -35,3 +35,8 @@ Thumbs.db
 .idea/
 *.swp
 .next-stale-*/
+
+# Local clutter
+.Rhistory
+_claude_scratch/
+*.applied
