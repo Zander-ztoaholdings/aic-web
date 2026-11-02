@@ -255,20 +255,20 @@ export const regulatoryData: Record<string, CountryRegulation> = {
       "No single federal AI law, and no federal preemption of state law. NIST's AI RMF is the voluntary national reference. Binding rules come from individual states, and that layer is unsettled rather than merely patchy — Colorado repealed and rewrote its AI Act in 2026, and a federal executive order now directs litigation against state AI laws.",
     pdfSlug: "united-states",
     detail: US_DETAIL,
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "124": {
     id: "124",
     name: "Canada",
     slug: "canada",
     region: "North America",
-    framework: "No federal AI-specific bill currently before Parliament",
+    framework: "No federal AI-specific bill currently before Parliament; non-binding National AI Strategy (\"AI for All\") released June 2026",
     authority: "Innovation, Science and Economic Development Canada",
     status: "No dedicated AI law identified",
     summary:
-      "Bill C-27, which contained the Artificial Intelligence and Data Act (AIDA), died on the Order Paper when Parliament was prorogued in January 2025 and was not reinstated (confirmed via Parliament's LEGISinfo). No successor federal AI-specific bill has been identified as of this review; ISED's AIDA page is now archived.",
+      "Bill C-27, which contained the Artificial Intelligence and Data Act (AIDA), died on the Order Paper when Parliament was prorogued in January 2025 and was not reinstated (confirmed via Parliament's LEGISinfo). No successor federal AI-specific bill has been identified as of this review; ISED's AIDA page remains archived. On 4 June 2026 ISED released a National Artificial Intelligence Strategy, \"AI for All\" — described on its own pages as a policy strategy, not legislation, and naming no specific AI bill before Parliament.",
     pdfSlug: "canada",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "484": {
     id: "484",
@@ -413,13 +413,13 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     name: "Switzerland",
     slug: "switzerland",
     region: "Europe",
-    framework: "No dedicated AI law; Council of Europe AI treaty signatory",
-    authority: "Federal Council / sector regulators",
+    framework: "No dedicated AI law; Council of Europe AI Convention signed, domestic implementing consultation draft expected early 2027",
+    authority: "Federal Council / FDJP, DETEC and FDFA (jointly) / sector regulators",
     status: "No dedicated AI law identified",
     summary:
-      "Switzerland is not an EU member and has no domestic AI-specific statute. It is a signatory to the Council of Europe's Framework Convention on AI, a human-rights-oriented treaty rather than direct regulation.",
+      "Switzerland is not an EU member and still has no domestic AI-specific statute. It has signed, but not yet ratified, the Council of Europe Framework Convention on AI. Per the Federal Council's own update (kmu.admin.ch, 23 Sep 2026), the responsible departments are preparing a consultation draft to implement the Convention domestically, targeted for early 2027; existing law (the Federal Act on Data Protection and sector-specific rules) applies in the meantime.",
     pdfSlug: "switzerland",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "578": {
     id: "578",
@@ -432,7 +432,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "As an EEA (not EU) member, Norway's incorporation of the EU AI Act into the EEA Agreement is still pending — no EEA Joint Committee Decision has been adopted (per EFTA's eea-lex tracker). Norway's domestic implementing law (KI-loven) has not passed the Storting; the government now plans a further hearing in autumn 2026, reflecting the EU's Digital Omnibus changes, before presenting the bill in spring 2027 (per Regjeringen.no).",
     pdfSlug: "norway",
-    verifiedAt: "2026-10-05",
+    verifiedAt: "2026-11-02",
   },
   "710": {
     id: "710",
@@ -472,7 +472,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Nigeria's National AI Strategy (NAIS) moved from draft to publicly launched policy in April 2025, per NITDA's own site. No AI-specific statute has been enacted: an earlier standalone AI bill (HB 942, 2023) was folded into the omnibus National Digital Economy and E-Governance Bill, which remains before the National Assembly. NITDA continues to issue non-binding guidance, including an October 2026 advisory on sharing data with public AI tools.",
     pdfSlug: "nigeria",
-    verifiedAt: "2026-10-05",
+    verifiedAt: "2026-11-02",
   },
   "646": {
     id: "646",
@@ -485,7 +485,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Rwanda has published a national AI policy setting ethical and economic-development principles, without binding AI-specific legal obligations identified to date.",
     pdfSlug: "rwanda",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "784": {
     id: "784",
@@ -498,7 +498,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "In June 2026, the UAE established the Artificial Intelligence and Data Authority (chaired by Minister of State for AI Omar Sultan Al Olama), merging the former AI Office, the Digital Economy and Remote Work Applications office, the UAE Data Office, and the digital-government portfolio of the Telecommunications and Digital Government Regulatory Authority. It sets national AI standards and proposes policy; no source describes it as holding binding legislative or enforcement powers. Free-zone-specific initiatives (DIFC, ADGM) continue in parallel, and no single binding cross-sector AI statute has been identified at federal level.",
     pdfSlug: "uae",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "682": {
     id: "682",
@@ -576,7 +576,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "Singapore's original MGF remains the core voluntary governance reference, paired with the AI Verify testing toolkit. IMDA released a companion Model AI Governance Framework for Agentic AI in January 2026, extending the same voluntary approach to agentic AI systems. Neither is binding cross-sector legislation.",
     pdfSlug: "singapore",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "356": {
     id: "356",
@@ -602,7 +602,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "The government's National AI Plan (December 2025) confirmed it will not proceed, for now, with the previously proposed mandatory guardrails for high-risk AI. In October 2025 the Department of Industry, Science and Resources streamlined the Voluntary AI Safety Standard's 10 guardrails into the 6-practice Guidance for AI Adoption. Australia relies on this voluntary guidance plus its existing, technology-neutral legal frameworks, with new AI-specific legislation reserved for if gaps emerge.",
     pdfSlug: "australia",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
   "554": {
     id: "554",
@@ -615,7 +615,7 @@ export const regulatoryData: Record<string, CountryRegulation> = {
     summary:
       "No AI-specific statute has been enacted. MBIE's July 2025 Strategy for Artificial Intelligence and accompanying voluntary business guidance state that existing privacy and consumer-protection law applies to AI without additional regulatory overlay. A narrow Member's Bill (Deepfake Digital Harm and Exploitation Bill) targeting non-consensual sexual deepfakes passed its first reading and reached select committee in 2026, but is not a general AI-governance statute and has not been enacted.",
     pdfSlug: "new-zealand",
-    verifiedAt: "2026-10-26",
+    verifiedAt: "2026-11-02",
   },
 };
 
